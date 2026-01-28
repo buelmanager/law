@@ -146,13 +146,19 @@ class RAGService:
                 context=context if context else "관련 법령 정보가 없습니다.",
                 question=question
             )
+            logger.info(f"[RAG] Prompt length: {len(prompt)} chars")
+            logger.info(f"[RAG] Starting LLM generation...")
 
             # LLM 추론
+            import time
+            start_time = time.time()
             answer = self.llm.generate(
                 prompt,
                 max_tokens=max_tokens,
                 temperature=temperature
             )
+            elapsed = time.time() - start_time
+            logger.info(f"[RAG] LLM generation completed in {elapsed:.2f}s, answer length: {len(answer)} chars")
             return answer
         except Exception as e:
             logger.error(f"LLM generation error: {e}")

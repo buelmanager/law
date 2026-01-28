@@ -75,9 +75,25 @@ Docker Container (HF Spaces, 포트 7860)
 
 ## 데이터 소스
 
-### 법령 데이터
-- **국가법령정보센터** (law.go.kr): Open API 제공, 공공데이터로 자유 활용 가능
-- **법제처 Open API**: 법령, 조문, 판례 검색 API 무료 제공
+### 법제처 국가법령정보 공유서비스 (Open API)
+- **End Point**: `https://apis.data.go.kr/1170000/law`
+- **데이터 포맷**: XML
+- **인증키**: `b7edf147d2fa53dbafbd3417ea617dde15ddc9cbbe54d6c9a078b64012f801ae`
+- **활용기간**: 2026-01-29 ~ 2028-01-29
+- **일일 트래픽**: 10,000건/API
+- **라이선스**: 저작자표시 (공공데이터)
+
+#### 제공 API 목록
+| API | 엔드포인트 | 설명 |
+|-----|-----------|------|
+| 법령정보 목록 조회 | `/lawSearchList.do` | 현행법령 목록 |
+| 행정규칙정보 목록 조회 | `/admrulSearchList.do` | 현행행정규칙 목록 |
+| 자치법규정보 목록 조회 | `/ordinSearchList.do` | 현행자치법규 목록 |
+| 법령해석례정보 목록 조회 | `/expcSearchList.do` | 법령해석례 목록 |
+| 헌재결정례정보 목록 조회 | `/detcSearchList.do` | 헌재결정례 목록 |
+| 별표서식정보 목록 조회 | `/licbylSearchList.do` | 별표서식 목록 |
+| 법령용어정보 목록 조회 | `/lstrmSearchList.do` | 법령용어 목록 |
+| 조약정보 목록 조회 | `/trtySearchList.do` | 조약 목록 |
 
 ### 판례 데이터
 - **대법원 공개 판례**: 공공저작물로 저작권 없음

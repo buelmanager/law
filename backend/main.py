@@ -40,7 +40,7 @@ async def lifespan(app: FastAPI):
 
         embeddings_model = os.getenv("EMBEDDINGS_MODEL_NAME", "intfloat/multilingual-e5-large")
         chroma_path = os.getenv("CHROMADB_PATH", "./vectordb")
-        llm_model_path = os.getenv("LLM_MODEL_PATH", "./models/qwen2.5-7b-instruct-q3_k_m.gguf")
+        llm_model_path = os.getenv("LLM_MODEL_PATH", "./models/qwen2.5-3b-instruct-q4_k_m.gguf")
 
         # Embeddings
         try:

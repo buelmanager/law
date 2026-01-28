@@ -10,9 +10,9 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 # Default model configuration
-# Note: q4_k_m is split into 2 files, so we use q3_k_m (single file, 3.81GB)
-DEFAULT_MODEL_REPO = "Qwen/Qwen2.5-7B-Instruct-GGUF"
-DEFAULT_MODEL_FILE = "qwen2.5-7b-instruct-q3_k_m.gguf"
+# Using Qwen2.5-3B for faster CPU inference (7B was too slow)
+DEFAULT_MODEL_REPO = "Qwen/Qwen2.5-3B-Instruct-GGUF"
+DEFAULT_MODEL_FILE = "qwen2.5-3b-instruct-q4_k_m.gguf"
 DEFAULT_MODEL_DIR = "./models"
 
 
