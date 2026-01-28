@@ -31,8 +31,32 @@ class Retriever:
         try:
             self.collection = self.client.get_collection(name=collection_name)
             logger.info(f"Loaded collection: {collection_name}")
+            # Rebuild BM25 index from existing documents
+            self._rebuild_bm25_index()
         except Exception as e:
             logger.info(f"Collection not found, will create on first add: {e}")
+
+    def _rebuild_bm25_index(self):
+        """Rebuild BM25 index from ChromaDB documents."""
+        if self.collection is None:
+            return
+
+        try:
+            # Get all documents from collection
+            results = self.collection.get()
+            if results and results["ids"]:
+                doc_ids = results["ids"]
+                doc_contents = results["documents"]
+                doc_metadatas = results["metadatas"] if results["metadatas"] else [{} for _ in doc_ids]
+
+                # Build BM25 index
+                self.bm25_corpus = [doc.split() for doc in doc_contents]
+                self.bm25_metadata = [(doc_id, metadata) for doc_id, metadata in zip(doc_ids, doc_metadatas)]
+                self.bm25 = BM25Okapi(self.bm25_corpus)
+
+                logger.info(f"Rebuilt BM25 index with {len(doc_ids)} documents")
+        except Exception as e:
+            logger.warning(f"Failed to rebuild BM25 index: {e}")
     
     def retrieve(self, query_embedding: np.ndarray, top_k: int = 5) -> list:
         """
