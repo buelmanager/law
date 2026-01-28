@@ -10,9 +10,9 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 # Default model configuration
-# Using Qwen2.5-3B for faster CPU inference (7B was too slow)
-DEFAULT_MODEL_REPO = "Qwen/Qwen2.5-3B-Instruct-GGUF"
-DEFAULT_MODEL_FILE = "qwen2.5-3b-instruct-q4_k_m.gguf"
+# Using Qwen2.5-1.5B for fast CPU inference (3B/7B too slow on free tier)
+DEFAULT_MODEL_REPO = "Qwen/Qwen2.5-1.5B-Instruct-GGUF"
+DEFAULT_MODEL_FILE = "qwen2.5-1.5b-instruct-q4_k_m.gguf"
 DEFAULT_MODEL_DIR = "./models"
 
 
