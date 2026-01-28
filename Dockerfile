@@ -56,11 +56,8 @@ COPY data/ ./data/
 # 프론트엔드 빌드 결과물 복사
 COPY --from=frontend-builder /app/frontend/out ./frontend/out
 
-# 사전 빌드된 벡터DB 복사 (인덱싱된 법령 데이터)
-COPY vectordb/ ./vectordb/
-
-# models 디렉토리 생성 (LLM 모델은 첫 실행 시 자동 다운로드)
-RUN mkdir -p ./models
+# vectordb 및 models 디렉토리 생성 (런타임에 자동 생성됨)
+RUN mkdir -p ./vectordb ./models
 
 # 포트 설정 (HuggingFace Spaces 필수)
 EXPOSE 7860
