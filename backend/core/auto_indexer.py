@@ -4,21 +4,24 @@ Called on startup if ChromaDB collection is empty.
 """
 
 import logging
+import shutil
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
 # Path to pre-collected labor laws data
 DATA_PATH = Path(__file__).parent.parent.parent / "data" / "collect" / "labor_laws.jsonl"
+VECTORDB_PATH = Path(__file__).parent.parent.parent / "vectordb"
 
 
-def auto_index_labor_laws(retriever, embeddings_mgr):
+def auto_index_labor_laws(retriever, embeddings_mgr, force_recreate=True):
     """
     Automatically index labor law documents if collection is empty.
 
     Args:
         retriever: Retriever instance
         embeddings_mgr: EmbeddingsManager instance
+        force_recreate: If True, delete and recreate vectordb on version mismatch
     """
     if embeddings_mgr is None:
         logger.warning("EmbeddingsManager not available, skipping auto-indexing")
@@ -27,6 +30,21 @@ def auto_index_labor_laws(retriever, embeddings_mgr):
     if not DATA_PATH.exists():
         logger.warning(f"Data file not found: {DATA_PATH}")
         return
+
+    # If force_recreate, delete old vectordb to avoid version conflicts
+    if force_recreate and VECTORDB_PATH.exists():
+        logger.info(f"Removing old vectordb at {VECTORDB_PATH} due to version mismatch...")
+        try:
+            shutil.rmtree(VECTORDB_PATH)
+            VECTORDB_PATH.mkdir(parents=True, exist_ok=True)
+            logger.info("Old vectordb removed, creating fresh database...")
+
+            # Reinitialize retriever with fresh database
+            import chromadb
+            retriever.client = chromadb.PersistentClient(path=str(VECTORDB_PATH))
+            retriever.collection = None
+        except Exception as e:
+            logger.error(f"Failed to remove old vectordb: {e}")
 
     logger.info(f"Loading documents from {DATA_PATH}")
 

@@ -10,8 +10,9 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 # Default model configuration
-DEFAULT_MODEL_REPO = "Qwen/Qwen2.5-7B-Instruct-GGUF"
-DEFAULT_MODEL_FILE = "qwen2.5-7b-instruct-q4_k_m.gguf"
+# Using bartowski's quantized GGUF model (well-maintained community repo)
+DEFAULT_MODEL_REPO = "bartowski/Qwen2.5-7B-Instruct-GGUF"
+DEFAULT_MODEL_FILE = "Qwen2.5-7B-Instruct-Q4_K_M.gguf"
 DEFAULT_MODEL_DIR = "./models"
 
 
