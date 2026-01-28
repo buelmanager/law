@@ -10,6 +10,8 @@ from fastapi.middleware.cors import CORSMiddleware
 # API 라우터
 from api.chat import router as chat_router
 from api.search import router as search_router
+from api.slack import router as slack_router
+from api.claude_cli import router as claude_cli_router
 
 # 로깅 설정
 logging.basicConfig(
@@ -98,6 +100,8 @@ app.add_middleware(
 # API 라우터 등록
 app.include_router(chat_router, prefix="/api", tags=["chat"])
 app.include_router(search_router, prefix="/api", tags=["search"])
+app.include_router(slack_router, prefix="/api", tags=["slack"])
+app.include_router(claude_cli_router, prefix="/api", tags=["claude"])
 
 # 헬스체크
 @app.get("/api/health")
@@ -130,7 +134,4 @@ if __name__ == "__main__":
         host=host,
         port=port,
         reload=debug,
-    )
-        port=7860,
-        reload=True
     )
