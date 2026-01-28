@@ -7,7 +7,6 @@ pydantic-settings==2.1.0
 --extra-index-url https://download.pytorch.org/whl/cpu
 torch==2.2.0+cpu
 transformers==4.37.2
-llama-cpp-python==0.2.90
 sentence-transformers==2.6.1
 
 # Vector DB

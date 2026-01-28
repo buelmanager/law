@@ -18,10 +18,9 @@ FROM python:3.11-slim AS python-builder
 
 WORKDIR /app
 
-# 빌드 도구 설치 (llama-cpp-python 컴파일용)
+# 빌드 도구 설치
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    cmake \
     && rm -rf /var/lib/apt/lists/*
 
 # Python 의존성 설치
@@ -56,8 +55,8 @@ COPY data/ ./data/
 # 프론트엔드 빌드 결과물 복사
 COPY --from=frontend-builder /app/frontend/out ./frontend/out
 
-# vectordb 및 models 디렉토리 생성 (런타임에 자동 생성됨)
-RUN mkdir -p ./vectordb ./models
+# vectordb 디렉토리 생성 (런타임에 자동 생성됨)
+RUN mkdir -p ./vectordb
 
 # 포트 설정 (HuggingFace Spaces 필수)
 EXPOSE 7860
@@ -66,6 +65,7 @@ EXPOSE 7860
 ENV PYTHONUNBUFFERED=1
 ENV PORT=7860
 ENV PYTHONPATH=/app
+# GROQ_API_KEY는 HuggingFace Spaces Secrets에서 설정
 
 # 헬스체크
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
