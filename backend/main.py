@@ -52,6 +52,18 @@ async def lifespan(app: FastAPI):
         # Retriever
         try:
             app_state.retriever = Retriever(chroma_db_path=chroma_path)
+
+            # Check if collection is empty and auto-index if needed
+            if app_state.retriever.collection is None or (
+                app_state.retriever.collection and app_state.retriever.collection.count() == 0
+            ):
+                logger.info("Collection empty or not found, attempting auto-indexing...")
+                try:
+                    from backend.core.auto_indexer import auto_index_labor_laws
+                    auto_index_labor_laws(app_state.retriever, app_state.embeddings)
+                    logger.info("Auto-indexing complete!")
+                except Exception as idx_err:
+                    logger.warning(f"Auto-indexing failed: {idx_err}")
         except Exception as e:
             logger.warning(f"Failed to init Retriever: {e}")
             app_state.retriever = None
