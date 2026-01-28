@@ -19,7 +19,7 @@ numpy==1.24.3
 requests==2.31.0
 
 # Model Download
-huggingface-hub==0.20.3
+huggingface-hub>=0.21.0
 
 # Utils
 python-dotenv==1.0.0
