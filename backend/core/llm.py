@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class LLMManager:
-    def __init__(self, model_path: str, n_ctx: int = 2048, n_threads: int = 4):
+    def __init__(self, model_path: str, n_ctx: int = 8192, n_threads: int = 4):
         """
         LLM 모델 초기화
         
