@@ -18,6 +18,9 @@ rank-bm25==0.2.2
 numpy==1.24.3
 requests==2.31.0
 
+# Model Download
+huggingface-hub==0.20.3
+
 # Utils
 python-dotenv==1.0.0
 python-multipart==0.0.6

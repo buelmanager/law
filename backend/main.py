@@ -56,12 +56,22 @@ async def lifespan(app: FastAPI):
             logger.warning(f"Failed to init Retriever: {e}")
             app_state.retriever = None
 
-        # LLM (only if model file exists)
+        # LLM (download model if not exists)
         try:
+            from backend.core.model_downloader import ensure_model_exists
+
+            # Download model if not exists (this may take a few minutes on first run)
+            if not os.path.exists(llm_model_path):
+                logger.info(f"LLM model not found at {llm_model_path}, attempting download...")
+                try:
+                    llm_model_path = ensure_model_exists(model_path=llm_model_path)
+                except Exception as download_err:
+                    logger.warning(f"Failed to download model: {download_err}")
+
             if os.path.exists(llm_model_path):
                 app_state.llm = LLMManager(model_path=llm_model_path)
             else:
-                logger.warning(f"LLM model not found at {llm_model_path}, skipping LLM init")
+                logger.warning(f"LLM model still not available at {llm_model_path}")
                 app_state.llm = None
         except Exception as e:
             logger.warning(f"Failed to init LLMManager: {e}")
