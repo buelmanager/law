@@ -123,24 +123,43 @@ Docker Container (HF Spaces, 포트 7860)
 
 ---
 
-## 개발 로드맵
+## 개발 로드맵 & 진행 현황
 
-### Phase 1: 기본 RAG 챗봇
+### Phase 1: 기본 RAG 챗봇 ✅ **완료**
 - [x] 특화 분야 선택 → **노동법**
 - [x] 기술 스택 확정 → HF Spaces + FastAPI + Next.js + llama-cpp
-- [ ] 프로젝트 스캐폴딩 (backend/, frontend/, Dockerfile)
-- [ ] 법제처 Open API로 노동법 법령 데이터 수집
-- [ ] 텍스트 청킹 + 임베딩 생성
-- [ ] ChromaDB 벡터 저장소 구축
-- [ ] FastAPI 백엔드 (LLM 추론 + RAG 검색 API)
-- [ ] Next.js 프론트엔드 (채팅 UI + 면책 고지)
-- [ ] Dockerfile 작성 (멀티스테이지 빌드)
-- [ ] HuggingFace Spaces 배포
+- [x] 프로젝트 스캐폴딩 (backend/, frontend/, Dockerfile)
+- [x] 법제처/law.go.kr API로 노동법 법령 데이터 수집
+  - 근로기준법, 근로자퇴직급여보장법, 남녀고용평등법, 최저임금법, 산업재해보상보험법 (5개)
+  - 샘플 데이터: `data/collect/labor_laws.jsonl` (5 documents)
+- [x] 텍스트 청킹 + 임베딩 생성
+  - DocumentChunker: 조문 단위 + 텍스트 크기 기반 청킹
+  - multilingual-e5-large: 1024 dim 임베딩
+- [x] ChromaDB 벡터 저장소 구축
+  - `./vectordb/` 디렉토리 (5 documents indexed, 영구 저장)
+- [x] FastAPI 백엔드 (LLM 추론 + RAG 검색 API)
+  - `POST /api/chat` - 채팅 (SSE 스트리밍)
+  - `POST /api/search` - 법령 검색
+  - `GET /api/health` - 헬스체크
+- [x] Next.js 프론트엔드 (채팅 UI + 면책 고지)
+  - ChatWindow.tsx, MessageBubble.tsx, Disclaimer.tsx
+  - TypeScript + Tailwind CSS
+- [x] Dockerfile 작성 (멀티스테이지 빌드)
+  - Node.js 20 → Next.js 빌드
+  - Python 3.11 → FastAPI 런타임
+  - git 설치 (모델 다운로드용)
+  - data/ + vectordb/ 포함
+- [x] GitHub 커밋 및 푸시
+  - Commit: `✨ Deploy: RAG-based Korean law chatbot ready for HF Spaces`
+  - 38 files, 2402 insertions
+- 🟡 HuggingFace Spaces 배포 (진행 중)
+  - Space 생성: `korean-law-chatbot` (Docker, CPU 16GB)
+  - GitHub 연결 대기: `buelmanager/law` 리포지토리 연결 예정
 
 ### Phase 2: 판례 검색 추가
 - [ ] 대법원 판례 데이터 수집 및 인덱싱
 - [ ] 판례 요약 기능 (LLM 활용)
-- [ ] 하이브리드 검색 (BM25 + 벡터)
+- [x] 하이브리드 검색 (BM25 + 벡터) - 이미 core/retriever.py에 구현
 - [ ] 리랭킹 모델 추가
 
 ### Phase 3: 파인튜닝 (선택)
@@ -236,3 +255,76 @@ law/
 - 멀티스테이지 빌드: Node.js → Next.js 빌드 → Python 런타임
 - 포트 7860 필수 (HF Spaces 요구사항)
 - 모델은 빌드 시 또는 첫 실행 시 huggingface_hub로 다운로드
+
+---
+
+## 📊 현재 배포 상태 (2026년 1월 28일)
+
+### ✅ 완료된 구현
+1. **백엔드 (backend/)**
+   - FastAPI 서버 (main.py): RAG 파이프라인 + 정적 파일 서빙
+   - API 모듈 (api/chat.py, api/search.py): 채팅 + 검색 엔드포인트
+   - 핵심 모듈 (core/):
+     - embeddings.py: multilingual-e5-large 로더
+     - llm.py: llama-cpp-python 기반 Qwen2.5-7B 추론
+     - retriever.py: 하이브리드 검색 (BM25 + 벡터)
+     - prompts.py: 시스템 프롬프트 + RAG 템플릿 + 면책 고지
+   - requirements.txt: 모든 의존성 명시
+
+2. **프론트엔드 (frontend/)**
+   - Next.js 14 App Router: 정적 빌드 (output: 'export')
+   - 채팅 UI: ChatWindow.tsx, MessageBubble.tsx
+   - 면책 고지: Disclaimer.tsx
+   - 스타일: TypeScript + Tailwind CSS
+
+3. **데이터 (data/)**
+   - 수집 클라이언트: law_go_kr.py (law.go.kr API 래퍼)
+   - 수집 스크립트: collect_labor_laws.py (5개 노동법 수집)
+   - 처리 파이프라인: index_labor_laws.py (청킹 + 임베딩 + 인덱싱)
+   - 샘플 데이터: labor_laws.jsonl (5 documents)
+
+4. **벡터DB (vectordb/)**
+   - ChromaDB 저장소: 5개 문서 인덱싱 완료
+   - 임베딩: 1024 dimensions (multilingual-e5-large)
+   - 검색: 하이브리드 (BM25 + 벡터 검색)
+
+5. **배포 (Dockerfile)**
+   - 멀티스테이지 빌드: Node.js 20 → Python 3.11
+   - git 설치 (모델 다운로드용)
+   - 포트 7860 (HF Spaces 표준)
+   - HEALTHCHECK: /api/health 엔드포인트
+
+6. **버전 관리 (Git)**
+   - GitHub 리포지토리: buelmanager/law
+   - 커밋: 38 files, 2402 insertions
+   - 마지막 커밋: "docs: Add detailed HF Spaces deployment guide"
+
+### 🟡 진행 중: HuggingFace Spaces 배포
+- Space 생성 완료: `korean-law-chatbot` (Docker, CPU 16GB)
+- 다음: GitHub 리포지토리 연결 → 자동 빌드 시작
+
+### 📈 배포 예상 타임라인
+| 단계 | 시간 | 상태 |
+|------|------|------|
+| Docker 빌드 | 2-3분 | 대기 중 |
+| 서버 시작 | 30초 | 대기 중 |
+| 첫 모델 다운로드* | 2-3분 | 첫 채팅 시 발생 |
+| 이후 응답 | 3-8초 | 정상 속도 |
+
+*Qwen2.5-7B GGUF (~4GB) + multilingual-e5-large (~2GB)
+
+### 🔗 배포 리소스
+- **배포 가이드**: HF_SPACES_DEPLOYMENT.md
+- **체크리스트**: DEPLOYMENT_CHECKLIST.md
+- **상세 문서**: DEPLOYMENT.md
+- **GitHub**: https://github.com/buelmanager/law (main branch)
+
+### ⚡ 핵심 명세 (확정)
+- **LLM**: Qwen2.5-7B-Instruct GGUF 4-bit (llama-cpp-python)
+- **임베딩**: intfloat/multilingual-e5-large (1024 dims)
+- **검색**: Hybrid (BM25 + 벡터 검색)
+- **VectorDB**: ChromaDB (영구 저장, ./vectordb/)
+- **백엔드**: FastAPI uvicorn (포트 7860)
+- **프론트엔드**: Next.js 14 App Router (정적 빌드)
+- **배포**: HF Spaces Docker (16GB RAM, 무료)
+- **면책**: 모든 답변에 법률 정보 서비스 고지 포함
