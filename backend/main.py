@@ -67,13 +67,18 @@ async def lifespan(app: FastAPI):
             logger.warning(f"Failed to init Retriever: {e}")
             app_state.retriever = None
 
-        # LLM (Groq API)
+        # LLM (Mistral 우선, Groq 폴백)
         try:
+            mistral_api_key = os.getenv("MISTRAL_API_KEY")
             groq_api_key = os.getenv("GROQ_API_KEY")
-            if groq_api_key:
-                app_state.llm = LLMManager(api_key=groq_api_key)
+
+            if mistral_api_key or groq_api_key:
+                app_state.llm = LLMManager(
+                    mistral_api_key=mistral_api_key,
+                    groq_api_key=groq_api_key
+                )
             else:
-                logger.warning("GROQ_API_KEY not set, LLM will not be available")
+                logger.warning("No LLM API key set (MISTRAL_API_KEY or GROQ_API_KEY)")
                 app_state.llm = None
         except Exception as e:
             logger.warning(f"Failed to init LLMManager: {e}")
