@@ -37,7 +37,7 @@ class RAGService:
 
         # 프롬프트 로드
         try:
-            from core.prompts import SYSTEM_PROMPT_LABOR_LAW, RAG_PROMPT_TEMPLATE, DISCLAIMER
+            from backend.core.prompts import SYSTEM_PROMPT_LABOR_LAW, RAG_PROMPT_TEMPLATE, DISCLAIMER
             self.system_prompt = SYSTEM_PROMPT_LABOR_LAW
             self.rag_template = RAG_PROMPT_TEMPLATE
             self.disclaimer = DISCLAIMER
