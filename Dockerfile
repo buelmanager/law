@@ -55,13 +55,11 @@ COPY data/ ./data/
 # 프론트엔드 빌드 결과물 복사
 COPY --from=frontend-builder /app/frontend/out ./frontend/out
 
-# vectordb 및 models 디렉토리 생성
-RUN mkdir -p ./vectordb ./models
+# 사전 빌드된 벡터DB 복사 (인덱싱된 법령 데이터)
+COPY vectordb/ ./vectordb/
 
-# 데이터 인덱싱 (벡터DB 구축)
-# 임베딩 모델 다운로드 및 법령 데이터 인덱싱
-RUN python -c "from backend.core.embeddings import EmbeddingsManager; EmbeddingsManager()" && \
-    python data/process/index_labor_laws.py
+# models 디렉토리 생성 (LLM 모델은 첫 실행 시 자동 다운로드)
+RUN mkdir -p ./models
 
 # 포트 설정 (HuggingFace Spaces 필수)
 EXPOSE 7860
