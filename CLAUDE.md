@@ -126,13 +126,15 @@ Docker Container (HF Spaces, 포트 7860)
 ## 개발 로드맵
 
 ### Phase 1: 기본 RAG 챗봇
-- [ ] 특화 분야 선택
-- [ ] 법제처 Open API로 법령 데이터 수집
+- [x] 특화 분야 선택 → **노동법**
+- [x] 기술 스택 확정 → HF Spaces + FastAPI + Next.js + llama-cpp
+- [ ] 프로젝트 스캐폴딩 (backend/, frontend/, Dockerfile)
+- [ ] 법제처 Open API로 노동법 법령 데이터 수집
 - [ ] 텍스트 청킹 + 임베딩 생성
 - [ ] ChromaDB 벡터 저장소 구축
-- [ ] Qwen2.5-7B (GGUF 4-bit) + llama-cpp-python 추론 서버
-- [ ] Gradio UI 구축
-- [ ] 면책 고지 통합
+- [ ] FastAPI 백엔드 (LLM 추론 + RAG 검색 API)
+- [ ] Next.js 프론트엔드 (채팅 UI + 면책 고지)
+- [ ] Dockerfile 작성 (멀티스테이지 빌드)
 - [ ] HuggingFace Spaces 배포
 
 ### Phase 2: 판례 검색 추가
