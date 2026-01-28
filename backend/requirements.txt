@@ -26,3 +26,6 @@ aiofiles==23.2.1
 
 # Logging
 loguru==0.7.2
+
+# Slack Integration
+slack-sdk==3.27.0

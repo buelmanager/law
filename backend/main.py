@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # API 라우터
 from api.chat import router as chat_router
 from api.search import router as search_router
+from api.slack import router as slack_router
 
 # 로깅 설정
 logging.basicConfig(
@@ -98,6 +99,7 @@ app.add_middleware(
 # API 라우터 등록
 app.include_router(chat_router, prefix="/api", tags=["chat"])
 app.include_router(search_router, prefix="/api", tags=["search"])
+app.include_router(slack_router, prefix="/api", tags=["slack"])
 
 # 헬스체크
 @app.get("/api/health")
