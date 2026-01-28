@@ -8,8 +8,8 @@ from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 # API 라우터
-from api.chat import router as chat_router
-from api.search import router as search_router
+from backend.api.chat import router as chat_router
+from backend.api.search import router as search_router
 
 # 로깅 설정
 logging.basicConfig(
@@ -34,9 +34,9 @@ async def lifespan(app: FastAPI):
     
     # 모델 초기화 시도 (환경변수 또는 기본값 사용)
     try:
-        from core.embeddings import EmbeddingsManager
-        from core.retriever import Retriever
-        from core.llm import LLMManager
+        from backend.core.embeddings import EmbeddingsManager
+        from backend.core.retriever import Retriever
+        from backend.core.llm import LLMManager
 
         embeddings_model = os.getenv("EMBEDDINGS_MODEL_NAME", "intfloat/multilingual-e5-large")
         chroma_path = os.getenv("CHROMADB_PATH", "./vectordb")

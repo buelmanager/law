@@ -36,7 +36,7 @@ async def chat(request: ChatRequest, http_request: Request):
 
     try:
         # RAGService 사용
-        from core.rag_service import RAGService
+        from backend.core.rag_service import RAGService
 
         rag_service = RAGService(
             embeddings_manager=getattr(http_request.app.state, "embeddings", None),
