@@ -29,3 +29,6 @@ loguru==0.7.2
 
 # Slack Integration
 slack-sdk==3.27.0
+
+# Process Management
+pexpect==4.9.0
