@@ -4,6 +4,16 @@ multilingual-e5-large 또는 ko-sroberta 사용
 """
 
 import logging
+
+# huggingface_hub 호환성 패치 (cached_download 제거됨)
+try:
+    from huggingface_hub import cached_download
+except ImportError:
+    # cached_download가 없으면 hf_hub_download로 대체
+    from huggingface_hub import hf_hub_download
+    import huggingface_hub
+    huggingface_hub.cached_download = hf_hub_download
+
 from sentence_transformers import SentenceTransformer
 import numpy as np
 
