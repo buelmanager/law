@@ -50,7 +50,7 @@ Thumbs.db
 
 # Data & Models
 models/
-# vectordb/ is committed (pre-built for deployment)
+vectordb/
 data/raw/
 data/collect/*.json
 data/collect/*.csv
