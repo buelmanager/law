@@ -1,0 +1,28 @@
+fastapi==0.109.2
+uvicorn==0.27.0
+pydantic==2.6.4
+pydantic-settings==2.1.0
+
+# AI/ML
+torch==2.2.0
+transformers==4.37.2
+llama-cpp-python==0.2.66
+sentence-transformers==2.2.2
+
+# Vector DB
+chromadb==0.4.24
+rank-bm25==0.2.2
+
+# Data Processing
+pandas==2.2.0
+numpy==1.24.3
+requests==2.31.0
+beautifulsoup4==4.12.2
+
+# Utils
+python-dotenv==1.0.0
+python-multipart==0.0.6
+aiofiles==23.2.1
+
+# Logging
+loguru==0.7.2
