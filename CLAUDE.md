@@ -29,18 +29,47 @@
 
 ---
 
-## 기술 스택
+## 기술 스택 (확정)
 
-| 구성 요소 | 선택 | 이유 |
-|-----------|------|------|
-| **LLM** | Qwen2.5-7B-Instruct (GGUF 4-bit) | 한국어 성능 우수, Apache 2.0, 양자화 지원 |
-| **추론 엔진** | llama-cpp-python | CPU 추론 가능, GGUF 포맷 지원, 경량 |
-| **임베딩 모델** | intfloat/multilingual-e5-large | 다국어+한국어 성능 우수 |
-| **벡터DB** | ChromaDB | 경량, Python 네이티브, 메타데이터 필터링 |
-| **검색 보강** | BM25 + 벡터 하이브리드 | 키워드 매칭 + 의미 검색 결합 |
-| **UI** | Gradio | HuggingFace Spaces 배포 호환, 빠른 프로토타이핑 |
-| **배포** | HuggingFace Spaces (무료) | 항시 가동, 웹 UI 기본 제공, 무료 16GB RAM |
-| **파인튜닝** | QLoRA (unsloth + peft) | Colab T4에서 7B 파인튜닝 가능 |
+### 서버 인프라
+- **배포 플랫폼**: HuggingFace Spaces (Docker Space, 무료)
+  - 16GB RAM, 2vCPU, 50GB 스토리지
+  - 포트 7860 필수 (FastAPI에서 서빙)
+  - 항시 가동, 무료
+
+### AI 모델
+- **LLM**: Qwen2.5-7B-Instruct (GGUF 4-bit 양자화)
+  - 한국어 성능 우수, Apache 2.0 라이선스
+  - llama-cpp-python으로 CPU 추론
+- **임베딩**: intfloat/multilingual-e5-large (다국어+한국어)
+- **벡터DB**: ChromaDB (경량, 메타데이터 필터링)
+- **검색**: BM25 + 벡터 하이브리드 검색
+
+### 프론트엔드
+- **Next.js** (React 기반, 정적 빌드 후 FastAPI에서 서빙)
+  - 채팅 UI, 법령 조문 하이라이트, 반응형 디자인
+
+### 백엔드
+- **FastAPI** (Python)
+  - LLM 추론 API, RAG 검색 API
+  - Next.js 정적 파일 서빙 (빌드 결과물)
+  - 포트 7860에서 통합 서빙
+
+### 배포 구조 (HuggingFace Spaces Docker)
+```
+Docker Container (HF Spaces, 포트 7860)
+├── FastAPI 서버
+│   ├── /api/chat          → LLM 추론 + RAG
+│   ├── /api/search        → 법령/판례 검색
+│   ├── /api/health        → 헬스체크
+│   └── /* (static)        → Next.js 빌드 결과물 서빙
+├── llama-cpp-python       → Qwen2.5-7B GGUF 로드
+├── ChromaDB               → 벡터 저장소
+└── Next.js (빌드 산출물)  → /app/frontend/out/
+```
+
+### 파인튜닝 (Phase 3)
+- QLoRA (unsloth + peft), Google Colab T4에서 실행
 
 ---
 
@@ -146,33 +175,62 @@
 
 ---
 
-## 프로젝트 디렉토리 구조 (예정)
+## 프로젝트 디렉토리 구조 (확정)
 
 ```
 law/
-├── CLAUDE.md              # 이 파일 (프로젝트 컨텍스트)
-├── app/
-│   ├── main.py            # Gradio 앱 진입점
-│   ├── llm.py             # LLM 추론 모듈
-│   ├── retriever.py       # RAG 검색 모듈
-│   ├── embeddings.py      # 임베딩 생성 모듈
-│   └── prompts.py         # 시스템 프롬프트 및 템플릿
+├── CLAUDE.md                  # 프로젝트 컨텍스트 (이 파일)
+├── Dockerfile                 # HF Spaces Docker 빌드
+├── backend/
+│   ├── main.py                # FastAPI 진입점 (포트 7860)
+│   ├── api/
+│   │   ├── chat.py            # /api/chat 엔드포인트
+│   │   └── search.py          # /api/search 엔드포인트
+│   ├── core/
+│   │   ├── llm.py             # llama-cpp-python LLM 추론
+│   │   ├── retriever.py       # RAG 검색 (ChromaDB + BM25)
+│   │   ├── embeddings.py      # 임베딩 생성
+│   │   └── prompts.py         # 시스템 프롬프트 및 템플릿
+│   └── requirements.txt       # Python 의존성
+├── frontend/
+│   ├── package.json
+│   ├── next.config.js         # 정적 빌드 설정 (output: 'export')
+│   ├── src/
+│   │   ├── app/               # Next.js App Router
+│   │   │   ├── layout.tsx
+│   │   │   └── page.tsx       # 메인 채팅 페이지
+│   │   └── components/
+│   │       ├── ChatWindow.tsx  # 채팅 UI
+│   │       ├── MessageBubble.tsx
+│   │       └── Disclaimer.tsx  # 면책 고지 컴포넌트
+│   └── public/
 ├── data/
-│   ├── collect/           # 데이터 수집 스크립트
-│   ├── process/           # 전처리 스크립트
-│   └── raw/               # 원본 데이터
-├── vectordb/              # ChromaDB 저장소
-├── models/                # 다운로드된 GGUF 모델
-├── requirements.txt
-└── README.md
+│   ├── collect/               # 데이터 수집 스크립트
+│   ├── process/               # 전처리 스크립트
+│   └── raw/                   # 원본 데이터
+├── vectordb/                  # ChromaDB 저장소 (빌드 시 포함)
+└── models/                    # GGUF 모델 (빌드 시 다운로드)
 ```
 
 ---
 
 ## 작업 시 참고사항
 
-- 코드는 Python 3.10+ 기준으로 작성
+### 백엔드 (Python)
+- Python 3.10+ 기준
 - 타입 힌트 사용
+- FastAPI + uvicorn
 - 환경 변수로 설정 관리 (API 키 등)
-- HuggingFace Spaces 배포를 고려하여 `app.py` 또는 Gradio 앱 구조 유지
 - 무료 티어 제약을 항상 고려하여 리소스 효율적인 코드 작성
+
+### 프론트엔드 (Next.js)
+- Next.js 14+ (App Router)
+- TypeScript 필수
+- 정적 빌드 (output: 'export') → FastAPI에서 서빙
+- Tailwind CSS 사용
+- 채팅 UI는 스트리밍 응답 지원 (SSE)
+
+### Docker (HF Spaces)
+- 멀티스테이지 빌드: Node.js → Next.js 빌드 → Python 런타임
+- 포트 7860 필수 (HF Spaces 요구사항)
+- 모델은 빌드 시 또는 첫 실행 시 huggingface_hub로 다운로드
