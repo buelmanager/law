@@ -1,32 +1,50 @@
-# 멀티스테이지 빌드: Node.js → Next.js 빌드
-FROM node:20-slim as frontend-builder
+# ===========================================
+# Stage 1: Node.js - Next.js 프론트엔드 빌드
+# ===========================================
+FROM node:20-slim AS frontend-builder
 
 WORKDIR /app/frontend
 
 COPY frontend/package*.json ./
-
 RUN npm ci
 
 COPY frontend/ .
-
 RUN npm run build
 
-# 메인 이미지: Python 런타임
-FROM python:3.11-slim
+# ===========================================
+# Stage 2: Python 빌드 환경 (컴파일 도구 포함)
+# ===========================================
+FROM python:3.11-slim AS python-builder
 
 WORKDIR /app
 
-# 시스템 의존성 설치
-RUN apt-get update && apt-get install -y \
+# 빌드 도구 설치 (llama-cpp-python 컴파일용)
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    curl \
-    git \
+    cmake \
     && rm -rf /var/lib/apt/lists/*
 
 # Python 의존성 설치
 COPY backend/requirements.txt .
 
-RUN pip install --no-cache-dir -r requirements.txt
+# CPU 전용 PyTorch + 의존성 설치
+RUN pip install --no-cache-dir --target=/app/packages -r requirements.txt
+
+# ===========================================
+# Stage 3: 최종 런타임 이미지 (경량)
+# ===========================================
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# 런타임 필수 패키지만 설치
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Python 패키지 복사
+COPY --from=python-builder /app/packages /usr/local/lib/python3.11/site-packages/
 
 # 백엔드 코드 복사
 COPY backend/ ./backend/
@@ -37,13 +55,8 @@ COPY data/ ./data/
 # 프론트엔드 빌드 결과물 복사
 COPY --from=frontend-builder /app/frontend/out ./frontend/out
 
-# vectordb 디렉토리 생성 및 초기화
-RUN mkdir -p ./vectordb && \
-    echo "VectorDB will be initialized on first run or can be pre-populated" > ./vectordb/README.txt
-
-# 빌드 시 vectordb 생성 (선택적 - 주석 처리됨)
-# 주석 해제하면 빌드 시 자동으로 인덱싱 (빌드 시간 +2-3분)
-# RUN python data/process/index_labor_laws.py
+# vectordb 디렉토리 생성
+RUN mkdir -p ./vectordb ./models
 
 # 포트 설정 (HuggingFace Spaces 필수)
 EXPOSE 7860
@@ -51,9 +64,10 @@ EXPOSE 7860
 # 환경 변수 설정
 ENV PYTHONUNBUFFERED=1
 ENV PORT=7860
+ENV PYTHONPATH=/app
 
 # 헬스체크
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:7860/api/health || exit 1
 
 # 백엔드 실행

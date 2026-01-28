@@ -138,9 +138,9 @@ Docker Container (HF Spaces, 포트 7860)
 - [x] ChromaDB 벡터 저장소 구축
   - `./vectordb/` 디렉토리 (5 documents indexed, 영구 저장)
 - [x] FastAPI 백엔드 (LLM 추론 + RAG 검색 API)
-  - `POST /api/chat` - 채팅 (SSE 스트리밍)
+  - `POST /api/chat` - 채팅 (JSON 응답)
   - `POST /api/search` - 법령 검색 (하이브리드 검색)
-  - `GET /api/health` - 헬스체크
+  - `GET /api/health` - 헬스체크 (모듈 상태 포함)
 - [x] Next.js 프론트엔드 (채팅 UI + 면책 고지)
   - ChatWindow.tsx, MessageBubble.tsx, Disclaimer.tsx
   - TypeScript + Tailwind CSS
@@ -155,25 +155,6 @@ Docker Container (HF Spaces, 포트 7860)
 - 🟡 HuggingFace Spaces 배포 (진행 중)
   - Space 생성: `korean-law-chatbot` (Docker, CPU 16GB)
   - GitHub 연결: `buelmanager/law` 리포지토리
-
-### Phase 1.5: Slack 및 원격 실행 통합 ✅ **완료**
-- [x] Slack 봇 통합 (backend/api/slack.py)
-  - `POST /api/slack/events` - 이벤트 수신 (멘션, DM)
-  - `POST /api/slack/command` - 슬래시 커맨드 (/법률상담)
-  - `GET /api/slack/health` - 연동 상태 확인
-  - slack-sdk 의존성 추가 (requirements.txt)
-- [x] Claude Code CLI 원격 실행 (backend/api/claude_cli.py)
-  - `POST /api/slack/claude` - 슬래시 커맨드 (/claude)
-  - `GET /api/claude/sessions` - 활성 세션 조회
-  - `GET /api/claude/health` - CLI 연동 상태 확인
-  - pexpect 기반 자동 승인 (y/n 프롬프트)
-  - 보안: 사용자 화이트리스트, 위험 명령 차단
-- [x] 환경 변수 확장 (.env.example)
-  - SLACK_BOT_TOKEN, SLACK_SIGNING_SECRET
-  - ALLOWED_SLACK_USERS, CLAUDE_WORK_DIR
-- [x] 문서화
-  - SLACK_SETUP_GUIDE.md (7.5KB) - Slack 앱 설정 가이드
-  - CLAUDE_CLI_SLACK_GUIDE.md (8.8KB) - CLI 원격 실행 가이드
 
 ### Phase 2: 판례 검색 추가
 - [ ] 대법원 판례 데이터 수집 및 인덱싱
@@ -221,22 +202,19 @@ Docker Container (HF Spaces, 포트 7860)
 law/
 ├── CLAUDE.md                  # 프로젝트 컨텍스트 (이 파일)
 ├── Dockerfile                 # HF Spaces Docker 빌드
-├── SLACK_SETUP_GUIDE.md       # Slack 앱 설정 가이드
-├── CLAUDE_CLI_SLACK_GUIDE.md  # Claude CLI 원격 실행 가이드
 ├── .env.example               # 환경 변수 템플릿
 ├── backend/
 │   ├── main.py                # FastAPI 진입점 (포트 7860)
 │   ├── api/
 │   │   ├── chat.py            # /api/chat 엔드포인트
-│   │   ├── search.py          # /api/search 엔드포인트
-│   │   ├── slack.py           # /api/slack/* Slack 통합
-│   │   └── claude_cli.py      # /api/claude Claude CLI 원격 실행
+│   │   └── search.py          # /api/search 엔드포인트
 │   ├── core/
 │   │   ├── llm.py             # llama-cpp-python LLM 추론
 │   │   ├── retriever.py       # RAG 검색 (ChromaDB + BM25)
 │   │   ├── embeddings.py      # 임베딩 생성
+│   │   ├── rag_service.py     # 공통 RAG 파이프라인 서비스
 │   │   └── prompts.py         # 시스템 프롬프트 및 템플릿
-│   └── requirements.txt       # Python 의존성 (slack-sdk, pexpect 포함)
+│   └── requirements.txt       # Python 의존성
 ├── frontend/
 │   ├── package.json
 │   ├── next.config.js         # 정적 빌드 설정 (output: 'export')
@@ -286,22 +264,21 @@ law/
 
 ---
 
-## 📊 현재 배포 상태 (2026년 1월 28일)
+## 📊 현재 프로젝트 상태
 
 ### ✅ 완료된 구현
 1. **백엔드 (backend/)**
    - FastAPI 서버 (main.py): RAG 파이프라인 + 정적 파일 서빙
-   - API 모듈 (4개):
+   - API 모듈:
      - chat.py: 채팅 엔드포인트 (RAG + LLM 추론)
      - search.py: 하이브리드 검색 엔드포인트 (BM25 + 벡터)
-     - slack.py: Slack 통합 (멘션, DM, 슬래시 커맨드)
-     - claude_cli.py: Claude CLI 원격 실행 (자동 승인)
    - 핵심 모듈 (core/):
      - embeddings.py: multilingual-e5-large 로더
      - llm.py: llama-cpp-python 기반 Qwen2.5-7B 추론
      - retriever.py: 하이브리드 검색 (BM25 + 벡터)
+     - rag_service.py: 공통 RAG 파이프라인 서비스
      - prompts.py: 시스템 프롬프트 + RAG 템플릿 + 면책 고지
-   - requirements.txt: 모든 의존성 명시 (slack-sdk, pexpect 포함)
+   - requirements.txt: 최적화된 의존성 (CPU-only torch)
 
 2. **프론트엔드 (frontend/)**
    - Next.js 14 App Router: 정적 빌드 (output: 'export')
@@ -331,9 +308,9 @@ law/
    - 커밋: 38 files, 2402 insertions
    - 마지막 커밋: "docs: Add detailed HF Spaces deployment guide"
 
-### 🟡 진행 중: HuggingFace Spaces 배포
-- Space 생성 완료: `korean-law-chatbot` (Docker, CPU 16GB)
-- 다음: GitHub 리포지토리 연결 → 자동 빌드 시작
+### 🟡 다음 단계: HuggingFace Spaces 배포
+- Space 생성: `korean-law-chatbot` (Docker, CPU 16GB)
+- GitHub 리포지토리 연결 후 자동 빌드 예정
 
 ### 📈 배포 예상 타임라인
 | 단계 | 시간 | 상태 |

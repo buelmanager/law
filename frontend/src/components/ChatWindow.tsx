@@ -59,7 +59,7 @@ export default function ChatWindow() {
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: data.response,
+        content: data.answer,  // 백엔드 응답 필드명과 일치
         sources: data.sources || [],
       };
 

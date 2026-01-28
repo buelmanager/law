@@ -10,8 +10,6 @@ from fastapi.middleware.cors import CORSMiddleware
 # API 라우터
 from api.chat import router as chat_router
 from api.search import router as search_router
-from api.slack import router as slack_router
-from api.claude_cli import router as claude_cli_router
 
 # 로깅 설정
 logging.basicConfig(
@@ -77,7 +75,17 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error(f"Error during startup initialization: {e}")
 
-    logger.info("✅ 모든 모듈 초기화 완료 (가능한 항목)")
+    # 초기화 상태 요약
+    init_status = {
+        "embeddings": app_state.embeddings is not None,
+        "retriever": app_state.retriever is not None,
+        "llm": app_state.llm is not None,
+    }
+    logger.info(f"✅ 모듈 초기화 상태: {init_status}")
+
+    if not init_status["embeddings"] or not init_status["retriever"]:
+        logger.warning("⚠️ 필수 모듈(embeddings, retriever) 미초기화 - RAG 기능 제한됨")
+
     yield
     logger.info("🛑 서버 종료")
 
@@ -88,29 +96,43 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS 미들웨어
+# CORS 미들웨어 (보안 강화)
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "").split(",") if os.getenv("ALLOWED_ORIGINS") else [
+    "https://wonchulhee-korean-law-chatbot.hf.space",
+    "https://huggingface.co",
+    "http://localhost:3000",  # 개발용
+    "http://localhost:7860",  # 개발용
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 # API 라우터 등록
 app.include_router(chat_router, prefix="/api", tags=["chat"])
 app.include_router(search_router, prefix="/api", tags=["search"])
-app.include_router(slack_router, prefix="/api", tags=["slack"])
-app.include_router(claude_cli_router, prefix="/api", tags=["claude"])
 
 # 헬스체크
 @app.get("/api/health")
 async def health_check():
-    """헬스 체크 엔드포인트"""
+    """헬스 체크 엔드포인트 - 모듈 상태 포함"""
+    modules_ready = {
+        "embeddings": app_state.embeddings is not None,
+        "retriever": app_state.retriever is not None,
+        "llm": app_state.llm is not None,
+    }
+
+    # 필수 모듈(embeddings, retriever) 중 하나라도 없으면 degraded 상태
+    is_fully_ready = modules_ready["embeddings"] and modules_ready["retriever"]
+
     return {
-        "status": "healthy",
+        "status": "healthy" if is_fully_ready else "degraded",
         "service": "law-chatbot-api",
         "version": "0.1.0",
+        "modules": modules_ready,
     }
 
 # Next.js 정적 파일 서빙 (빌드 결과물)
