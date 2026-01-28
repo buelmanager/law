@@ -31,12 +31,19 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 백엔드 코드 복사
 COPY backend/ ./backend/
 
-# 데이터 및 벡터DB 복사
+# 데이터 복사
 COPY data/ ./data/
-COPY vectordb/ ./vectordb/
 
 # 프론트엔드 빌드 결과물 복사
 COPY --from=frontend-builder /app/frontend/out ./frontend/out
+
+# vectordb 디렉토리 생성 및 초기화
+RUN mkdir -p ./vectordb && \
+    echo "VectorDB will be initialized on first run or can be pre-populated" > ./vectordb/README.txt
+
+# 빌드 시 vectordb 생성 (선택적 - 주석 처리됨)
+# 주석 해제하면 빌드 시 자동으로 인덱싱 (빌드 시간 +2-3분)
+# RUN python data/process/index_labor_laws.py
 
 # 포트 설정 (HuggingFace Spaces 필수)
 EXPOSE 7860
