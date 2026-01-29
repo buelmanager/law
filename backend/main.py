@@ -47,7 +47,7 @@ async def lifespan(app: FastAPI):
         from backend.core.retriever import Retriever
         from backend.core.llm import LLMManager
 
-        embeddings_model = os.getenv("EMBEDDINGS_MODEL_NAME", "intfloat/multilingual-e5-large")
+        embeddings_model = os.getenv("EMBEDDINGS_MODEL_NAME", "intfloat/multilingual-e5-small")
         chroma_path = os.getenv("CHROMADB_PATH", "./vectordb")
 
         # Embeddings

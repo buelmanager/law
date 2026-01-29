@@ -11,8 +11,6 @@ import sys
 import json
 import logging
 import argparse
-import requests
-import numpy as np
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
@@ -30,10 +28,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# HuggingFace Inference API 설정
-HF_API_URL = "https://api-inference.huggingface.co/pipeline/feature-extraction/"
-HF_TOKEN = os.getenv("HF_TOKEN", "")
-
 
 @dataclass
 class CaseChunk:
@@ -50,58 +44,28 @@ class CaseIndexer:
         self,
         chroma_path: str = None,
         collection_name: str = "law_cases",
-        embeddings_model: str = "intfloat/multilingual-e5-large"
+        embeddings_model: str = "intfloat/multilingual-e5-small"
     ):
         self.chroma_path = Path(chroma_path) if chroma_path else PROJECT_ROOT / "vectordb"
         self.chroma_path.mkdir(parents=True, exist_ok=True)
 
         self.collection_name = collection_name
         self.embeddings_model = embeddings_model
-        self.api_url = f"{HF_API_URL}{embeddings_model}"
-        self.headers = {"Authorization": f"Bearer {HF_TOKEN}"} if HF_TOKEN else {}
+        self.embeddings = None
         self.client = None
         self.collection = None
 
     def _init_embeddings(self):
-        """외부 임베딩 API 초기화"""
-        logger.info(f"🔄 외부 임베딩 API 사용: {self.embeddings_model}")
-        if not HF_TOKEN:
-            logger.warning("⚠️ HF_TOKEN이 설정되지 않았습니다. API 호출이 제한될 수 있습니다.")
-        logger.info("✅ 임베딩 API 준비 완료")
-
-    def _encode_text(self, text: str) -> List[float]:
-        """단일 텍스트 임베딩 생성 (외부 API)"""
-        try:
-            response = requests.post(
-                self.api_url,
-                headers=self.headers,
-                json={"inputs": text, "options": {"wait_for_model": True}},
-                timeout=60
-            )
-            response.raise_for_status()
-            embedding = response.json()
-
-            # API 응답이 중첩 리스트일 수 있음
-            if isinstance(embedding, list) and len(embedding) > 0:
-                if isinstance(embedding[0], list):
-                    # [[[...]]] → 평균 풀링
-                    embedding = np.mean(embedding[0], axis=0).tolist()
-                else:
-                    embedding = embedding
-
-            return embedding
-        except Exception as e:
-            logger.error(f"Embedding API error: {e}")
-            # 폴백: 빈 벡터 반환 (1024 dims for e5-large)
-            return [0.0] * 1024
-
-    def _encode_batch(self, texts: List[str]) -> List[List[float]]:
-        """배치 임베딩 생성 (외부 API)"""
-        embeddings = []
-        for text in texts:
-            embedding = self._encode_text(text)
-            embeddings.append(embedding)
-        return embeddings
+        """임베딩 모델 초기화"""
+        if self.embeddings is None:
+            try:
+                from sentence_transformers import SentenceTransformer
+                logger.info(f"🔄 임베딩 모델 로딩: {self.embeddings_model}")
+                self.embeddings = SentenceTransformer(self.embeddings_model)
+                logger.info("✅ 임베딩 모델 로드 완료")
+            except ImportError:
+                logger.error("sentence-transformers가 설치되지 않았습니다.")
+                raise
 
     def _init_chroma(self):
         """ChromaDB 초기화"""
@@ -324,8 +288,8 @@ class CaseIndexer:
                 ids = [c.id for c in batch]
                 metadatas = [c.metadata for c in batch]
 
-                # 임베딩 생성 (외부 API)
-                embeddings = self._encode_batch(texts)
+                # 임베딩 생성
+                embeddings = self.embeddings.encode(texts, show_progress_bar=False).tolist()
 
                 # ChromaDB에 추가
                 self.collection.add(
