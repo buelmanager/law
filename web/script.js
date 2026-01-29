@@ -803,7 +803,65 @@ const LAW_URLS = {
     "도로교통법": "https://www.law.go.kr/법령/도로교통법",
 };
 
-// 법령명에서 URL 가져오기
+// 출처 유형 판별 및 URL 생성
+function getSourceUrl(source) {
+    const trimmed = source.trim();
+
+    // 판례 (예: "판례 2018다244877", "판례 2024노652")
+    if (trimmed.startsWith('판례 ')) {
+        const caseNumber = trimmed.replace('판례 ', '').trim();
+        // 대법원 종합법률정보 판례 검색
+        return {
+            type: 'precedent',
+            url: `https://glaw.scourt.go.kr/wsjo/panre/sjo100.do?q=${encodeURIComponent(caseNumber)}`,
+            label: trimmed
+        };
+    }
+
+    // 법령해석례 (예: "법령해석례 21-0702", "법령해석례 07-0115")
+    if (trimmed.startsWith('법령해석례 ')) {
+        const expcNumber = trimmed.replace('법령해석례 ', '').trim();
+        // 법제처 법령해석례 검색
+        return {
+            type: 'interpretation',
+            url: `https://www.law.go.kr/LSW/precInfoP.do?q=${encodeURIComponent(expcNumber)}`,
+            label: trimmed
+        };
+    }
+
+    // 법령명인 경우
+    if (LAW_URLS[trimmed]) {
+        return {
+            type: 'law',
+            url: LAW_URLS[trimmed],
+            label: trimmed
+        };
+    }
+
+    // 부분 일치 검색
+    for (const [key, url] of Object.entries(LAW_URLS)) {
+        if (trimmed.includes(key) || key.includes(trimmed)) {
+            return {
+                type: 'law',
+                url: url,
+                label: key
+            };
+        }
+    }
+
+    // 기타 법령 (기본 검색)
+    if (trimmed.includes('법') || trimmed.includes('령')) {
+        return {
+            type: 'law',
+            url: `https://www.law.go.kr/법령/${encodeURIComponent(trimmed)}`,
+            label: trimmed
+        };
+    }
+
+    return null;
+}
+
+// 법령명에서 URL 가져오기 (기존 함수 유지 - 호환성)
 function getLawUrl(lawName) {
     // 정확히 일치하는 경우
     if (LAW_URLS[lawName]) {
@@ -888,32 +946,62 @@ function formatApiResponse(data) {
     if (data.sources && data.sources.length > 0) {
         html += '<div class="source-section" style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">';
         html += '<p style="font-size: 0.85em; color: var(--color-primary-light); margin-bottom: 8px;"><strong>📚 참고 자료:</strong></p>';
+
+        // 출처별 리스트 (클릭 가능한 링크로)
         html += '<ul style="font-size: 0.8em; color: rgba(255,255,255,0.6); padding-left: 16px; margin-bottom: 12px;">';
         data.sources.forEach(source => {
-            html += `<li style="margin-bottom: 4px;">${source}</li>`;
+            const sourceInfo = getSourceUrl(source);
+            if (sourceInfo && sourceInfo.url) {
+                html += `<li style="margin-bottom: 4px;">
+                    <a href="${sourceInfo.url}" target="_blank" rel="noopener noreferrer"
+                       style="color: rgba(255,255,255,0.7); text-decoration: underline; text-decoration-style: dotted;">
+                        ${source}
+                    </a>
+                </li>`;
+            } else {
+                html += `<li style="margin-bottom: 4px;">${source}</li>`;
+            }
         });
         html += '</ul>';
 
-        // 법제처 링크 버튼 추가
-        const lawNames = extractLawNames(data.sources);
-        if (lawNames.length > 0) {
-            html += '<div class="law-links" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">';
-            lawNames.forEach(lawName => {
-                const url = getLawUrl(lawName);
-                html += `<a href="${url}" target="_blank" rel="noopener noreferrer" class="law-link-btn" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; font-size: 0.75em; color: var(--color-primary-light); background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 6px; text-decoration: none; transition: all 0.2s;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                    ${lawName} 원문
+        // 출처별 원문 버튼
+        html += '<div class="source-links" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">';
+
+        data.sources.forEach(source => {
+            const sourceInfo = getSourceUrl(source);
+            if (sourceInfo) {
+                // 유형별 색상 설정
+                let btnColor, btnBg, btnBorder, icon;
+                if (sourceInfo.type === 'precedent') {
+                    btnColor = '#f59e0b'; // 골드 - 판례
+                    btnBg = 'rgba(245, 158, 11, 0.1)';
+                    btnBorder = 'rgba(245, 158, 11, 0.3)';
+                    icon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'; // 판례 아이콘
+                } else if (sourceInfo.type === 'interpretation') {
+                    btnColor = '#10b981'; // 에메랄드 - 해석례
+                    btnBg = 'rgba(16, 185, 129, 0.1)';
+                    btnBorder = 'rgba(16, 185, 129, 0.3)';
+                    icon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>'; // 문서 아이콘
+                } else {
+                    btnColor = 'var(--color-primary-light)'; // 블루 - 법령
+                    btnBg = 'rgba(59, 130, 246, 0.1)';
+                    btnBorder = 'rgba(59, 130, 246, 0.3)';
+                    icon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+                }
+
+                html += `<a href="${sourceInfo.url}" target="_blank" rel="noopener noreferrer"
+                    class="source-link-btn"
+                    style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px;
+                           font-size: 0.75em; color: ${btnColor}; background: ${btnBg};
+                           border: 1px solid ${btnBorder}; border-radius: 6px;
+                           text-decoration: none; transition: all 0.2s;">
+                    ${icon}
+                    ${sourceInfo.label} 원문
                 </a>`;
-            });
-            html += '</div>';
-        }
+            }
+        });
 
-        // JSON 다운로드 버튼 추가
-        html += `<button onclick="downloadLawData()" class="download-btn" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 8px 16px; font-size: 0.75em; color: var(--color-emerald); background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 6px; cursor: pointer; transition: all 0.2s;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            인덱싱 데이터 다운로드 (JSON)
-        </button>`;
-
+        html += '</div>';
         html += '</div>';
     }
 
