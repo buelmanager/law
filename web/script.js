@@ -821,10 +821,10 @@ function getSourceUrl(source) {
     // 법령해석례 (예: "법령해석례 21-0702", "법령해석례 07-0115")
     if (trimmed.startsWith('법령해석례 ')) {
         const expcNumber = trimmed.replace('법령해석례 ', '').trim();
-        // 법제처 - 법령해석례 검색
+        // 법제처 - 법령해석례 통합검색
         return {
             type: 'interpretation',
-            url: `https://www.law.go.kr/LSW/nwRvsLsInfoR.do?lsNm=${encodeURIComponent(expcNumber)}`,
+            url: `https://www.law.go.kr/법령해석례/${encodeURIComponent(expcNumber)}`,
             label: trimmed
         };
     }
