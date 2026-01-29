@@ -1,7 +1,11 @@
 /* ===========================
-   법률AI - Main Script
-   GSAP + Lenis + Canvas Particles
+   LawBot - Main Script
+   4대 법률 분야 특화 AI 법률 정보 서비스
+   GSAP + Lenis + Canvas Particles + Lucide Icons
    =========================== */
+
+// Initialize Lucide Icons
+lucide.createIcons();
 
 // Initialize Lenis Smooth Scroll
 const lenis = new Lenis({
@@ -39,8 +43,8 @@ class ParticleNetwork {
         this.particleCount = 60;
         this.connectionDistance = 120;
         this.colors = {
-            particle: '#c9a227',
-            connection: 'rgba(201, 162, 39, 0.1)',
+            particle: '#3b82f6',
+            connection: 'rgba(59, 130, 246, 0.08)',
         };
 
         this.init();
@@ -100,7 +104,7 @@ class ParticleNetwork {
                 if (distance < this.connectionDistance) {
                     const opacity = 1 - distance / this.connectionDistance;
                     this.ctx.beginPath();
-                    this.ctx.strokeStyle = `rgba(201, 162, 39, ${opacity * 0.15})`;
+                    this.ctx.strokeStyle = `rgba(59, 130, 246, ${opacity * 0.15})`;
                     this.ctx.lineWidth = 0.5;
                     this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
                     this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
@@ -197,6 +201,15 @@ heroTimeline
         delay: 0.3,
     })
     .to(
+        '.hero-areas',
+        {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+        },
+        '-=0.5'
+    )
+    .to(
         '.title-line',
         {
             opacity: 1,
@@ -267,6 +280,26 @@ blurElements.forEach((el) => {
 });
 
 /* ===========================
+   Trust Cards Animation
+   =========================== */
+const trustCards = document.querySelectorAll('.trust-card');
+
+trustCards.forEach((card, index) => {
+    gsap.to(card, {
+        scrollTrigger: {
+            trigger: card,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+        },
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        delay: index * 0.1,
+        ease: 'power3.out',
+    });
+});
+
+/* ===========================
    Feature Cards Animation
    =========================== */
 const featureCards = document.querySelectorAll('.feature-card');
@@ -287,14 +320,15 @@ featureCards.forEach((card, index) => {
 });
 
 /* ===========================
-   Step Cards Animation
+   RAG Steps Animation
    =========================== */
-const stepCards = document.querySelectorAll('.step-card');
+const ragSteps = document.querySelectorAll('.rag-step');
+const ragArrows = document.querySelectorAll('.rag-arrow');
 
-stepCards.forEach((card, index) => {
-    gsap.to(card, {
+ragSteps.forEach((step, index) => {
+    gsap.to(step, {
         scrollTrigger: {
-            trigger: card,
+            trigger: step,
             start: 'top 85%',
             toggleActions: 'play none none none',
         },
@@ -306,22 +340,36 @@ stepCards.forEach((card, index) => {
     });
 });
 
-/* ===========================
-   Category Cards Animation
-   =========================== */
-const categoryCards = document.querySelectorAll('.category-card');
+ragArrows.forEach((arrow, index) => {
+    gsap.to(arrow, {
+        scrollTrigger: {
+            trigger: arrow,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+        },
+        opacity: 0.5,
+        duration: 0.8,
+        delay: index * 0.15 + 0.2,
+        ease: 'power3.out',
+    });
+});
 
-categoryCards.forEach((card, index) => {
+/* ===========================
+   Category Area Cards Animation
+   =========================== */
+const categoryAreas = document.querySelectorAll('.category-area');
+
+categoryAreas.forEach((card, index) => {
     gsap.to(card, {
         scrollTrigger: {
             trigger: card,
             start: 'top 85%',
             toggleActions: 'play none none none',
         },
-        opacity: card.classList.contains('category-coming') ? 0.6 : 1,
+        opacity: 1,
         y: 0,
         duration: 0.8,
-        delay: index * 0.1,
+        delay: index * 0.15,
         ease: 'power3.out',
     });
 });
@@ -393,6 +441,12 @@ exampleBtns.forEach((btn) => {
 function sendMessage() {
     const message = chatInput.value.trim();
     if (!message) return;
+
+    // Expand chat to full width when conversation starts
+    const heroSection = document.querySelector('.hero.hero-with-chat');
+    if (heroSection && !heroSection.classList.contains('chat-fullwidth')) {
+        heroSection.classList.add('chat-fullwidth');
+    }
 
     // Expand chat container when conversation starts
     const chatContainer = document.querySelector('.hero-chat .chat-container');
@@ -481,7 +535,7 @@ typingStyles.textContent = `
     .typing-dot {
         width: 8px;
         height: 8px;
-        background: var(--color-gold);
+        background: var(--color-primary);
         border-radius: 50%;
         opacity: 0.3;
     }
@@ -501,7 +555,7 @@ function getDemoResponse(question) {
         return `
             <p><strong>퇴직금 계산 방법</strong></p>
             <p>퇴직금은 다음 공식으로 계산됩니다:</p>
-            <p style="background: rgba(201,162,39,0.1); padding: 12px; border-radius: 8px; margin: 12px 0;">
+            <p style="background: rgba(59,130,246,0.1); padding: 12px; border-radius: 8px; margin: 12px 0;">
                 <strong>퇴직금 = 1일 평균임금 × 30일 × (재직일수 ÷ 365)</strong>
             </p>
             <p><strong>관련 법령:</strong> 근로자퇴직급여 보장법 제8조</p>
@@ -527,16 +581,32 @@ function getDemoResponse(question) {
         `;
     }
 
-    if (q.includes('연차') && q.includes('휴가')) {
+    if (q.includes('보증금') || q.includes('전세')) {
         return `
-            <p><strong>연차휴가 일수</strong></p>
-            <p>연차휴가는 근속기간에 따라 다음과 같이 부여됩니다:</p>
+            <p><strong>전세보증금 반환 방법</strong></p>
+            <p>전세보증금을 돌려받지 못할 경우 다음 절차를 진행할 수 있습니다:</p>
+            <ol style="margin: 12px 0; padding-left: 20px;">
+                <li style="margin-bottom: 8px;"><strong>내용증명 발송:</strong> 임대인에게 보증금 반환을 요청하는 내용증명을 보내세요.</li>
+                <li style="margin-bottom: 8px;"><strong>임차권등기명령:</strong> 법원에 임차권등기명령을 신청하여 대항력을 유지하세요.</li>
+                <li style="margin-bottom: 8px;"><strong>지급명령 신청:</strong> 법원에 지급명령을 신청하거나 민사소송을 제기할 수 있습니다.</li>
+            </ol>
+            <p><strong>관련 법령:</strong> 주택임대차보호법 제3조, 제3조의3</p>
+            <p style="font-size: 0.85em; color: rgba(255,255,255,0.5); margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
+                ⚠️ 위 정보는 일반적인 법률 정보이며, 구체적인 사안은 변호사와 상담하시기 바랍니다.
+            </p>
+        `;
+    }
+
+    if (q.includes('환불') || q.includes('청약철회')) {
+        return `
+            <p><strong>온라인 쇼핑 환불 규정</strong></p>
+            <p>전자상거래법에 따른 청약철회 규정입니다:</p>
             <ul style="margin: 12px 0; padding-left: 20px;">
-                <li style="margin-bottom: 8px;"><strong>1년 미만 근무:</strong> 1개월 개근 시 1일씩 (최대 11일)</li>
-                <li style="margin-bottom: 8px;"><strong>1년 이상 근무:</strong> 15일</li>
-                <li style="margin-bottom: 8px;"><strong>3년 이상 근무:</strong> 2년마다 1일씩 추가 (최대 25일)</li>
+                <li style="margin-bottom: 8px;"><strong>청약철회 기간:</strong> 상품을 받은 날로부터 7일 이내</li>
+                <li style="margin-bottom: 8px;"><strong>환불 기한:</strong> 청약철회 후 3영업일 이내 환불</li>
+                <li style="margin-bottom: 8px;"><strong>배송비:</strong> 단순 변심은 소비자 부담, 하자는 판매자 부담</li>
             </ul>
-            <p><strong>관련 법령:</strong> 근로기준법 제60조</p>
+            <p><strong>관련 법령:</strong> 전자상거래법 제17조</p>
             <p style="font-size: 0.85em; color: rgba(255,255,255,0.5); margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
                 ⚠️ 위 정보는 일반적인 법률 정보이며, 구체적인 사안은 변호사와 상담하시기 바랍니다.
             </p>
@@ -551,7 +621,8 @@ function getDemoResponse(question) {
         <ul style="margin: 12px 0; padding-left: 20px;">
             <li>퇴직금은 어떻게 계산하나요?</li>
             <li>부당해고를 당했을 때 어떻게 해야 하나요?</li>
-            <li>연차휴가는 며칠이 주어지나요?</li>
+            <li>전세보증금을 돌려받지 못하면 어떻게 해야 하나요?</li>
+            <li>온라인 쇼핑 환불 규정이 어떻게 되나요?</li>
         </ul>
         <p style="font-size: 0.85em; color: rgba(255,255,255,0.5); margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
             ⚠️ 위 정보는 일반적인 법률 정보이며, 구체적인 사안은 변호사와 상담하시기 바랍니다.
@@ -577,18 +648,21 @@ if (mobileToggle) {
 window.addEventListener('load', () => {
     document.body.classList.add('loaded');
     ScrollTrigger.refresh();
+
+    // Re-initialize Lucide icons after page load
+    lucide.createIcons();
 });
 
 /* ===========================
    Console Message
    =========================== */
 console.log(
-    '%c⚖️ 법률AI',
-    'font-size: 24px; font-weight: bold; color: #c9a227;'
+    '%c⚖️ LawBot',
+    'font-size: 24px; font-weight: bold; color: #3b82f6;'
 );
 console.log(
-    '%cAI가 제공하는 무료 법률 정보 서비스',
-    'font-size: 14px; color: #d4af37;'
+    '%c4대 법률 분야 특화 AI 법률 정보 서비스',
+    'font-size: 14px; color: #60a5fa;'
 );
 console.log(
     '%c본 서비스는 법률 정보 제공 목적이며, 법률 자문이 아닙니다.',

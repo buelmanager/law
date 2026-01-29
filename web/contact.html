@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>무료 상담 신청 | LawBot</title>
+    <meta name="description" content="LawBot 무료 법률 상담 신청. 노동법, 임대차법, 소비자보호법, 교통사고 4대 분야 전문 상담.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Contact Page Specific Styles */
+        .contact-page {
+            min-height: 100vh;
+            padding: calc(var(--space-3xl) + 80px) var(--container-padding) var(--space-3xl);
+        }
+
+        .contact-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: var(--space-xl);
+        }
+
+        /* Contact Info */
+        .contact-info {
+            padding: var(--space-xl);
+            min-width: 0;
+        }
+
+        .contact-info-header {
+            margin-bottom: var(--space-xl);
+        }
+
+        .contact-info-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+            color: var(--color-text-primary);
+        }
+
+        .contact-info-header p {
+            font-size: 0.9375rem;
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+        }
+
+        .contact-features {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        .contact-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            background: rgba(59, 130, 246, 0.05);
+            border-radius: 12px;
+        }
+
+        .contact-feature-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(59, 130, 246, 0.15);
+            border-radius: 10px;
+            color: var(--color-primary);
+            flex-shrink: 0;
+        }
+
+        .contact-feature-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .contact-feature-text h3 {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--color-text-primary);
+            margin-bottom: 4px;
+        }
+
+        .contact-feature-text p {
+            font-size: 0.8125rem;
+            color: var(--color-text-muted);
+        }
+
+        /* Areas Tags */
+        .contact-areas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-xs);
+        }
+
+        .contact-area-tag {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: 0.375rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .contact-area-tag svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .contact-area-tag.labor {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .contact-area-tag.housing {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .contact-area-tag.consumer {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .contact-area-tag.traffic {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        /* Contact Form */
+        .contact-form-card {
+            padding: var(--space-xl);
+        }
+
+        .contact-form-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xl);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .contact-form-header svg {
+            width: 24px;
+            height: 24px;
+            color: var(--color-primary);
+        }
+
+        .contact-form-header h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--color-text-primary);
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-md);
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+        }
+
+        .form-label .required {
+            color: #f87171;
+            margin-left: 2px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            font-family: var(--font-primary);
+            font-size: 0.9375rem;
+            color: var(--color-text-primary);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            transition: all var(--transition-fast);
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: var(--color-text-muted);
+        }
+
+        .form-select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9L12 15L18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 2.5rem;
+        }
+
+        .form-select option {
+            background: var(--color-bg-secondary);
+            color: var(--color-text-primary);
+        }
+
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-sm);
+        }
+
+        .form-checkbox {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            accent-color: var(--color-primary);
+            cursor: pointer;
+        }
+
+        .form-checkbox-label {
+            font-size: 0.8125rem;
+            color: var(--color-text-tertiary);
+            line-height: 1.5;
+        }
+
+        .form-checkbox-label a {
+            color: var(--color-primary-light);
+            text-decoration: none;
+        }
+
+        .form-checkbox-label a:hover {
+            text-decoration: underline;
+        }
+
+        .form-submit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            border: none;
+            border-radius: 12px;
+            font-family: var(--font-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .form-submit svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .form-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .form-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Form Notice */
+        .form-notice {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-sm);
+            padding: var(--space-md);
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 10px;
+            margin-top: var(--space-md);
+        }
+
+        .form-notice-icon {
+            color: var(--color-primary);
+            flex-shrink: 0;
+        }
+
+        .form-notice-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .form-notice p {
+            font-size: 0.75rem;
+            color: var(--color-text-tertiary);
+            line-height: 1.5;
+        }
+
+        .form-notice strong {
+            color: var(--color-primary-light);
+        }
+
+        /* Success Message */
+        .form-success {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: var(--space-3xl);
+            gap: var(--space-lg);
+        }
+
+        .form-success.show {
+            display: flex;
+        }
+
+        .form-success-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(16, 185, 129, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4ade80;
+        }
+
+        .form-success-icon svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .form-success h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-text-primary);
+        }
+
+        .form-success p {
+            font-size: 0.9375rem;
+            color: var(--color-text-secondary);
+        }
+
+        .form-success-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: 0.75rem 1.5rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 100px;
+            color: var(--color-primary-light);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all var(--transition-fast);
+        }
+
+        .form-success-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .form-success-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        /* Responsive - Tablet */
+        @media (max-width: 900px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+                max-width: 600px;
+            }
+
+            .contact-info {
+                padding: var(--space-lg);
+            }
+
+            .contact-info-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .contact-features {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: var(--space-sm);
+            }
+
+            .contact-feature {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: var(--space-md) var(--space-sm);
+            }
+
+            .contact-feature-text h3 {
+                font-size: 0.8125rem;
+            }
+
+            .contact-feature-text p {
+                font-size: 0.75rem;
+            }
+
+            .contact-areas {
+                justify-content: center;
+            }
+
+            .contact-form-card {
+                padding: var(--space-lg);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Responsive - Mobile */
+        @media (max-width: 600px) {
+            .contact-page {
+                padding: calc(var(--space-2xl) + 60px) var(--space-md) var(--space-xl);
+            }
+
+            .contact-container {
+                gap: var(--space-lg);
+            }
+
+            .contact-info {
+                padding: var(--space-md);
+            }
+
+            .contact-info-header h1 {
+                font-size: 1.375rem;
+            }
+
+            .contact-info-header p {
+                font-size: 0.875rem;
+            }
+
+            .contact-features {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-feature {
+                flex-direction: row;
+                align-items: flex-start;
+                text-align: left;
+            }
+
+            .contact-areas {
+                justify-content: flex-start;
+            }
+
+            .contact-form-card {
+                padding: var(--space-md);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-submit {
+                padding: 0.875rem;
+                font-size: 0.9375rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Canvas Background -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="nav scrolled">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <i data-lucide="scale" class="icon"></i>
+                <span>LawBot</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="index.html#categories" class="nav-link">상담 분야</a>
+                <a href="index.html#how-it-works" class="nav-link">이용 방법</a>
+                <a href="index.html#faq" class="nav-link">FAQ</a>
+                <a href="contact.html" class="nav-link active">상담 신청</a>
+            </div>
+
+            <a href="index.html#chat" class="nav-cta">
+                <i data-lucide="message-circle" class="icon-sm"></i>
+                <span>AI 상담</span>
+            </a>
+
+            <button class="nav-mobile-toggle" aria-label="메뉴 열기">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Contact Section -->
+    <section class="contact-page">
+        <div class="contact-container">
+            <!-- Contact Info -->
+            <div class="contact-info glass-card">
+                <div class="contact-info-header">
+                    <h1>무료 상담 신청</h1>
+                    <p>AI 챗봇으로 해결되지 않는 복잡한 법률 문제가 있으신가요? 상담 신청을 남겨주시면 검토 후 연락드리겠습니다.</p>
+                </div>
+
+                <div class="contact-features">
+                    <div class="contact-feature">
+                        <div class="contact-feature-icon">
+                            <i data-lucide="clock"></i>
+                        </div>
+                        <div class="contact-feature-text">
+                            <h3>24시간 접수</h3>
+                            <p>언제든지 상담 신청 가능</p>
+                        </div>
+                    </div>
+                    <div class="contact-feature">
+                        <div class="contact-feature-icon">
+                            <i data-lucide="shield-check"></i>
+                        </div>
+                        <div class="contact-feature-text">
+                            <h3>개인정보 보호</h3>
+                            <p>상담 목적 외 사용 금지</p>
+                        </div>
+                    </div>
+                    <div class="contact-feature">
+                        <div class="contact-feature-icon">
+                            <i data-lucide="message-circle"></i>
+                        </div>
+                        <div class="contact-feature-text">
+                            <h3>빠른 답변</h3>
+                            <p>영업일 기준 24시간 내 회신</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-areas">
+                    <span class="contact-area-tag labor">
+                        <i data-lucide="briefcase"></i>
+                        노동법
+                    </span>
+                    <span class="contact-area-tag housing">
+                        <i data-lucide="home"></i>
+                        임대차법
+                    </span>
+                    <span class="contact-area-tag consumer">
+                        <i data-lucide="shopping-cart"></i>
+                        소비자보호법
+                    </span>
+                    <span class="contact-area-tag traffic">
+                        <i data-lucide="car"></i>
+                        교통사고
+                    </span>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="contact-form-card glass-card">
+                <div class="contact-form-header">
+                    <i data-lucide="mail"></i>
+                    <h2>상담 신청서</h2>
+                </div>
+
+                <!-- Form - Web3Forms Integration -->
+                <form id="contact-form" class="contact-form" action="https://api.web3forms.com/submit" method="POST">
+                    <!-- Web3Forms Access Key -->
+                    <input type="hidden" name="access_key" value="7ee3e7e5-8b79-4ef4-9153-9d52d95b0e40">
+                    <!-- Form Subject -->
+                    <input type="hidden" name="subject" value="LawBot 무료 상담 신청">
+                    <!-- Redirect after submission -->
+                    <input type="hidden" name="redirect" value="https://law-ai-chat.vercel.app/contact.html?success=true">
+                    <!-- Honeypot for spam protection -->
+                    <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">
+                                이름 <span class="required">*</span>
+                            </label>
+                            <input type="text" name="name" class="form-input" placeholder="홍길동" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                연락처 <span class="required">*</span>
+                            </label>
+                            <input type="tel" name="phone" class="form-input" placeholder="010-1234-5678" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            이메일 <span class="required">*</span>
+                        </label>
+                        <input type="email" name="email" class="form-input" placeholder="example@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            상담 분야 <span class="required">*</span>
+                        </label>
+                        <select name="category" class="form-select" required>
+                            <option value="" disabled selected>상담 분야를 선택하세요</option>
+                            <option value="labor">노동법 (해고, 임금, 퇴직금 등)</option>
+                            <option value="housing">임대차법 (보증금, 계약갱신 등)</option>
+                            <option value="consumer">소비자보호법 (환불, 하자 등)</option>
+                            <option value="traffic">교통사고·손해배상</option>
+                            <option value="other">기타</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            상담 내용 <span class="required">*</span>
+                        </label>
+                        <textarea name="message" class="form-textarea" placeholder="상담받고 싶은 내용을 자세히 적어주세요. 구체적인 상황 설명이 있을수록 정확한 답변이 가능합니다." required></textarea>
+                    </div>
+
+                    <div class="form-checkbox-group">
+                        <input type="checkbox" id="privacy-agree" name="privacy" class="form-checkbox" required>
+                        <label for="privacy-agree" class="form-checkbox-label">
+                            <a href="#" onclick="alert('개인정보 수집 및 이용 동의\\n\\n1. 수집항목: 이름, 연락처, 이메일, 상담내용\\n2. 수집목적: 법률 상담 서비스 제공\\n3. 보유기간: 상담 완료 후 즉시 파기\\n4. 동의 거부 시 상담 서비스 이용이 제한됩니다.'); return false;">개인정보 수집 및 이용</a>에 동의합니다. 수집된 정보는 상담 목적으로만 사용되며, 상담 완료 후 파기됩니다. <span class="required">*</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="form-submit">
+                        <i data-lucide="send"></i>
+                        <span>상담 신청하기</span>
+                    </button>
+
+                    <div class="form-notice">
+                        <div class="form-notice-icon">
+                            <i data-lucide="info"></i>
+                        </div>
+                        <p>
+                            <strong>안내:</strong> 본 서비스는 일반적인 법률 정보 제공을 위한 것이며, 정식 법률 자문이 아닙니다.
+                            구체적인 법률 문제는 변호사와 상담하시기 바랍니다.
+                        </p>
+                    </div>
+                </form>
+
+                <!-- Success Message (shown after form submission) -->
+                <div id="form-success" class="form-success">
+                    <div class="form-success-icon">
+                        <i data-lucide="check"></i>
+                    </div>
+                    <h3>상담 신청이 완료되었습니다</h3>
+                    <p>입력하신 이메일로 확인 메일이 발송됩니다.<br>영업일 기준 24시간 내에 답변드리겠습니다.</p>
+                    <a href="index.html" class="form-success-btn">
+                        <i data-lucide="home"></i>
+                        <span>홈으로 돌아가기</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p class="copyright">&copy; 2024 LawBot. 오픈소스 프로젝트.</p>
+                <div class="footer-disclaimer">
+                    <p>본 서비스는 AI가 제공하는 일반적인 법률 정보이며, 법률 자문이 아닙니다.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Particle Canvas (Blue theme)
+        const canvas = document.getElementById('particle-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const particleCount = 30;
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.3,
+                    vy: (Math.random() - 0.5) * 0.3,
+                    radius: Math.random() * 2 + 1
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = '#3b82f6';
+                    ctx.globalAlpha = 0.3;
+                    ctx.fill();
+                });
+
+                ctx.globalAlpha = 1;
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+
+        // Form Animation
+        gsap.from('.contact-info', {
+            opacity: 0,
+            x: -30,
+            duration: 0.8,
+            delay: 0.2
+        });
+
+        gsap.from('.contact-form-card', {
+            opacity: 0,
+            x: 30,
+            duration: 0.8,
+            delay: 0.3
+        });
+
+        // Check for success parameter in URL (redirect from Web3Forms)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === 'true') {
+            const contactForm = document.getElementById('contact-form');
+            const formSuccess = document.getElementById('form-success');
+            if (contactForm && formSuccess) {
+                contactForm.style.display = 'none';
+                formSuccess.classList.add('show');
+                lucide.createIcons();
+            }
+        }
+
+        // Form Submission Handler - Web3Forms Integration
+        const contactForm = document.getElementById('contact-form');
+        const formSuccess = document.getElementById('form-success');
+
+        if (contactForm) {
+            contactForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                // Show loading state
+                const submitBtn = contactForm.querySelector('.form-submit');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/></svg> <span>전송 중...</span>';
+                submitBtn.disabled = true;
+
+                try {
+                    // Submit to Web3Forms API
+                    const formData = new FormData(contactForm);
+                    const response = await fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        // Hide form, show success message
+                        contactForm.style.display = 'none';
+                        formSuccess.classList.add('show');
+                        lucide.createIcons();
+                    } else {
+                        throw new Error(result.message || '전송에 실패했습니다.');
+                    }
+                } catch (error) {
+                    console.error('Form submission error:', error);
+                    alert('상담 신청 중 오류가 발생했습니다. 다시 시도해주세요.');
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    lucide.createIcons();
+                }
+            });
+        }
+
+        // Phone number auto-formatting
+        const phoneInput = document.querySelector('input[name="phone"]');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 3 && value.length <= 7) {
+                    value = value.slice(0, 3) + '-' + value.slice(3);
+                } else if (value.length > 7) {
+                    value = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7, 11);
+                }
+                e.target.value = value;
+            });
+        }
+
+        // Add spin animation for loader
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+            .spinner {
+                animation: spin 1s linear infinite;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

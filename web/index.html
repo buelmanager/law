@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>법률 AI | 무료 AI 법률 상담 서비스</title>
-    <meta name="description" content="AI가 제공하는 무료 법률 정보 서비스. 노동법, 근로기준법 관련 질문에 법령과 판례를 기반으로 답변합니다.">
+    <title>LawBot | 4대 법률 분야 특화 AI 법률 정보 서비스</title>
+    <meta name="description" content="노동법, 임대차법, 소비자보호법, 교통사고 4대 분야에 특화된 AI 법률 정보 서비스. 법제처 API와 대법원 판례 기반 근거 있는 답변.">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
@@ -22,21 +25,10 @@
     <nav class="nav">
         <div class="nav-container">
             <a href="#" class="nav-logo">
-                <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Scale of Justice Icon -->
-                    <rect x="18" y="6" width="4" height="28" rx="1" fill="currentColor" opacity="0.9"/>
-                    <rect x="8" y="8" width="24" height="3" rx="1.5" fill="currentColor"/>
-                    <circle cx="20" cy="6" r="3" fill="currentColor"/>
-                    <!-- Left plate -->
-                    <path d="M8 11L5 22H11L8 11Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                    <ellipse cx="8" cy="22" rx="4" ry="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                    <!-- Right plate -->
-                    <path d="M32 11L29 22H35L32 11Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                    <ellipse cx="32" cy="22" rx="4" ry="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                    <!-- Base -->
-                    <rect x="12" y="32" width="16" height="3" rx="1" fill="currentColor" opacity="0.7"/>
-                </svg>
-                <span class="logo-text">법률<span class="logo-highlight">AI</span></span>
+                <div class="logo-icon">
+                    <i data-lucide="scale" class="icon-md"></i>
+                </div>
+                <span class="logo-text">Law<span class="logo-highlight">Bot</span></span>
             </a>
 
             <div class="nav-links">
@@ -46,11 +38,9 @@
                 <a href="#faq" class="nav-link">자주 묻는 질문</a>
             </div>
 
-            <a href="#hero" class="nav-cta">
-                <span>무료 상담 시작</span>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+            <a href="contact.html" class="nav-cta">
+                <span>무료 상담</span>
+                <i data-lucide="arrow-right" class="icon-sm"></i>
             </a>
 
             <button class="nav-mobile-toggle" aria-label="메뉴 열기">
@@ -65,52 +55,46 @@
         <div class="hero-content">
             <div class="hero-badge">
                 <span class="badge-dot"></span>
-                <span class="badge-text">무료 AI 법률 정보 서비스</span>
+                <span class="badge-text">4대 법률 분야 특화 AI 서비스</span>
+            </div>
+
+            <!-- 4대 특화 분야 배지 -->
+            <div class="hero-areas">
+                <span class="area-badge labor"><i data-lucide="briefcase" class="icon-xs"></i> 노동법</span>
+                <span class="area-badge housing"><i data-lucide="home" class="icon-xs"></i> 임대차법</span>
+                <span class="area-badge consumer"><i data-lucide="shopping-cart" class="icon-xs"></i> 소비자보호법</span>
+                <span class="area-badge traffic"><i data-lucide="car" class="icon-xs"></i> 교통사고</span>
             </div>
 
             <h1 class="hero-title">
-                <span class="title-line">복잡한 법률 문제,</span>
-                <span class="title-line title-highlight">AI가 쉽게 풀어드립니다</span>
+                <span class="title-line">4대 법률 분야 특화</span>
+                <span class="title-line title-highlight">근거 있는 AI 법률 정보</span>
             </h1>
 
             <p class="hero-description">
-                근로기준법, 퇴직금, 부당해고 등 노동법 관련 궁금증을<br>
-                AI가 법령과 판례를 기반으로 명확하게 안내해 드립니다
+                법제처 국가법령정보 API와 대법원 판례를 기반으로<br>
+                조문 번호와 판례를 명시한 신뢰할 수 있는 답변을 제공합니다
             </p>
 
             <!-- Trust Indicators -->
             <div class="hero-trust">
                 <div class="trust-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    </svg>
+                    <i data-lucide="shield-check" class="icon-sm"></i>
                     <span>개인정보 수집 없음</span>
                 </div>
                 <div class="trust-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M12 6v6l4 2"/>
-                    </svg>
+                    <i data-lucide="clock" class="icon-sm"></i>
                     <span>24시간 무료 이용</span>
                 </div>
                 <div class="trust-item">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                        <polyline points="14 2 14 8 20 8"/>
-                        <line x1="16" y1="13" x2="8" y2="13"/>
-                        <line x1="16" y1="17" x2="8" y2="17"/>
-                    </svg>
+                    <i data-lucide="file-text" class="icon-sm"></i>
                     <span>법령·판례 기반 답변</span>
                 </div>
             </div>
 
             <!-- AI Disclaimer Notice -->
             <div class="hero-ai-notice">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="12" y1="8" x2="12" y2="12"/>
-                    <line x1="12" y1="16" x2="12.01" y2="16"/>
-                </svg>
+                <i data-lucide="info" class="icon-sm"></i>
                 <p>AI가 제공하는 일반적인 법률 정보입니다. 정확하지 않을 수 있으며, 구체적 사안은 변호사와 상담하세요.</p>
             </div>
         </div>
@@ -123,20 +107,36 @@
                         <span class="status-dot active"></span>
                         <span>AI 상담 가능</span>
                     </div>
-                    <div class="chat-info">노동법 전문</div>
+                    <div class="chat-info">4대 분야 전문</div>
                 </div>
 
                 <div class="chat-messages" id="chat-messages">
                     <div class="chat-welcome">
-                        <div class="welcome-emoji">⚖️</div>
-                        <h3>법률AI에 오신 것을 환영합니다</h3>
-                        <p>노동법 관련 궁금한 점을 자유롭게 질문해 주세요.</p>
+                        <div class="welcome-icon">
+                            <i data-lucide="scale" class="icon-xl"></i>
+                        </div>
+                        <h3>LawBot에 오신 것을 환영합니다</h3>
+                        <p>4대 법률 분야 관련 궁금한 점을 자유롭게 질문해 주세요.</p>
+
+                        <!-- 법령 배지 -->
+                        <div class="welcome-laws">
+                            <span class="law-badge"><i data-lucide="book-open" class="icon-xs"></i> 근로기준법</span>
+                            <span class="law-badge"><i data-lucide="book-open" class="icon-xs"></i> 주택임대차보호법</span>
+                            <span class="law-badge"><i data-lucide="book-open" class="icon-xs"></i> 소비자기본법</span>
+                            <span class="law-badge"><i data-lucide="book-open" class="icon-xs"></i> 자동차손해배상보장법</span>
+                        </div>
 
                         <div class="welcome-examples">
                             <span class="example-label">예시 질문:</span>
-                            <button class="example-btn" data-question="퇴직금은 어떻게 계산하나요?">퇴직금 계산 방법</button>
-                            <button class="example-btn" data-question="부당해고를 당했을 때 어떻게 해야 하나요?">부당해고 대응</button>
-                            <button class="example-btn" data-question="연차휴가는 며칠이 주어지나요?">연차휴가 일수</button>
+                            <button class="example-btn" data-question="퇴직금은 어떻게 계산하나요?">
+                                <i data-lucide="message-circle" class="icon-xs"></i> 퇴직금 계산 방법
+                            </button>
+                            <button class="example-btn" data-question="전세보증금을 돌려받지 못하면 어떻게 해야 하나요?">
+                                <i data-lucide="message-circle" class="icon-xs"></i> 보증금 반환
+                            </button>
+                            <button class="example-btn" data-question="온라인 쇼핑 환불 규정이 어떻게 되나요?">
+                                <i data-lucide="message-circle" class="icon-xs"></i> 온라인 환불
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -150,30 +150,63 @@
                             maxlength="1000"
                         ></textarea>
                         <button id="chat-submit" class="chat-submit-btn" disabled>
-                            <svg viewBox="0 0 24 24" fill="none">
-                                <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
+                            <i data-lucide="send" class="icon-sm"></i>
                         </button>
                     </div>
                     <p class="chat-disclaimer">
-                        ⚠️ AI 답변은 참고용이며 실수가 있을 수 있습니다. 법률 자문이 아닙니다.
+                        <i data-lucide="alert-triangle" class="icon-xs"></i>
+                        AI 답변은 참고용이며 실수가 있을 수 있습니다. 법률 자문이 아닙니다.
                     </p>
                 </div>
             </div>
         </div>
+    </section>
 
+    <!-- Trust Section -->
+    <section class="trust-section" id="trust">
+        <div class="container">
+            <div class="trust-grid">
+                <div class="trust-card glass-card">
+                    <div class="trust-icon">
+                        <i data-lucide="layers" class="icon-lg"></i>
+                    </div>
+                    <div class="trust-value">4개</div>
+                    <div class="trust-label">특화 분야</div>
+                    <div class="trust-detail">노동법, 임대차법, 소비자보호법, 교통사고</div>
+                </div>
+                <div class="trust-card glass-card">
+                    <div class="trust-icon">
+                        <i data-lucide="book-open" class="icon-lg"></i>
+                    </div>
+                    <div class="trust-value">20+</div>
+                    <div class="trust-label">핵심 법령</div>
+                    <div class="trust-detail">법제처 국가법령정보 API 연동</div>
+                </div>
+                <div class="trust-card glass-card">
+                    <div class="trust-icon">
+                        <i data-lucide="gavel" class="icon-lg"></i>
+                    </div>
+                    <div class="trust-value">1,438+</div>
+                    <div class="trust-label">대법원 판례</div>
+                    <div class="trust-detail">판시사항 및 판결요지 포함</div>
+                </div>
+                <div class="trust-card glass-card">
+                    <div class="trust-icon">
+                        <i data-lucide="shield" class="icon-lg"></i>
+                    </div>
+                    <div class="trust-value">Zero</div>
+                    <div class="trust-label">개인정보 수집</div>
+                    <div class="trust-detail">대화 내용 미저장, 완전 익명</div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- Disclaimer Banner -->
     <section class="disclaimer-banner">
         <div class="container">
             <div class="disclaimer-content">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="12" y1="8" x2="12" y2="12"/>
-                    <line x1="12" y1="16" x2="12.01" y2="16"/>
-                </svg>
+                <i data-lucide="alert-circle" class="icon-md"></i>
                 <p>
                     <strong>안내:</strong> 본 서비스는 AI가 제공하는 일반적인 <em>법률 정보</em>이며, 정식 <em>법률 자문</em>이 아닙니다.
                     구체적인 사안은 반드시 변호사와 상담하세요.
@@ -188,7 +221,7 @@
             <div class="section-header">
                 <span class="section-tag">Features</span>
                 <h2 class="section-title">
-                    <span class="blur-reveal">왜 법률AI를</span>
+                    <span class="blur-reveal">왜 LawBot을</span>
                     <span class="blur-reveal">이용해야 할까요?</span>
                 </h2>
                 <p class="section-description blur-reveal">
@@ -199,11 +232,7 @@
             <div class="features-grid">
                 <div class="feature-card glass-card">
                     <div class="feature-icon">
-                        <svg viewBox="0 0 48 48" fill="none">
-                            <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
-                            <path d="M24 14V24L30 28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <circle cx="24" cy="24" r="12" stroke="currentColor" stroke-width="1.5"/>
-                        </svg>
+                        <i data-lucide="clock" class="icon-lg"></i>
                     </div>
                     <h3 class="feature-title">24시간 무료 상담</h3>
                     <p class="feature-desc">
@@ -214,11 +243,7 @@
 
                 <div class="feature-card glass-card">
                     <div class="feature-icon">
-                        <svg viewBox="0 0 48 48" fill="none">
-                            <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
-                            <path d="M16 20L22 26L32 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M16 32H32" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                        </svg>
+                        <i data-lucide="check-circle" class="icon-lg"></i>
                     </div>
                     <h3 class="feature-title">법령·판례 기반 답변</h3>
                     <p class="feature-desc">
@@ -229,11 +254,7 @@
 
                 <div class="feature-card glass-card">
                     <div class="feature-icon">
-                        <svg viewBox="0 0 48 48" fill="none">
-                            <path d="M24 4L44 14V34L24 44L4 34V14L24 4Z" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
-                            <path d="M24 12L36 18V30L24 36L12 30V18L24 12Z" stroke="currentColor" stroke-width="1.5"/>
-                            <circle cx="24" cy="24" r="4" fill="currentColor"/>
-                        </svg>
+                        <i data-lucide="shield" class="icon-lg"></i>
                     </div>
                     <h3 class="feature-title">개인정보 보호</h3>
                     <p class="feature-desc">
@@ -244,12 +265,7 @@
 
                 <div class="feature-card glass-card feature-card-wide">
                     <div class="feature-icon">
-                        <svg viewBox="0 0 48 48" fill="none">
-                            <circle cx="16" cy="24" r="8" stroke="currentColor" stroke-width="1.5"/>
-                            <circle cx="32" cy="24" r="8" stroke="currentColor" stroke-width="1.5"/>
-                            <path d="M24 24L24 12" stroke="currentColor" stroke-width="1.5"/>
-                            <path d="M24 36L24 24" stroke="currentColor" stroke-width="1.5"/>
-                        </svg>
+                        <i data-lucide="message-square" class="icon-lg"></i>
                     </div>
                     <h3 class="feature-title">쉬운 법률 용어 설명</h3>
                     <p class="feature-desc">
@@ -268,173 +284,267 @@
             <div class="section-header">
                 <span class="section-tag">How It Works</span>
                 <h2 class="section-title">
-                    <span class="blur-reveal">간단한 3단계로</span>
-                    <span class="blur-reveal">법률 정보를 얻으세요</span>
+                    <span class="blur-reveal">RAG 기반</span>
+                    <span class="blur-reveal">근거 있는 답변 시스템</span>
                 </h2>
+                <p class="section-description blur-reveal">
+                    검색 증강 생성(RAG) 기술로 법령과 판례를 실시간 검색하여 답변합니다
+                </p>
             </div>
 
-            <div class="steps-container">
-                <div class="step-card glass-card">
-                    <div class="step-number">01</div>
-                    <div class="step-icon">
-                        <svg viewBox="0 0 48 48" fill="none">
-                            <rect x="8" y="12" width="32" height="24" rx="4" stroke="currentColor" stroke-width="2"/>
-                            <path d="M16 24H32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M16 30H26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
+            <div class="rag-process">
+                <div class="rag-step glass-card">
+                    <div class="rag-step-number">01</div>
+                    <div class="rag-step-icon">
+                        <i data-lucide="message-circle" class="icon-lg"></i>
                     </div>
-                    <h3 class="step-title">질문 입력</h3>
-                    <p class="step-desc">
-                        궁금한 법률 문제를 일상적인 언어로 입력하세요.
-                        "퇴직금 계산은 어떻게 하나요?" 처럼 편하게 물어보세요.
-                    </p>
+                    <h3 class="rag-step-title">질문 입력</h3>
+                    <p class="rag-step-desc">일상 언어로 법률 질문을 입력하세요</p>
                 </div>
 
-                <div class="step-connector">
-                    <svg viewBox="0 0 100 20" fill="none">
-                        <path d="M0 10H90M90 10L80 5M90 10L80 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
+                <div class="rag-arrow">
+                    <i data-lucide="chevron-right" class="icon-md"></i>
                 </div>
 
-                <div class="step-card glass-card">
-                    <div class="step-number">02</div>
-                    <div class="step-icon">
-                        <svg viewBox="0 0 48 48" fill="none">
-                            <circle cx="24" cy="24" r="16" stroke="currentColor" stroke-width="2"/>
-                            <path d="M24 16V24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <circle cx="24" cy="24" r="3" fill="currentColor"/>
-                            <path d="M24 32V36" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M16 24H12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M36 24H32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
+                <div class="rag-step glass-card">
+                    <div class="rag-step-number">02</div>
+                    <div class="rag-step-icon">
+                        <i data-lucide="search" class="icon-lg"></i>
                     </div>
-                    <h3 class="step-title">AI 분석</h3>
-                    <p class="step-desc">
-                        AI가 관련 법령과 판례를 검색하고 분석합니다.
-                        근로기준법, 대법원 판례 등 공식 자료를 기반으로 합니다.
-                    </p>
+                    <h3 class="rag-step-title">법령·판례 검색</h3>
+                    <p class="rag-step-desc">BM25 + 벡터 하이브리드 검색</p>
                 </div>
 
-                <div class="step-connector">
-                    <svg viewBox="0 0 100 20" fill="none">
-                        <path d="M0 10H90M90 10L80 5M90 10L80 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
+                <div class="rag-arrow">
+                    <i data-lucide="chevron-right" class="icon-md"></i>
                 </div>
 
-                <div class="step-card glass-card">
-                    <div class="step-number">03</div>
-                    <div class="step-icon">
-                        <svg viewBox="0 0 48 48" fill="none">
-                            <path d="M8 12H40V36H8V12Z" stroke="currentColor" stroke-width="2"/>
-                            <path d="M14 20H34" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M14 26H30" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M14 32H26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M36 28L40 32L48 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                <div class="rag-step glass-card">
+                    <div class="rag-step-number">03</div>
+                    <div class="rag-step-icon">
+                        <i data-lucide="cpu" class="icon-lg"></i>
                     </div>
-                    <h3 class="step-title">답변 확인</h3>
-                    <p class="step-desc">
-                        법령 조문 번호와 함께 이해하기 쉬운 설명을 받으세요.
-                        필요시 추가 질문으로 더 자세한 정보를 얻을 수 있습니다.
-                    </p>
+                    <h3 class="rag-step-title">AI 분석</h3>
+                    <p class="rag-step-desc">검색된 법령을 컨텍스트로 활용</p>
+                </div>
+
+                <div class="rag-arrow">
+                    <i data-lucide="chevron-right" class="icon-md"></i>
+                </div>
+
+                <div class="rag-step glass-card">
+                    <div class="rag-step-number">04</div>
+                    <div class="rag-step-icon">
+                        <i data-lucide="file-check" class="icon-lg"></i>
+                    </div>
+                    <h3 class="rag-step-title">근거 답변</h3>
+                    <p class="rag-step-desc">조문 번호와 판례 번호 명시</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Categories Section -->
+    <!-- Categories Section - 4대 특화 분야 -->
     <section class="categories" id="categories">
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">Categories</span>
                 <h2 class="section-title">
-                    <span class="blur-reveal">상담 가능한</span>
-                    <span class="blur-reveal">법률 분야</span>
+                    <span class="blur-reveal">4대 특화</span>
+                    <span class="blur-reveal">법률 상담 분야</span>
                 </h2>
                 <p class="section-description blur-reveal">
-                    현재 노동법 분야에 특화되어 있으며, 순차적으로 확장됩니다
+                    생활 밀착형 4대 법률 분야에 특화된 전문 상담 서비스를 제공합니다
                 </p>
             </div>
 
-            <div class="categories-grid">
-                <div class="category-card glass-card category-active">
-                    <div class="category-status">
-                        <span class="status-dot active"></span>
-                        <span>서비스 중</span>
+            <div class="category-areas">
+                <!-- 노동법 -->
+                <div class="category-area glass-card" id="area-labor">
+                    <div class="area-header">
+                        <div class="area-icon labor">
+                            <i data-lucide="briefcase" class="icon-lg"></i>
+                        </div>
+                        <div class="area-info">
+                            <h3 class="area-title">노동법</h3>
+                            <p class="area-subtitle">근로기준법, 최저임금법, 퇴직급여보장법 등</p>
+                        </div>
                     </div>
-                    <div class="category-icon">
-                        <svg viewBox="0 0 48 48" fill="none">
-                            <circle cx="24" cy="16" r="8" stroke="currentColor" stroke-width="2"/>
-                            <path d="M12 40V36C12 32.6863 14.6863 30 18 30H30C33.3137 30 36 32.6863 36 36V40" stroke="currentColor" stroke-width="2"/>
-                            <path d="M20 22L16 28H32L28 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="category-title">노동법</h3>
-                    <ul class="category-list">
-                        <li>부당해고 / 해고예고</li>
-                        <li>임금체불 / 최저임금</li>
-                        <li>퇴직금 계산</li>
-                        <li>연차휴가</li>
-                        <li>직장 내 괴롭힘</li>
-                        <li>근로계약서</li>
-                    </ul>
-                    <div class="category-laws">
-                        <span>근로기준법</span>
-                        <span>최저임금법</span>
-                        <span>남녀고용평등법</span>
-                    </div>
-                </div>
-
-                <div class="category-card glass-card category-coming">
-                    <div class="category-status">
-                        <span class="status-dot coming"></span>
-                        <span>준비 중</span>
-                    </div>
-                    <div class="category-icon">
-                        <svg viewBox="0 0 48 48" fill="none">
-                            <rect x="8" y="16" width="32" height="24" rx="2" stroke="currentColor" stroke-width="2"/>
-                            <path d="M8 22H40" stroke="currentColor" stroke-width="2"/>
-                            <path d="M16 12V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M32 12V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="category-title">임대차법</h3>
-                    <ul class="category-list">
-                        <li>전월세 분쟁</li>
-                        <li>보증금 반환</li>
-                        <li>계약 갱신</li>
-                        <li>임대료 인상</li>
-                    </ul>
-                    <div class="category-laws">
-                        <span>주택임대차보호법</span>
-                        <span>상가임대차보호법</span>
+                    <div class="area-content">
+                        <div class="area-topics">
+                            <div class="topic-item">
+                                <i data-lucide="user-x" class="icon-sm"></i>
+                                <span>부당해고</span>
+                            </div>
+                            <div class="topic-item">
+                                <i data-lucide="wallet" class="icon-sm"></i>
+                                <span>임금체불</span>
+                            </div>
+                            <div class="topic-item">
+                                <i data-lucide="piggy-bank" class="icon-sm"></i>
+                                <span>퇴직금</span>
+                            </div>
+                            <div class="topic-item">
+                                <i data-lucide="calendar" class="icon-sm"></i>
+                                <span>연차휴가</span>
+                            </div>
+                            <div class="topic-item">
+                                <i data-lucide="alert-triangle" class="icon-sm"></i>
+                                <span>직장 내 괴롭힘</span>
+                            </div>
+                        </div>
+                        <div class="area-laws">
+                            <span class="law-tag">근로기준법</span>
+                            <span class="law-tag">최저임금법</span>
+                            <span class="law-tag">남녀고용평등법</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="category-card glass-card category-coming">
-                    <div class="category-status">
-                        <span class="status-dot coming"></span>
-                        <span>준비 중</span>
+                <!-- 임대차법 -->
+                <div class="category-area glass-card" id="area-housing">
+                    <div class="area-header">
+                        <div class="area-icon housing">
+                            <i data-lucide="home" class="icon-lg"></i>
+                        </div>
+                        <div class="area-info">
+                            <h3 class="area-title">임대차법</h3>
+                            <p class="area-subtitle">주택임대차보호법, 상가건물임대차보호법</p>
+                        </div>
                     </div>
-                    <div class="category-icon">
-                        <svg viewBox="0 0 48 48" fill="none">
-                            <circle cx="24" cy="24" r="16" stroke="currentColor" stroke-width="2"/>
-                            <path d="M24 16V24L30 28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M16 36L20 32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M32 36L28 32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
+                    <div class="area-content">
+                        <div class="area-topics">
+                            <div class="topic-item">
+                                <i data-lucide="banknote" class="icon-sm"></i>
+                                <span>보증금 반환</span>
+                            </div>
+                            <div class="topic-item">
+                                <i data-lucide="refresh-cw" class="icon-sm"></i>
+                                <span>계약갱신</span>
+                            </div>
+                            <div class="topic-item">
+                                <i data-lucide="trending-up" class="icon-sm"></i>
+                                <span>차임인상</span>
+                            </div>
+                            <div class="topic-item">
+                                <i data-lucide="shield" class="icon-sm"></i>
+                                <span>대항력</span>
+                            </div>
+                            <div class="topic-item">
+                                <i data-lucide="store" class="icon-sm"></i>
+                                <span>상가임대차</span>
+                            </div>
+                        </div>
+                        <div class="area-laws">
+                            <span class="law-tag">주택임대차보호법</span>
+                            <span class="law-tag">상가건물임대차보호법</span>
+                        </div>
                     </div>
-                    <h3 class="category-title">소비자보호법</h3>
-                    <ul class="category-list">
-                        <li>환불 / 교환</li>
-                        <li>하자 보수</li>
-                        <li>약관 분쟁</li>
-                        <li>전자상거래</li>
-                    </ul>
-                    <div class="category-laws">
-                        <span>소비자기본법</span>
-                        <span>전자상거래법</span>
+                </div>
+
+                <!-- 소비자보호법 -->
+                <div class="category-area glass-card" id="area-consumer">
+                    <div class="area-header">
+                        <div class="area-icon consumer">
+                            <i data-lucide="shopping-cart" class="icon-lg"></i>
+                        </div>
+                        <div class="area-info">
+                            <h3 class="area-title">소비자보호법</h3>
+                            <p class="area-subtitle">소비자기본법, 전자상거래법, 약관규제법</p>
+                        </div>
                     </div>
+                    <div class="area-content">
+                        <div class="area-topics">
+                            <div class="topic-item">
+                                <i data-lucide="undo-2" class="icon-sm"></i>
+                                <span>환불/청약철회</span>
+                            </div>
+                            <div class="topic-item">
+                                <i data-lucide="alert-circle" class="icon-sm"></i>
+                                <span>제품 하자</span>
+                            </div>
+                            <div class="topic-item">
+                                <i data-lucide="file-x" class="icon-sm"></i>
+                                <span>불공정 약관</span>
+                            </div>
+                            <div class="topic-item">
+                                <i data-lucide="globe" class="icon-sm"></i>
+                                <span>온라인 거래</span>
+                            </div>
+                            <div class="topic-item">
+                                <i data-lucide="users" class="icon-sm"></i>
+                                <span>분쟁조정</span>
+                            </div>
+                        </div>
+                        <div class="area-laws">
+                            <span class="law-tag">소비자기본법</span>
+                            <span class="law-tag">전자상거래법</span>
+                            <span class="law-tag">약관규제법</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 교통사고·손해배상 -->
+                <div class="category-area glass-card" id="area-traffic">
+                    <div class="area-header">
+                        <div class="area-icon traffic">
+                            <i data-lucide="car" class="icon-lg"></i>
+                        </div>
+                        <div class="area-info">
+                            <h3 class="area-title">교통사고·손해배상</h3>
+                            <p class="area-subtitle">자동차손해배상보장법, 도로교통법</p>
+                        </div>
+                    </div>
+                    <div class="area-content">
+                        <div class="area-topics">
+                            <div class="topic-item">
+                                <i data-lucide="percent" class="icon-sm"></i>
+                                <span>과실비율</span>
+                            </div>
+                            <div class="topic-item">
+                                <i data-lucide="calculator" class="icon-sm"></i>
+                                <span>손해배상 산정</span>
+                            </div>
+                            <div class="topic-item">
+                                <i data-lucide="file-text" class="icon-sm"></i>
+                                <span>보험금 청구</span>
+                            </div>
+                            <div class="topic-item">
+                                <i data-lucide="heart-pulse" class="icon-sm"></i>
+                                <span>후유장해</span>
+                            </div>
+                            <div class="topic-item">
+                                <i data-lucide="scale" class="icon-sm"></i>
+                                <span>형사/민사 절차</span>
+                            </div>
+                        </div>
+                        <div class="area-laws">
+                            <span class="law-tag">자동차손해배상보장법</span>
+                            <span class="law-tag">도로교통법</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhanced Disclaimer Section -->
+    <section class="disclaimer-section">
+        <div class="container">
+            <div class="disclaimer-box glass-card">
+                <div class="disclaimer-icon">
+                    <i data-lucide="alert-triangle" class="icon-xl"></i>
+                </div>
+                <div class="disclaimer-text">
+                    <h3>법률 정보 서비스 안내</h3>
+                    <p>
+                        본 서비스는 AI가 제공하는 <strong>"일반적인 법률 정보"</strong>입니다.
+                        정식 법률 자문이 아니며, 개별 사안에 대한 단정적 결론을 제시하지 않습니다.
+                    </p>
+                    <p>
+                        법령과 판례는 지속적으로 변경될 수 있으며, AI의 답변에는 오류가 포함될 수 있습니다.
+                        <strong>구체적인 법률 문제는 반드시 변호사와 상담하시기 바랍니다.</strong>
+                    </p>
                 </div>
             </div>
         </div>
@@ -453,14 +563,12 @@
             <div class="faq-list">
                 <details class="faq-item glass-card">
                     <summary class="faq-question">
-                        <span>법률AI의 답변을 신뢰할 수 있나요?</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M6 9L12 15L18 9"/>
-                        </svg>
+                        <span>LawBot의 답변을 신뢰할 수 있나요?</span>
+                        <i data-lucide="chevron-down" class="icon-sm"></i>
                     </summary>
                     <div class="faq-answer">
                         <p>
-                            법률AI는 대한민국 법령과 대법원 판례를 기반으로 답변합니다.
+                            LawBot은 대한민국 법령과 대법원 판례를 기반으로 답변합니다.
                             모든 답변에는 관련 법령 조문 번호가 함께 제공되어 직접 확인하실 수 있습니다.
                         </p>
                         <p>
@@ -473,13 +581,11 @@
                 <details class="faq-item glass-card">
                     <summary class="faq-question">
                         <span>개인정보는 어떻게 처리되나요?</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M6 9L12 15L18 9"/>
-                        </svg>
+                        <i data-lucide="chevron-down" class="icon-sm"></i>
                     </summary>
                     <div class="faq-answer">
                         <p>
-                            법률AI는 회원가입이 필요 없으며, 어떠한 개인정보도 수집하지 않습니다.
+                            LawBot은 회원가입이 필요 없으며, 어떠한 개인정보도 수집하지 않습니다.
                             대화 내용은 서버에 저장되지 않으며, 브라우저 세션 종료 시 자동으로 삭제됩니다.
                         </p>
                     </div>
@@ -488,28 +594,25 @@
                 <details class="faq-item glass-card">
                     <summary class="faq-question">
                         <span>어떤 법률 분야에 대해 상담받을 수 있나요?</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M6 9L12 15L18 9"/>
-                        </svg>
+                        <i data-lucide="chevron-down" class="icon-sm"></i>
                     </summary>
                     <div class="faq-answer">
                         <p>
-                            현재는 <strong>노동법</strong> 분야에 특화되어 있습니다.
-                            부당해고, 임금체불, 퇴직금, 연차휴가, 직장 내 괴롭힘 등
-                            근로기준법 관련 질문에 답변드릴 수 있습니다.
+                            LawBot은 <strong>4대 법률 분야</strong>에 특화되어 있습니다:
                         </p>
-                        <p>
-                            추후 임대차법, 소비자보호법, 교통사고/손해배상 분야가 순차적으로 추가될 예정입니다.
-                        </p>
+                        <ul>
+                            <li><strong>노동법</strong>: 부당해고, 임금체불, 퇴직금, 연차휴가, 직장 내 괴롭힘</li>
+                            <li><strong>임대차법</strong>: 보증금 반환, 계약갱신, 차임인상, 대항력</li>
+                            <li><strong>소비자보호법</strong>: 환불, 청약철회, 제품 하자, 온라인 거래</li>
+                            <li><strong>교통사고</strong>: 과실비율, 손해배상, 보험금 청구</li>
+                        </ul>
                     </div>
                 </details>
 
                 <details class="faq-item glass-card">
                     <summary class="faq-question">
                         <span>답변 속도는 얼마나 걸리나요?</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M6 9L12 15L18 9"/>
-                        </svg>
+                        <i data-lucide="chevron-down" class="icon-sm"></i>
                     </summary>
                     <div class="faq-answer">
                         <p>
@@ -522,9 +625,7 @@
                 <details class="faq-item glass-card">
                     <summary class="faq-question">
                         <span>무료인가요? 이용 제한이 있나요?</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M6 9L12 15L18 9"/>
-                        </svg>
+                        <i data-lucide="chevron-down" class="icon-sm"></i>
                     </summary>
                     <div class="faq-answer">
                         <p>
@@ -543,20 +644,13 @@
             <div class="footer-content">
                 <div class="footer-brand">
                     <a href="#" class="nav-logo">
-                        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="18" y="6" width="4" height="28" rx="1" fill="currentColor" opacity="0.9"/>
-                            <rect x="8" y="8" width="24" height="3" rx="1.5" fill="currentColor"/>
-                            <circle cx="20" cy="6" r="3" fill="currentColor"/>
-                            <path d="M8 11L5 22H11L8 11Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                            <ellipse cx="8" cy="22" rx="4" ry="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                            <path d="M32 11L29 22H35L32 11Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                            <ellipse cx="32" cy="22" rx="4" ry="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                            <rect x="12" y="32" width="16" height="3" rx="1" fill="currentColor" opacity="0.7"/>
-                        </svg>
-                        <span class="logo-text">법률<span class="logo-highlight">AI</span></span>
+                        <div class="logo-icon">
+                            <i data-lucide="scale" class="icon-md"></i>
+                        </div>
+                        <span class="logo-text">Law<span class="logo-highlight">Bot</span></span>
                     </a>
                     <p class="footer-tagline">
-                        AI가 제공하는 무료 법률 정보 서비스<br>
+                        4대 법률 분야 특화 AI 법률 정보 서비스<br>
                         복잡한 법률, 쉽게 이해하세요
                     </p>
                 </div>
@@ -567,12 +661,14 @@
                         <a href="#hero" class="footer-link">AI 상담</a>
                         <a href="#categories" class="footer-link">상담 분야</a>
                         <a href="#how-it-works" class="footer-link">이용 방법</a>
+                        <a href="contact.html" class="footer-link">무료 상담 신청</a>
                     </div>
                     <div class="footer-col">
-                        <h4 class="footer-col-title">법률 분야</h4>
-                        <a href="#" class="footer-link">노동법</a>
-                        <a href="#" class="footer-link">임대차법 (준비 중)</a>
-                        <a href="#" class="footer-link">소비자보호법 (준비 중)</a>
+                        <h4 class="footer-col-title">4대 특화 분야</h4>
+                        <a href="#area-labor" class="footer-link">노동법</a>
+                        <a href="#area-housing" class="footer-link">임대차법</a>
+                        <a href="#area-consumer" class="footer-link">소비자보호법</a>
+                        <a href="#area-traffic" class="footer-link">교통사고·손해배상</a>
                     </div>
                     <div class="footer-col">
                         <h4 class="footer-col-title">안내</h4>
@@ -584,9 +680,12 @@
             </div>
 
             <div class="footer-bottom">
-                <p class="copyright">&copy; 2024 법률AI. 오픈소스 프로젝트.</p>
+                <p class="copyright">&copy; 2024 LawBot. 오픈소스 프로젝트.</p>
                 <div class="footer-disclaimer">
-                    <p>본 서비스는 법률 정보 제공 목적이며, 법률 자문이 아닙니다. 구체적 사안은 변호사와 상담하세요.</p>
+                    <p>
+                        <i data-lucide="info" class="icon-xs"></i>
+                        본 서비스는 법률 정보 제공 목적이며, 법률 자문이 아닙니다. 구체적 사안은 변호사와 상담하세요.
+                    </p>
                 </div>
             </div>
         </div>
