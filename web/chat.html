@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 법률 상담 | LawBot</title>
+    <meta name="description" content="노동법, 임대차법, 소비자보호법, 교통사고 4대 분야에 특화된 AI 법률 정보 서비스.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="chat.css">
+</head>
+<body class="chat-page">
+    <!-- Particle Canvas Background -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <div class="logo-icon">
+                    <i data-lucide="scale" class="icon-md"></i>
+                </div>
+                <span class="logo-text">Law<span class="logo-highlight">Bot</span></span>
+            </a>
+
+            <div class="nav-links">
+                <a href="index.html#features" class="nav-link">서비스 소개</a>
+                <a href="index.html#how-it-works" class="nav-link">이용 방법</a>
+                <a href="index.html#categories" class="nav-link">상담 분야</a>
+                <a href="index.html#faq" class="nav-link">FAQ</a>
+                <span class="nav-divider"></span>
+                <a href="chat.html" class="nav-link nav-link-highlight active">AI 상담</a>
+                <a href="story/index.html" class="nav-link">상담 사연</a>
+                <a href="blog/index.html" class="nav-link">블로그</a>
+            </div>
+
+            <a href="contact.html" class="nav-cta">
+                <span>변호사 상담</span>
+                <i data-lucide="arrow-right" class="icon-sm"></i>
+            </a>
+
+            <button class="nav-mobile-toggle" aria-label="메뉴 열기">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Chat Section -->
+    <section class="chat-section">
+        <div class="chat-wrapper">
+            <!-- 선택된 분야 표시 -->
+            <div class="chat-category-header" id="chat-category-header">
+                <div class="category-indicator" id="category-indicator">
+                    <i data-lucide="briefcase" class="icon-md" id="category-icon"></i>
+                    <span id="category-name">노동법</span>
+                </div>
+                <button class="change-category-btn" id="change-category-btn">
+                    <i data-lucide="repeat" class="icon-xs"></i>
+                    <span>분야 변경</span>
+                </button>
+            </div>
+
+            <!-- Chat Container -->
+            <div class="chat-container glass-card">
+                <div class="chat-header">
+                    <div class="chat-status">
+                        <span class="status-dot active"></span>
+                        <span>AI 상담 가능</span>
+                    </div>
+                    <div class="chat-info" id="chat-info">법률 정보 서비스</div>
+                </div>
+
+                <div class="chat-messages" id="chat-messages">
+                    <!-- 메시지가 여기에 표시됨 -->
+                </div>
+
+                <div class="chat-input-container">
+                    <div class="chat-input-wrapper">
+                        <textarea
+                            id="chat-input"
+                            placeholder="법률 관련 질문을 입력하세요..."
+                            rows="1"
+                            maxlength="1000"
+                        ></textarea>
+                        <button id="chat-submit" class="chat-submit-btn" disabled>
+                            <i data-lucide="send" class="icon-sm"></i>
+                        </button>
+                    </div>
+                    <p class="chat-disclaimer">
+                        <i data-lucide="alert-triangle" class="icon-xs"></i>
+                        AI 답변은 참고용이며 실수가 있을 수 있습니다. 법률 자문이 아닙니다.
+                    </p>
+                </div>
+            </div>
+
+            <!-- AI Notice -->
+            <div class="chat-ai-notice">
+                <i data-lucide="info" class="icon-sm"></i>
+                <p>AI가 제공하는 일반적인 법률 정보입니다. 정확하지 않을 수 있으며, 구체적 사안은 변호사와 상담하세요.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+    <script src="chat.js"></script>
+</body>
+</html>

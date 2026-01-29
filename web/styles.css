@@ -240,6 +240,20 @@ a {
     width: 100%;
 }
 
+/* AI 상담 메뉴 강조 */
+.nav-link-highlight {
+    color: var(--color-primary-light) !important;
+    font-weight: 600;
+}
+
+.nav-link-highlight.active {
+    color: var(--color-primary) !important;
+}
+
+.nav-link-highlight::after {
+    background: var(--color-primary) !important;
+}
+
 .nav-divider {
     width: 1px;
     height: 20px;
@@ -1604,6 +1618,13 @@ a {
     color: var(--color-text-muted);
 }
 
+.footer-version {
+    font-size: 0.6875rem;
+    color: var(--color-text-muted);
+    opacity: 0.6;
+    margin-top: var(--space-sm);
+}
+
 /* ===========================
    Responsive Design
    =========================== */
@@ -1677,8 +1698,102 @@ a {
         display: none;
     }
 
+    .nav-links.active {
+        display: flex;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        height: calc(100vh - 60px);
+        height: calc(100dvh - 60px);
+        flex-direction: column;
+        background: rgba(10, 15, 26, 0.98);
+        backdrop-filter: blur(20px);
+        padding: 2rem;
+        padding-bottom: 100px;
+        gap: 0.5rem;
+        z-index: 99;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-links.active .nav-link {
+        padding: 1rem;
+        font-size: 1.1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-links.active .nav-divider {
+        display: none;
+    }
+
+    /* 스크롤 후 nav가 작아졌을 때 메뉴 위치 조정 */
+    .nav.scrolled .nav-links.active {
+        top: 52px;
+        height: calc(100vh - 52px);
+        height: calc(100dvh - 52px);
+    }
+
     .nav-mobile-toggle {
         display: flex;
+    }
+
+    .nav-mobile-toggle.active span:first-child {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .nav-mobile-toggle.active span:last-child {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    /* 모바일에서 채팅창 크기 고정 (가로 너비 유지) */
+    .hero.hero-with-chat .hero-chat {
+        max-width: 600px;
+        width: 100%;
+    }
+
+    .hero-chat .chat-messages {
+        min-height: 320px;
+        max-height: 400px;
+    }
+
+    .hero-chat .chat-container.chat-expanded .chat-messages {
+        min-height: 320px;
+        max-height: 400px;
+    }
+
+    /* fullwidth 모드에서도 가로 너비 고정 */
+    .hero.hero-with-chat.chat-fullwidth .hero-chat {
+        max-width: 600px;
+    }
+
+    .hero.hero-with-chat.chat-fullwidth .chat-messages {
+        min-height: 400px;
+        max-height: 500px;
+    }
+
+    /* 모바일에서 분야 선택 버튼 스타일 */
+    .category-select {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-xs);
+    }
+
+    .category-btn {
+        padding: var(--space-sm) var(--space-xs);
+        gap: 4px;
+    }
+
+    .category-btn i {
+        width: 20px;
+        height: 20px;
+    }
+
+    .category-name {
+        font-size: 0.8125rem;
+    }
+
+    .category-desc {
+        font-size: 0.6875rem;
     }
 
     .hero-content {

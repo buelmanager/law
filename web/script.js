@@ -494,84 +494,8 @@ if (categorySelect) {
 }
 
 function selectCategory(category) {
-    selectedCategory = category;
-    const info = CATEGORY_INTRO[category];
-
-    // 분야 변경 버튼 표시
-    const changeCategoryBtn = document.getElementById('change-category-btn');
-    if (changeCategoryBtn) {
-        changeCategoryBtn.style.display = 'flex';
-    }
-
-    // 선택된 버튼 하이라이트
-    const currentCategorySelect = document.getElementById('category-select');
-    if (currentCategorySelect) {
-        const categoryBtns = currentCategorySelect.querySelectorAll('.category-btn');
-        categoryBtns.forEach(btn => {
-            btn.classList.remove('selected');
-            if (btn.dataset.category === category) {
-                btn.classList.add('selected');
-            }
-        });
-    }
-
-    // 예시 질문 표시
-    if (welcomeExamples && exampleBtnsContainer) {
-        welcomeExamples.style.display = 'block';
-        exampleBtnsContainer.innerHTML = '';
-
-        CATEGORY_EXAMPLES[category].forEach(example => {
-            const btn = document.createElement('button');
-            btn.className = 'example-btn';
-            btn.dataset.question = example.question;
-            btn.innerHTML = `<i data-lucide="message-circle" class="icon-xs"></i> ${example.label}`;
-            btn.addEventListener('click', () => {
-                if (chatInput) {
-                    chatInput.value = example.question;
-                    chatInput.dispatchEvent(new Event('input'));
-                    chatInput.focus();
-                    setTimeout(() => sendMessage(), 300);
-                }
-            });
-            exampleBtnsContainer.appendChild(btn);
-        });
-
-        // Lucide 아이콘 재초기화
-        lucide.createIcons();
-    }
-
-    // 채팅창 확장 및 안내 메시지 표시
-    const heroSection = document.querySelector('.hero.hero-with-chat');
-    if (heroSection && !heroSection.classList.contains('chat-fullwidth')) {
-        heroSection.classList.add('chat-fullwidth');
-    }
-
-    const chatContainer = document.querySelector('.hero-chat .chat-container');
-    if (chatContainer && !chatContainer.classList.contains('chat-expanded')) {
-        chatContainer.classList.add('chat-expanded');
-    }
-
-    // 분야 선택 안내 메시지를 AI 메시지로 추가
-    const welcomeEl = chatMessages.querySelector('.chat-welcome');
-    if (welcomeEl) {
-        welcomeEl.style.display = 'none';
-    }
-
-    // 분야 선택 메시지 추가
-    const introMessage = `
-        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-            <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: ${info.color}20;">
-                <i data-lucide="${info.icon}" style="width: 18px; height: 18px; color: ${info.color};"></i>
-            </span>
-            <strong style="color: ${info.color};">${info.name}</strong> 상담
-        </div>
-        <p>${info.message}</p>
-        <p style="font-size: 0.85em; color: rgba(255,255,255,0.5); margin-top: 12px;">아래 예시 질문을 클릭하거나 직접 질문을 입력해 주세요.</p>
-    `;
-    addMessage(introMessage, 'ai');
-
-    // Lucide 아이콘 재초기화
-    lucide.createIcons();
+    // 채팅 전용 페이지로 이동
+    window.location.href = `chat.html?category=${category}`;
 }
 
 // 분야 변경 버튼
@@ -810,10 +734,10 @@ function getSourceUrl(source) {
     // 판례 (예: "판례 2018다244877", "판례 2024노652")
     if (trimmed.startsWith('판례 ')) {
         const caseNumber = trimmed.replace('판례 ', '').trim();
-        // 법제처 - 판례 검색
+        // 대법원 종합법률정보 - 판례 검색 (판례·해석례등 탭)
         return {
             type: 'precedent',
-            url: `https://www.law.go.kr/precSc.do?menuId=7&subMenuId=47&tabMenuId=213&query=${encodeURIComponent(caseNumber)}`,
+            url: `https://www.law.go.kr/LSW/precSc.do?menuId=7&subMenuId=67&tabMenuId=1&query=${encodeURIComponent(caseNumber)}`,
             label: trimmed
         };
     }
@@ -821,10 +745,10 @@ function getSourceUrl(source) {
     // 법령해석례 (예: "법령해석례 21-0702", "법령해석례 07-0115")
     if (trimmed.startsWith('법령해석례 ')) {
         const expcNumber = trimmed.replace('법령해석례 ', '').trim();
-        // 법제처 - 법령해석례 검색
+        // 법제처 - 법령해석례 검색 (법제처 해석례 탭)
         return {
             type: 'interpretation',
-            url: `https://www.law.go.kr/expcSc.do?menuId=5&subMenuId=47&tabMenuId=213&query=${encodeURIComponent(expcNumber)}`,
+            url: `https://www.law.go.kr/LSW/precSc.do?menuId=7&subMenuId=67&tabMenuId=2&query=${encodeURIComponent(expcNumber)}`,
             label: trimmed
         };
     }
@@ -1193,9 +1117,27 @@ function getDemoResponse(question) {
 const mobileToggle = document.querySelector('.nav-mobile-toggle');
 const navLinks = document.querySelector('.nav-links');
 
-if (mobileToggle) {
+if (mobileToggle && navLinks) {
     mobileToggle.addEventListener('click', () => {
+        const isOpening = !mobileToggle.classList.contains('active');
         mobileToggle.classList.toggle('active');
+        navLinks.classList.toggle('active');
+
+        // 메뉴 열릴 때 body 스크롤 방지
+        if (isOpening) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    });
+
+    // Close menu when clicking a link
+    navLinks.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileToggle.classList.remove('active');
+            navLinks.classList.remove('active');
+            document.body.style.overflow = '';
+        });
     });
 }
 
