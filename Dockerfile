@@ -26,8 +26,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Python 의존성 설치
 COPY backend/requirements.txt .
 
-# CPU 전용 PyTorch + 의존성 설치 (캐시 무효화용 버전: v3)
-ARG CACHEBUST=3
+# CPU 전용 PyTorch + 의존성 설치 (캐시 무효화용 버전: v4)
+ARG CACHEBUST=4
 RUN pip install --no-cache-dir --target=/app/packages -r requirements.txt
 
 # ===========================================
