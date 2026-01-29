@@ -44,11 +44,11 @@ async def chat(request: ChatRequest, http_request: Request):
             llm_manager=getattr(http_request.app.state, "llm", None),
         )
 
-        # RAG 파이프라인 실행
+        # RAG 파이프라인 실행 (max_tokens 증가로 답변 잘림 방지)
         result = rag_service.process(
             question=request.message,
             top_k=5,
-            max_tokens=512,
+            max_tokens=1024,
         )
 
         return ChatResponse(

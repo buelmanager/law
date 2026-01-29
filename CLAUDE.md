@@ -75,7 +75,8 @@ Docker Container (HF Spaces, 포트 7860)
 
 ## 데이터 소스
 
-### 법제처 국가법령정보 공유서비스 (Open API)
+### 법제처 국가법령정보 공동활용 (Open API)
+- **신청 페이지**: https://open.law.go.kr/LSO/openApi/cuAskList.do#
 - **End Point**: `https://apis.data.go.kr/1170000/law`
 - **데이터 포맷**: XML
 - **인증키**: `b7edf147d2fa53dbafbd3417ea617dde15ddc9cbbe54d6c9a078b64012f801ae`

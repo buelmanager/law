@@ -170,7 +170,7 @@ class RAGService:
         self,
         question: str,
         top_k: int = 5,
-        max_tokens: int = 512,
+        max_tokens: int = 1024,
     ) -> RAGResult:
         """
         전체 RAG 파이프라인 실행
