@@ -810,10 +810,10 @@ function getSourceUrl(source) {
     // 판례 (예: "판례 2018다244877", "판례 2024노652")
     if (trimmed.startsWith('판례 ')) {
         const caseNumber = trimmed.replace('판례 ', '').trim();
-        // 대법원 종합법률정보 - 판례 통합검색
+        // 법제처 - 판례 검색
         return {
             type: 'precedent',
-            url: `https://glaw.scourt.go.kr/wsjo/intesrch/sjo022.do?q=${encodeURIComponent(caseNumber)}`,
+            url: `https://www.law.go.kr/precSc.do?menuId=7&subMenuId=47&tabMenuId=213&query=${encodeURIComponent(caseNumber)}`,
             label: trimmed
         };
     }
@@ -821,10 +821,10 @@ function getSourceUrl(source) {
     // 법령해석례 (예: "법령해석례 21-0702", "법령해석례 07-0115")
     if (trimmed.startsWith('법령해석례 ')) {
         const expcNumber = trimmed.replace('법령해석례 ', '').trim();
-        // 법제처 - 법령해석례 통합검색
+        // 법제처 - 법령해석례 검색
         return {
             type: 'interpretation',
-            url: `https://www.law.go.kr/법령해석례/${encodeURIComponent(expcNumber)}`,
+            url: `https://www.law.go.kr/expcSc.do?menuId=5&subMenuId=47&tabMenuId=213&query=${encodeURIComponent(expcNumber)}`,
             label: trimmed
         };
     }
