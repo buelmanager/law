@@ -431,13 +431,98 @@ law/
 6. **FAQ**: 자주 묻는 질문 (5개)
 7. **Footer**: 브랜딩 + 링크
 
-### 파일 구조
+### 파일 구조 (총 78개 파일)
 ```
 web/
-├── index.html      # 메인 HTML (LawBot 브랜딩, 4대 분야)
-├── contact.html    # 무료 상담 신청 페이지 (Web3Forms 연동)
-├── styles.css      # 전체 스타일 (CSS 변수, 반응형, 블루 테마)
-└── script.js       # GSAP 애니메이션, Lucide 초기화, 채팅 로직
+├── index.html          # 메인 랜딩 페이지 (LawBot 브랜딩, 4대 분야)
+├── contact.html        # 무료 상담 신청 페이지 (Web3Forms 연동)
+├── styles.css          # 전체 스타일 (CSS 변수, 반응형, 블루 테마)
+├── script.js           # GSAP 애니메이션, Lucide 초기화, 채팅 로직
+├── vercel.json         # Vercel 배포 설정
+├── README.md
+│
+├── blog/               # 블로그 섹션
+│   ├── index.html      # 블로그 목록 페이지
+│   └── blog.css        # 블로그 스타일
+│
+└── story/              # 법률 사례 스토리 (64개 사례)
+    ├── index.html      # 스토리 목록/검색 페이지
+    ├── story.js        # 스토리 필터링/검색 로직
+    ├── story.css       # 스토리 카드 스타일
+    ├── stories-data.js # 스토리 메타데이터 (제목, 설명, 카테고리)
+    │
+    ├── labor/          # 노동법 사례 (20개)
+    │   ├── severance-pay-one-year.html    # 1년 미만 퇴직금
+    │   ├── unfair-dismissal-small-business.html
+    │   ├── workplace-bullying.html
+    │   ├── overtime-unpaid.html
+    │   └── ... (16개 더)
+    │
+    ├── housing/        # 임대차법 사례 (14개)
+    │   ├── deposit-return-delay.html      # 보증금 반환 지연
+    │   ├── contract-renewal-rejection.html
+    │   ├── rent-increase-limit.html
+    │   └── ... (11개 더)
+    │
+    ├── consumer/       # 소비자보호법 사례 (15개)
+    │   ├── online-refund.html             # 온라인 환불
+    │   ├── gym-cancellation.html
+    │   ├── subscription-trap.html
+    │   └── ... (12개 더)
+    │
+    └── traffic/        # 교통사고 사례 (15개)
+        ├── hit-and-run.html               # 뺑소니 사고
+        ├── insurance-claim.html
+        ├── rear-end-fault.html
+        └── ... (12개 더)
+```
+
+### 스토리 섹션 상세
+
+#### 카테고리별 사례 수
+| 카테고리 | 파일 수 | 주요 주제 |
+|---------|--------|----------|
+| 노동법 (labor) | 20개 | 퇴직금, 부당해고, 직장 내 괴롭힘, 연차, 임금체불 |
+| 소비자보호법 (consumer) | 15개 | 환불, 청약철회, 헬스장 해지, 제품 하자 |
+| 교통사고 (traffic) | 15개 | 과실비율, 뺑소니, 보험금 청구, 후유장해 |
+| 임대차법 (housing) | 14개 | 보증금 반환, 계약갱신, 전세사기, 수리비 |
+| **합계** | **64개** | - |
+
+#### 스토리 페이지 구조
+각 스토리 HTML 파일은 다음 구조를 따름:
+```html
+<!-- story/{category}/{slug}.html -->
+<article class="story-article">
+    <header class="story-header">
+        <span class="category-badge">{카테고리}</span>
+        <h1>{제목}</h1>
+        <p class="story-meta">{날짜} · {읽기 시간}</p>
+    </header>
+    <section class="story-content">
+        <h2>사건 개요</h2>
+        <h2>법적 쟁점</h2>
+        <h2>관련 법령</h2>
+        <h2>해결 방법</h2>
+        <h2>교훈</h2>
+    </section>
+    <aside class="related-stories">...</aside>
+</article>
+```
+
+#### stories-data.js 구조
+```javascript
+const STORIES = [
+    {
+        slug: "severance-pay-one-year",
+        category: "labor",
+        title: "1년 미만 근무자도 퇴직금 받을 수 있나요?",
+        description: "11개월 근무 후 퇴직금을 거부당한 사례",
+        date: "2026-01-15",
+        readTime: "5분",
+        tags: ["퇴직금", "근로기준법", "1년미만"]
+    },
+    // ...
+];
 ```
 
 ### 아이콘 시스템
@@ -492,6 +577,51 @@ web/
 - **데스크톱 (900px+)**: 2컬럼 (정보 340px + 폼)
 - **태블릿 (600-900px)**: 1컬럼, 특징 3열 그리드
 - **모바일 (600px-)**: 1컬럼, 특징 1열
+
+### 채팅 응답 출처(Sources) 시스템
+
+#### 데이터 흐름
+```
+1. 인덱싱 (index_cases.py)
+   → 메타데이터에 source 필드 저장
+   → 예: "판례 2020다287921", "법령해석례 07-0039"
+
+2. 검색 (retriever.py)
+   → hybrid_search()가 metadata 포함하여 반환
+
+3. RAG (rag_service.py)
+   → extract_sources()가 metadata.source에서 출처 추출
+
+4. API (chat.py)
+   → ChatResponse.sources 배열로 반환
+
+5. 프론트엔드 (script.js)
+   → formatApiResponse()가 "📚 참고 자료:" 섹션으로 표시
+```
+
+#### 출처 URL 매핑 (script.js)
+```javascript
+// 출처 유형별 URL 생성
+function getSourceUrl(source) {
+    // 판례 → 대법원 종합법률정보
+    if (source.startsWith('판례 ')) {
+        return `https://glaw.scourt.go.kr/wsjo/intesrch/sjo022.do?q=${caseNumber}`;
+    }
+    // 법령해석례 → 법제처 통합검색
+    if (source.startsWith('법령해석례 ')) {
+        return `https://www.law.go.kr/법령해석례/${expcNumber}`;
+    }
+    // 법령 → 법제처 법령정보
+    return `https://www.law.go.kr/법령/${lawName}`;
+}
+```
+
+#### 출처 표시 UI
+- **참고 자료 리스트**: 출처별 클릭 가능한 링크
+- **원문 보기 버튼**: 유형별 색상 구분
+  - 판례: 골드 (#f59e0b)
+  - 법령해석례: 에메랄드 (#10b981)
+  - 법령: 블루 (#3b82f6)
 
 ### 채팅창 확장 기능
 ```javascript
