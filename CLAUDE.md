@@ -346,7 +346,7 @@ law/
 - **GitHub**: https://github.com/buelmanager/law (main branch)
 
 ### ⚡ 핵심 명세 (확정)
-- **LLM**: Qwen2.5-7B-Instruct GGUF 4-bit (llama-cpp-python)
+- **LLM**: Mistral AI (open-mixtral-8x7b) 또는 Groq 폴백
 - **임베딩**: intfloat/multilingual-e5-large (1024 dims)
 - **검색**: Hybrid (BM25 + 벡터 검색)
 - **VectorDB**: ChromaDB (영구 저장, ./vectordb/)
@@ -354,3 +354,42 @@ law/
 - **프론트엔드**: Next.js 14 App Router (정적 빌드)
 - **배포**: HF Spaces Docker (16GB RAM, 무료)
 - **면책**: 모든 답변에 법률 정보 서비스 고지 포함
+
+---
+
+## 🔖 버전 관리
+
+### 현재 버전
+- **APP_VERSION**: `0.2.0`
+- **BUILD_ID**: `prompt-improvement-v2`
+- **BUILD_DATE**: `2025-01-29`
+
+### 버전 확인 방법
+1. **로그 확인** - HF Spaces 로그에서 서버 시작 시 버전 출력
+   ```
+   ============================================================
+   🚀 서버 시작
+   📦 버전: 0.2.0 | 빌드: prompt-improvement-v2 | 날짜: 2025-01-29
+   ============================================================
+   ```
+
+2. **API 엔드포인트** - `/api/health` 호출
+   ```bash
+   curl https://wonchulhee-korean-law-chatbot.hf.space/api/health
+   ```
+   응답:
+   ```json
+   {
+     "version": "0.2.0",
+     "build_id": "prompt-improvement-v2",
+     "build_date": "2025-01-29"
+   }
+   ```
+
+### 버전 업데이트 시
+`backend/main.py` 상단의 다음 변수를 수정:
+```python
+APP_VERSION = "0.2.0"
+BUILD_DATE = "2025-01-29"
+BUILD_ID = "prompt-improvement-v2"
+```
