@@ -14,9 +14,9 @@ from backend.api.search import router as search_router
 from backend.api.download import router as download_router
 
 # 버전 정보 (배포 시 확인용)
-APP_VERSION = "0.5.0"
+APP_VERSION = "0.5.1"
 BUILD_DATE = "2026-01-29"
-BUILD_ID = "category-filter-fix"
+BUILD_ID = "embeddings-fix"
 
 # 로깅 설정
 logging.basicConfig(
