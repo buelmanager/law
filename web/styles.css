@@ -240,6 +240,13 @@ a {
     width: 100%;
 }
 
+.nav-divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 0 0.5rem;
+}
+
 .nav-cta {
     display: flex;
     align-items: center;

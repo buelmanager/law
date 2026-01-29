@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>법률 상담 사연 | LawBot - 4대 법률 분야 AI 법률 정보 서비스</title>
+    <meta name="description" content="실제 법률 상담 사연을 확인해보세요. 노동법, 임대차법, 소비자보호법, 교통사고 분야의 다양한 사례를 만나보실 수 있습니다.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="story.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-logo">
+                <div class="logo-icon">
+                    <i data-lucide="scale" class="icon-md"></i>
+                </div>
+                <span class="logo-text">Law<span class="logo-highlight">Bot</span></span>
+            </a>
+
+            <div class="nav-links">
+                <a href="../index.html#features" class="nav-link">서비스 소개</a>
+                <a href="../index.html#how-it-works" class="nav-link">이용 방법</a>
+                <a href="../index.html#categories" class="nav-link">상담 분야</a>
+                <a href="../index.html#faq" class="nav-link">FAQ</a>
+                <span class="nav-divider"></span>
+                <a href="index.html" class="nav-link active">상담 사연</a>
+                <a href="../blog/" class="nav-link">블로그</a>
+            </div>
+
+            <a href="../contact.html" class="nav-cta">
+                <span>변호사 상담</span>
+                <i data-lucide="arrow-right" class="icon-sm"></i>
+            </a>
+
+            <button class="nav-mobile-toggle" aria-label="메뉴 열기">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="story-hero">
+        <div class="container">
+            <div class="story-hero-content">
+                <span class="section-tag">Real Stories</span>
+                <h1 class="story-hero-title">
+                    실제 법률 상담 사연
+                </h1>
+                <p class="story-hero-desc">
+                    비슷한 상황에 처한 분들의 실제 사연을 확인해보세요.<br>
+                    4대 법률 분야별로 다양한 상담 사례를 정리했습니다.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Category Filter -->
+    <section class="story-filter">
+        <div class="container">
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-category="all">
+                    <i data-lucide="grid" class="icon-sm"></i>
+                    <span>전체</span>
+                    <span class="tab-count">64</span>
+                </button>
+                <button class="filter-tab" data-category="labor">
+                    <i data-lucide="briefcase" class="icon-sm"></i>
+                    <span>노동법</span>
+                    <span class="tab-count">20</span>
+                </button>
+                <button class="filter-tab" data-category="housing">
+                    <i data-lucide="home" class="icon-sm"></i>
+                    <span>임대차법</span>
+                    <span class="tab-count">14</span>
+                </button>
+                <button class="filter-tab" data-category="consumer">
+                    <i data-lucide="shopping-cart" class="icon-sm"></i>
+                    <span>소비자보호법</span>
+                    <span class="tab-count">15</span>
+                </button>
+                <button class="filter-tab" data-category="traffic">
+                    <i data-lucide="car" class="icon-sm"></i>
+                    <span>교통사고</span>
+                    <span class="tab-count">15</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stories List -->
+    <section class="stories-section">
+        <div class="container">
+            <div class="stories-grid" id="stories-grid">
+                <!-- Stories will be dynamically loaded -->
+            </div>
+
+            <div class="load-more-container">
+                <button class="load-more-btn" id="load-more-btn">
+                    <span>더 보기</span>
+                    <i data-lucide="chevron-down" class="icon-sm"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="story-cta">
+        <div class="container">
+            <div class="post-cta">
+                <h3>비슷한 상황이신가요?</h3>
+                <p>AI 법률 상담으로 더 자세한 정보를 확인해보세요.</p>
+                <div class="post-cta-buttons">
+                    <a href="../index.html#hero" class="post-cta-btn primary">
+                        <i data-lucide="message-circle" class="icon-sm"></i>
+                        AI 상담 시작하기
+                    </a>
+                    <a href="../contact.html" class="post-cta-btn secondary">
+                        <i data-lucide="user" class="icon-sm"></i>
+                        변호사 상담 신청
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="../index.html" class="nav-logo">
+                        <div class="logo-icon">
+                            <i data-lucide="scale" class="icon-md"></i>
+                        </div>
+                        <span class="logo-text">Law<span class="logo-highlight">Bot</span></span>
+                    </a>
+                    <p class="footer-tagline">
+                        4대 법률 분야 특화 AI 법률 정보 서비스<br>
+                        복잡한 법률, 쉽게 이해하세요
+                    </p>
+                </div>
+
+                <div class="footer-links">
+                    <div class="footer-col">
+                        <h4 class="footer-col-title">서비스</h4>
+                        <a href="../index.html#hero" class="footer-link">AI 상담</a>
+                        <a href="../index.html#categories" class="footer-link">상담 분야</a>
+                        <a href="index.html" class="footer-link">상담 사연</a>
+                        <a href="../contact.html" class="footer-link">변호사 상담 신청</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4 class="footer-col-title">상담 사연</h4>
+                        <a href="index.html?category=labor" class="footer-link">노동법 사연</a>
+                        <a href="index.html?category=housing" class="footer-link">임대차법 사연</a>
+                        <a href="index.html?category=consumer" class="footer-link">소비자보호법 사연</a>
+                        <a href="index.html?category=traffic" class="footer-link">교통사고 사연</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4 class="footer-col-title">안내</h4>
+                        <a href="../index.html#faq" class="footer-link">자주 묻는 질문</a>
+                        <a href="#" class="footer-link">이용약관</a>
+                        <a href="#" class="footer-link">개인정보처리방침</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p class="copyright">&copy; 2024 LawBot. 오픈소스 프로젝트.</p>
+                <div class="footer-disclaimer">
+                    <p>
+                        <i data-lucide="info" class="icon-xs"></i>
+                        본 서비스는 법률 정보 제공 목적이며, 법률 자문이 아닙니다. 구체적 사안은 변호사와 상담하세요.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="./stories-data.js"></script>
+    <script src="./story.js"></script>
+</body>
+</html>
