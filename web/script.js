@@ -523,12 +523,6 @@ function resetCategory() {
         // 웰컴 화면 다시 표시
         const welcomeHtml = `
             <div class="chat-welcome">
-                <div class="welcome-icon">
-                    <i data-lucide="scale" class="icon-xl"></i>
-                </div>
-                <h3>LawBot에 오신 것을 환영합니다</h3>
-                <p>상담받고 싶은 법률 분야를 선택해 주세요.</p>
-
                 <div class="category-select" id="category-select">
                     <button class="category-btn labor" data-category="labor">
                         <i data-lucide="briefcase" class="icon-md"></i>
@@ -966,15 +960,10 @@ function addMessage(content, type) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message message-${type}`;
 
-    const avatar = document.createElement('div');
-    avatar.className = 'message-avatar';
-    avatar.textContent = type === 'user' ? '나' : 'AI';
-
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content';
     contentDiv.innerHTML = content;
 
-    messageDiv.appendChild(avatar);
     messageDiv.appendChild(contentDiv);
 
     chatMessages.appendChild(messageDiv);
@@ -989,7 +978,6 @@ function showTypingIndicator() {
     typingDiv.id = id;
     typingDiv.className = 'message message-ai';
     typingDiv.innerHTML = `
-        <div class="message-avatar">AI</div>
         <div class="message-content" style="display: flex; gap: 4px; padding: 16px 20px;">
             <span class="typing-dot" style="animation: typingDot 1.4s infinite; animation-delay: 0s;"></span>
             <span class="typing-dot" style="animation: typingDot 1.4s infinite; animation-delay: 0.2s;"></span>

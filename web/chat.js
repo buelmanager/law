@@ -314,15 +314,10 @@ function addMessage(content, type) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message message-${type}`;
 
-    const avatar = document.createElement('div');
-    avatar.className = 'message-avatar';
-    avatar.textContent = type === 'user' ? '나' : 'AI';
-
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content';
     contentDiv.innerHTML = content;
 
-    messageDiv.appendChild(avatar);
     messageDiv.appendChild(contentDiv);
 
     chatMessages.appendChild(messageDiv);
@@ -336,7 +331,6 @@ function showTypingIndicator() {
     typingDiv.id = id;
     typingDiv.className = 'message message-ai';
     typingDiv.innerHTML = `
-        <div class="message-avatar">AI</div>
         <div class="message-content" style="display: flex; gap: 4px; padding: 16px 20px;">
             <span class="typing-dot" style="animation: typingDot 1.4s infinite; animation-delay: 0s;"></span>
             <span class="typing-dot" style="animation: typingDot 1.4s infinite; animation-delay: 0.2s;"></span>

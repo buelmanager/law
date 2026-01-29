@@ -208,6 +208,25 @@
     margin: 0;
 }
 
+/* 카카오 애드핏 광고 - chat 페이지 */
+.chat-wrapper .adfit-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: var(--space-lg);
+    padding: var(--space-md);
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 16px;
+    min-height: 250px;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.chat-wrapper .adfit-container ins {
+    display: block !important;
+}
+
 /* PWA Install Banner */
 .pwa-install-banner {
     position: fixed;
@@ -419,21 +438,39 @@
     opacity: 0.7;
 }
 
-/* Responsive */
+/* Responsive - 태블릿 */
 @media (max-width: 768px) {
     .chat-section {
-        padding: 80px var(--container-padding) 20px;
+        padding: 70px var(--container-padding) 16px;
+        min-height: 100vh;
+        min-height: 100dvh;
+    }
+
+    .chat-wrapper {
+        gap: var(--space-md);
+        height: calc(100vh - 86px);
+        height: calc(100dvh - 86px);
+    }
+
+    .chat-section .chat-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        max-height: none;
     }
 
     .chat-section .chat-messages {
-        min-height: 350px;
-        max-height: calc(100vh - 300px);
-        height: 350px;
+        flex: 1;
+        min-height: 0;
+        max-height: none;
+        height: auto;
     }
 
     .chat-section .chat-welcome {
-        min-height: 300px;
+        min-height: auto;
         padding: var(--space-lg) var(--space-md);
+        flex: 1;
+        justify-content: center;
     }
 
     .chat-section .welcome-examples {
@@ -452,12 +489,24 @@
 
     .chat-category-header {
         flex-direction: column;
-        gap: var(--space-md);
+        gap: var(--space-sm);
         text-align: center;
+        padding: var(--space-sm) var(--space-md);
     }
 
     .category-modal-grid {
         grid-template-columns: 1fr;
+    }
+
+    /* AI Notice 간소화 */
+    .chat-ai-notice {
+        padding: var(--space-sm) var(--space-md);
+        font-size: 0.8rem;
+    }
+
+    /* 광고 숨김 - 모바일에서 공간 확보 */
+    .chat-wrapper .adfit-container {
+        display: none;
     }
 
     /* 모바일 메뉴 스타일 */
@@ -510,5 +559,220 @@
 
     .nav-mobile-toggle.active span:last-child {
         transform: rotate(-45deg) translate(5px, -5px);
+    }
+}
+
+/* 모바일 세로 모드 - 작은 화면 */
+@media (max-width: 480px) {
+    .chat-section {
+        padding: 60px 12px 12px;
+    }
+
+    .chat-wrapper {
+        gap: var(--space-sm);
+        height: calc(100vh - 72px);
+        height: calc(100dvh - 72px);
+    }
+
+    /* 네비게이션 컴팩트 */
+    .chat-page .nav {
+        padding: 8px 12px;
+    }
+
+    .chat-page .nav-logo .logo-text {
+        font-size: 1.1rem;
+    }
+
+    /* 카테고리 헤더 더 작게 */
+    .chat-category-header {
+        padding: var(--space-xs) var(--space-sm);
+        border-radius: 12px;
+    }
+
+    .category-indicator {
+        font-size: 0.95rem;
+    }
+
+    .change-category-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+
+    /* 채팅 컨테이너 풀 높이 */
+    .chat-section .chat-container {
+        border-radius: 16px;
+    }
+
+    .chat-section .chat-header {
+        padding: var(--space-sm) var(--space-md);
+    }
+
+    .chat-section .chat-messages {
+        padding: var(--space-sm);
+    }
+
+    /* 입력창 최적화 */
+    .chat-input-container {
+        padding: var(--space-sm);
+    }
+
+    .chat-input-wrapper {
+        gap: 8px;
+    }
+
+    .chat-input-wrapper textarea {
+        padding: 10px 14px;
+        font-size: 16px; /* iOS 줌 방지 */
+        min-height: 44px;
+    }
+
+    .chat-submit-btn {
+        width: 44px;
+        height: 44px;
+    }
+
+    .chat-disclaimer {
+        font-size: 0.7rem;
+        margin-top: 8px;
+    }
+
+    /* 메시지 스타일 */
+    .message-content {
+        padding: var(--space-sm) var(--space-md);
+        font-size: 0.9rem;
+    }
+
+    .message-user {
+        max-width: 85%;
+    }
+
+    .message-ai {
+        max-width: 90%;
+    }
+
+    /* AI Notice 더 작게 */
+    .chat-ai-notice {
+        padding: 8px 12px;
+        font-size: 0.75rem;
+        border-radius: 8px;
+        gap: 8px;
+    }
+
+    .chat-ai-notice i {
+        width: 14px;
+        height: 14px;
+    }
+
+    /* 웰컴 화면 최적화 */
+    .chat-section .chat-welcome {
+        padding: var(--space-md);
+    }
+
+    .chat-section .category-select {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .chat-section .category-btn {
+        padding: var(--space-sm);
+    }
+
+    .chat-section .category-btn .icon-md {
+        width: 24px;
+        height: 24px;
+    }
+
+    .chat-section .category-name {
+        font-size: 0.85rem;
+    }
+
+    .chat-section .category-desc {
+        font-size: 0.7rem;
+    }
+}
+
+/* 아주 작은 화면 (iPhone SE 등) */
+@media (max-width: 375px) {
+    .chat-section {
+        padding: 56px 8px 8px;
+    }
+
+    .chat-wrapper {
+        gap: 8px;
+        height: calc(100vh - 64px);
+        height: calc(100dvh - 64px);
+    }
+
+    .chat-category-header {
+        padding: 8px 12px;
+    }
+
+    .category-indicator {
+        font-size: 0.9rem;
+    }
+
+    .chat-section .chat-container {
+        border-radius: 12px;
+    }
+
+    .chat-section .chat-messages {
+        padding: 8px;
+    }
+
+    .chat-input-wrapper textarea {
+        padding: 8px 12px;
+    }
+
+    .chat-ai-notice {
+        padding: 6px 10px;
+        font-size: 0.7rem;
+    }
+
+    /* 카테고리 버튼 더 작게 */
+    .chat-section .category-select {
+        gap: 6px;
+    }
+
+    .chat-section .category-btn {
+        padding: 8px;
+    }
+
+    .chat-section .category-name {
+        font-size: 0.8rem;
+    }
+
+    .chat-section .category-desc {
+        display: none;
+    }
+}
+
+/* 가로 모드 */
+@media (max-height: 500px) and (orientation: landscape) {
+    .chat-section {
+        padding: 50px 16px 8px;
+    }
+
+    .chat-wrapper {
+        flex-direction: row;
+        gap: var(--space-md);
+        height: calc(100vh - 58px);
+        height: calc(100dvh - 58px);
+    }
+
+    .chat-category-header {
+        display: none;
+    }
+
+    .chat-section .chat-container {
+        flex: 1;
+    }
+
+    .chat-section .chat-messages {
+        max-height: calc(100vh - 180px);
+        max-height: calc(100dvh - 180px);
+    }
+
+    .chat-ai-notice {
+        display: none;
     }
 }

@@ -3,8 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI 법률 상담 | LawBot</title>
-    <meta name="description" content="노동법, 임대차법, 소비자보호법, 교통사고 4대 분야에 특화된 AI 법률 정보 서비스.">
+    <title>AI 법률 상담 | LawBot - 무료 AI 법률 정보 서비스</title>
+    <meta name="description" content="24시간 무료 AI 법률 상담. 노동법, 임대차법, 소비자보호법, 교통사고 4대 분야 전문. 법제처 법령과 대법원 판례 기반 근거 있는 답변.">
+
+    <!-- SEO Meta Tags -->
+    <meta name="keywords" content="AI 법률 상담, 무료 법률 상담, 노동법 상담, 퇴직금 계산, 부당해고, 전세보증금, 환불, 교통사고 보상">
+    <meta name="robots" content="index, follow">
+    <meta name="naver-site-verification" content="8c99e6ed6c2a935af0ae1d26f2315819f0eaa023" />
+    <link rel="canonical" href="https://lawbot-public.vercel.app/chat.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lawbot-public.vercel.app/chat.html">
+    <meta property="og:title" content="AI 법률 상담 | LawBot">
+    <meta property="og:description" content="24시간 무료 AI 법률 상담. 노동법, 임대차법, 소비자보호법, 교통사고 4대 분야 전문.">
+    <meta property="og:image" content="https://lawbot-public.vercel.app/og-image.png">
+    <meta property="og:locale" content="ko_KR">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AI 법률 상담 | LawBot">
+    <meta name="twitter:description" content="24시간 무료 AI 법률 상담. 노동법, 임대차법, 소비자보호법, 교통사고 4대 분야 전문.">
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#3b82f6">
@@ -25,6 +44,9 @@
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="chat.css">
+
+    <!-- 카카오 애드핏 SDK -->
+    <script async type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js"></script>
 </head>
 <body class="chat-page">
     <!-- Particle Canvas Background -->
@@ -47,7 +69,7 @@
                 <a href="index.html#faq" class="nav-link">FAQ</a>
                 <span class="nav-divider"></span>
                 <a href="chat.html" class="nav-link nav-link-highlight active">AI 상담</a>
-                <a href="story/index.html" class="nav-link">상담 사연</a>
+                <a href="story/index.html" class="nav-link">법률 사연</a>
                 <a href="blog/index.html" class="nav-link">블로그</a>
             </div>
 
@@ -111,13 +133,24 @@
                 </div>
             </div>
 
-            <!-- AI Notice -->
-            <div class="chat-ai-notice">
-                <i data-lucide="info" class="icon-sm"></i>
-                <p>AI가 제공하는 일반적인 법률 정보입니다. 정확하지 않을 수 있으며, 구체적 사안은 변호사와 상담하세요.</p>
+            <!-- 카카오 애드핏 광고 -->
+            <div class="adfit-container" id="adfit-chat">
+                <ins class="kakao_ad_area" style="display:none;width:100%;"
+                    data-ad-unit="DAN-lJv0UFXMhOFUlRhD"
+                    data-ad-width="300"
+                    data-ad-height="250"
+                    data-ad-onfail="adfitChatFail"></ins>
             </div>
         </div>
     </section>
+
+    <script>
+        // 광고 로드 실패 시 컨테이너 숨김
+        function adfitChatFail(e) {
+            const container = document.getElementById('adfit-chat');
+            if (container) container.style.display = 'none';
+        }
+    </script>
 
     <!-- PWA Install Banner (모바일용) -->
     <div id="pwa-install-banner" class="pwa-install-banner" style="display: none;">

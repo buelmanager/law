@@ -737,3 +737,12 @@
         font-size: 1rem;
     }
 }
+
+/* Modal AdFit */
+.modal-adfit {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}

@@ -156,9 +156,33 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="modal-tags">
                         ${story.tags.map(tag => `<span class="modal-tag">#${tag}</span>`).join('')}
                     </div>
+                    <!-- 모달 내 애드핏 광고 -->
+                    <div class="modal-adfit" id="modal-adfit-story">
+                        <ins class="kakao_ad_area" style="display:none;width:100%;"
+                            data-ad-unit="DAN-lJv0UFXMhOFUlRhD"
+                            data-ad-width="300"
+                            data-ad-height="250"></ins>
+                    </div>
                 </div>
             </div>
         `;
+
+        // 애드핏 광고 로드 (동적 요소용)
+        setTimeout(() => {
+            const adContainer = modal.querySelector('#modal-adfit-story');
+            if (adContainer && window.kakaoAdFit) {
+                adContainer.innerHTML = '';
+                const ins = document.createElement('ins');
+                ins.className = 'kakao_ad_area';
+                ins.style.display = 'none';
+                ins.style.width = '100%';
+                ins.setAttribute('data-ad-unit', 'DAN-lJv0UFXMhOFUlRhD');
+                ins.setAttribute('data-ad-width', '300');
+                ins.setAttribute('data-ad-height', '250');
+                adContainer.appendChild(ins);
+                kakaoAdFit.load();
+            }
+        }, 100);
 
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';

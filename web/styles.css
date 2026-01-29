@@ -1642,6 +1642,48 @@ a {
 }
 
 /* ===========================
+   카카오 애드핏 광고
+   =========================== */
+.adfit-section {
+    padding: var(--space-xl) 0;
+}
+
+.adfit-section .adfit-container,
+.adfit-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-md);
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 16px;
+    min-height: 250px;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.adfit-section .adfit-container ins,
+.adfit-container ins {
+    display: block !important;
+}
+
+/* 광고 로드 실패 시 숨김 처리 */
+.adfit-container[style*="display: none"],
+.adfit-container[style*="display:none"] {
+    display: none !important;
+    min-height: 0;
+    padding: 0;
+}
+
+/* 반응형 - 모바일에서도 중앙 정렬 유지 */
+@media (max-width: 768px) {
+    .adfit-section .adfit-container,
+    .adfit-container {
+        max-width: 300px;
+        min-height: 250px;
+    }
+}
+
+/* ===========================
    Responsive Design
    =========================== */
 @media (max-width: 1024px) {
