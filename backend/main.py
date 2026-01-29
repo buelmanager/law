@@ -13,9 +13,9 @@ from backend.api.chat import router as chat_router
 from backend.api.search import router as search_router
 
 # 버전 정보 (배포 시 확인용)
-APP_VERSION = "0.2.0"
-BUILD_DATE = "2025-01-29"
-BUILD_ID = "prompt-improvement-v2"
+APP_VERSION = "0.3.0"
+BUILD_DATE = "2026-01-29"
+BUILD_ID = "case-data-v1"
 
 # 로깅 설정
 logging.basicConfig(
