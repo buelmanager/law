@@ -1,0 +1,21 @@
+{
+  "name": "LawBot - AI 법률 상담",
+  "short_name": "LawBot",
+  "description": "4대 법률 분야 특화 AI 법률 정보 서비스",
+  "start_url": "/chat.html?source=pwa",
+  "display": "standalone",
+  "background_color": "#0a0f1a",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["utilities", "lifestyle"],
+  "lang": "ko",
+  "dir": "ltr"
+}

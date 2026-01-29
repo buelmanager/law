@@ -2,9 +2,17 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AI 법률 상담 | LawBot</title>
     <meta name="description" content="노동법, 임대차법, 소비자보호법, 교통사고 4대 분야에 특화된 AI 법률 정보 서비스.">
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="LawBot">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon.svg">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
@@ -111,10 +119,78 @@
         </div>
     </section>
 
+    <!-- PWA Install Banner (모바일용) -->
+    <div id="pwa-install-banner" class="pwa-install-banner" style="display: none;">
+        <div class="pwa-install-content">
+            <div class="pwa-install-icon">
+                <i data-lucide="download" class="icon-md"></i>
+            </div>
+            <div class="pwa-install-text">
+                <strong>홈 화면에 추가하기</strong>
+                <p id="pwa-install-instruction"></p>
+            </div>
+            <button id="pwa-install-close" class="pwa-install-close">
+                <i data-lucide="x" class="icon-sm"></i>
+            </button>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
     <script src="chat.js"></script>
+
+    <!-- PWA & Install Banner Script -->
+    <script>
+        // Service Worker 등록
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker 등록 성공:', reg.scope))
+                    .catch(err => console.log('Service Worker 등록 실패:', err));
+            });
+        }
+
+        // PWA 설치 안내 배너
+        (function() {
+            const banner = document.getElementById('pwa-install-banner');
+            const instruction = document.getElementById('pwa-install-instruction');
+            const closeBtn = document.getElementById('pwa-install-close');
+
+            // 이미 PWA로 실행 중이거나, 이미 닫았으면 표시하지 않음
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+            const dismissed = localStorage.getItem('pwa-install-dismissed');
+
+            if (isStandalone || dismissed) return;
+
+            // 모바일 기기 감지
+            const userAgent = navigator.userAgent.toLowerCase();
+            const isIOS = /iphone|ipad|ipod/.test(userAgent);
+            const isAndroid = /android/.test(userAgent);
+            const isMobile = isIOS || isAndroid;
+
+            if (!isMobile) return;
+
+            // 안내 문구 설정
+            if (isIOS) {
+                instruction.innerHTML = '<i data-lucide="share" class="icon-xs" style="display:inline;vertical-align:middle;"></i> 버튼 → "홈 화면에 추가"를 탭하세요';
+            } else if (isAndroid) {
+                instruction.innerHTML = '메뉴(⋮) → "홈 화면에 추가"를 탭하세요';
+            }
+
+            // 배너 표시 (2초 후)
+            setTimeout(() => {
+                banner.style.display = 'block';
+                lucide.createIcons();
+            }, 2000);
+
+            // 닫기 버튼
+            closeBtn.addEventListener('click', () => {
+                banner.style.display = 'none';
+                localStorage.setItem('pwa-install-dismissed', 'true');
+            });
+        })();
+    </script>
 </body>
 </html>

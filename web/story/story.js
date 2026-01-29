@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </button>
                 <div class="modal-header">
                     <span class="modal-category story-category ${story.category}">${story.categoryName}</span>
-                    <h2 class="modal-title">${story.title}</h2>
+                    <h1 class="modal-title">${story.title}</h1>
                     <div class="modal-meta">
                         <span><i data-lucide="user" class="icon-xs"></i> ${story.author}</span>
                         <span><i data-lucide="calendar" class="icon-xs"></i> ${formatDate(story.date)}</span>
@@ -131,20 +131,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="modal-body">
                     ${story.content.split('\n\n').map(p => `<p>${p}</p>`).join('')}
+
+                    <div class="post-disclaimer">
+                        <div class="post-disclaimer-title"><i data-lucide="alert-circle" class="icon-sm"></i> 법률 정보 안내</div>
+                        <p>이 글은 일반적인 법률 정보를 제공하기 위한 것으로, 구체적인 법률 자문이 아닙니다. 개별 사안에 따라 결과가 달라질 수 있으므로, 정확한 판단을 위해서는 변호사와 상담하시기 바랍니다.</p>
+                    </div>
+
+                    <div class="post-cta">
+                        <h3>비슷한 상황이신가요?</h3>
+                        <p>AI 법률 상담으로 더 자세한 정보를 확인해보세요.</p>
+                        <div class="post-cta-buttons">
+                            <a href="../index.html#hero" class="post-cta-btn primary">
+                                <i data-lucide="message-circle" class="icon-sm"></i>
+                                AI 상담 시작하기
+                            </a>
+                            <a href="../contact.html" class="post-cta-btn secondary">
+                                <i data-lucide="user" class="icon-sm"></i>
+                                변호사 상담 신청
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <div class="modal-tags">
-                        ${story.tags.map(tag => `<span class="modal-tag">${tag}</span>`).join('')}
-                    </div>
-                    <div class="modal-cta">
-                        <a href="index.html#hero" class="cta-btn primary">
-                            <i data-lucide="message-square" class="icon-sm"></i>
-                            <span>AI 상담 시작</span>
-                        </a>
-                        <a href="contact.html" class="cta-btn secondary">
-                            <i data-lucide="user" class="icon-sm"></i>
-                            <span>변호사 상담 신청</span>
-                        </a>
+                        ${story.tags.map(tag => `<span class="modal-tag">#${tag}</span>`).join('')}
                     </div>
                 </div>
             </div>
@@ -191,6 +201,34 @@ document.addEventListener('DOMContentLoaded', function() {
             nav.classList.remove('scrolled');
         }
     });
+
+    // Mobile menu toggle
+    const mobileToggle = document.querySelector('.nav-mobile-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    if (mobileToggle && navLinks) {
+        mobileToggle.addEventListener('click', () => {
+            const isOpening = !mobileToggle.classList.contains('active');
+            mobileToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+
+            // 메뉴 열릴 때 body 스크롤 방지
+            if (isOpening) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Close menu when clicking a link
+        navLinks.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+    }
 
     // Initial render
     renderStories();

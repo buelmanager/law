@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#60a5fa"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+
+  <!-- Scale/Balance Icon -->
+  <g transform="translate(256, 240)">
+    <!-- Center pillar -->
+    <rect x="-12" y="-80" width="24" height="180" rx="8" fill="url(#accent)"/>
+
+    <!-- Top beam -->
+    <rect x="-120" y="-100" width="240" height="20" rx="10" fill="url(#accent)"/>
+
+    <!-- Left pan -->
+    <circle cx="-100" cy="-40" r="50" fill="none" stroke="url(#accent)" stroke-width="8"/>
+    <line x1="-100" y1="-100" x2="-100" y2="-40" stroke="url(#accent)" stroke-width="6"/>
+
+    <!-- Right pan -->
+    <circle cx="100" cy="-40" r="50" fill="none" stroke="url(#accent)" stroke-width="8"/>
+    <line x1="100" y1="-100" x2="100" y2="-40" stroke="url(#accent)" stroke-width="6"/>
+
+    <!-- Base -->
+    <rect x="-60" y="100" width="120" height="20" rx="10" fill="url(#accent)"/>
+  </g>
+
+  <!-- AI dot indicator -->
+  <circle cx="400" cy="112" r="40" fill="#10b981"/>
+  <text x="400" y="125" text-anchor="middle" fill="white" font-size="36" font-weight="bold" font-family="Arial">AI</text>
+</svg>
