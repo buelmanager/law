@@ -65,7 +65,7 @@ ENV PYTHONPATH=/app
 
 # 데이터 수집 및 인덱싱 (빌드 시 실행)
 # 노동법 판례/해석례 수집 후 벡터DB 인덱싱
-RUN python data/collect/collect_all_categories.py --category labor --max-items 60 --detail-limit 120 \
+RUN python data/collect/collect_all_categories.py --category labor --max-items 40 --detail-limit 80 \
     && python data/process/index_cases.py --category labor --collection law_cases
 
 # 포트 설정 (HuggingFace Spaces 필수)
