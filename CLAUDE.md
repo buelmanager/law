@@ -397,7 +397,8 @@ law/
 ## 🌐 웹 랜딩 페이지 (web/)
 
 ### 배포 정보
-- **랜딩 페이지 URL**: https://law-ai-chat.vercel.app
+- **랜딩 페이지 URL**: https://lawbot-public.vercel.app
+- **상담 신청 URL**: https://lawbot-public.vercel.app/contact.html
 - **챗봇 URL**: https://wonchulhee-korean-law-chatbot.hf.space
 - **플랫폼**: Vercel (랜딩) + HuggingFace Spaces (챗봇)
 - **GitHub**: buelmanager/law (main branch)
@@ -434,7 +435,7 @@ law/
 ```
 web/
 ├── index.html      # 메인 HTML (LawBot 브랜딩, 4대 분야)
-├── contact.html    # 무료 상담 신청 페이지 (Webform 연동 준비)
+├── contact.html    # 무료 상담 신청 페이지 (Web3Forms 연동)
 ├── styles.css      # 전체 스타일 (CSS 변수, 반응형, 블루 테마)
 └── script.js       # GSAP 애니메이션, Lucide 초기화, 채팅 로직
 ```
@@ -468,7 +469,29 @@ web/
 - **Trust Card**: 신뢰 지표 표시 카드
 - **RAG Step**: 프로세스 단계 표시
 - **Category Area Card**: 4대 분야 상세 카드 (분야별 아이콘/컬러)
-- **Contact Form**: 상담 신청 폼 (Webform 연동 준비)
+- **Contact Form**: 상담 신청 폼 (Web3Forms 연동)
+
+### 무료 상담 신청 (contact.html)
+
+#### Web3Forms 연동
+- **Access Key**: `7ee3e7e5-8b79-4ef4-9153-9d52d95b0e40`
+- **제출 URL**: `https://api.web3forms.com/submit`
+- **리다이렉트**: `?success=true` 파라미터로 성공 메시지 표시
+
+#### 폼 필드
+| 필드 | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| name | text | ✅ | 이름 |
+| phone | tel | ✅ | 연락처 (자동 포맷팅) |
+| email | email | ✅ | 이메일 |
+| category | select | ✅ | 상담 분야 (5개 옵션) |
+| message | textarea | ✅ | 상담 내용 |
+| privacy | checkbox | ✅ | 개인정보 동의 |
+
+#### 반응형 레이아웃
+- **데스크톱 (900px+)**: 2컬럼 (정보 340px + 폼)
+- **태블릿 (600-900px)**: 1컬럼, 특징 3열 그리드
+- **모바일 (600px-)**: 1컬럼, 특징 1열
 
 ### 채팅창 확장 기능
 ```javascript
