@@ -63,8 +63,12 @@ ENV PYTHONUNBUFFERED=1
 ENV PORT=7860
 ENV PYTHONPATH=/app
 
-# 데이터 수집 및 인덱싱 (빌드 시 실행)
-# 노동법 판례/해석례 수집 후 벡터DB 인덱싱
+# HF_TOKEN은 빌드 시 ARG로 전달받음 (HF Spaces Secrets에서 설정)
+ARG HF_TOKEN
+ENV HF_TOKEN=${HF_TOKEN}
+
+# 데이터 수집 및 인덱싱 (빌드 시 실행, 외부 API로 e5-large 임베딩)
+# 4개 분야 판례/해석례 수집 후 벡터DB 인덱싱
 RUN python data/collect/collect_all_categories.py --enable-category labor,lease,consumer,traffic --all-enabled --max-items 60 --detail-limit 120 \
     && python data/process/index_cases.py --collection law_cases
 
