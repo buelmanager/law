@@ -13,10 +13,10 @@
 
 ```
 사용자 질문
-    → 임베딩 (multilingual-e5-large 또는 ko-sroberta)
+    → 임베딩 (multilingual-e5-base, 768 dims)
     → 벡터DB 검색 (ChromaDB)
     → 관련 법령/판례 청크 추출
-    → LLM 컨텍스트로 전달 (Qwen2.5-7B-Instruct, GGUF 4-bit)
+    → LLM 컨텍스트로 전달 (Groq API - open-mixtral-8x7b)
     → 답변 생성 + 출처 명시
     → 면책 고지 첨부
 ```
@@ -38,10 +38,11 @@
   - 항시 가동, 무료
 
 ### AI 모델
-- **LLM**: Qwen2.5-7B-Instruct (GGUF 4-bit 양자화)
-  - 한국어 성능 우수, Apache 2.0 라이선스
-  - llama-cpp-python으로 CPU 추론
-- **임베딩**: intfloat/multilingual-e5-large (다국어+한국어)
+- **LLM**: Groq API (open-mixtral-8x7b) 또는 Mistral AI 폴백
+  - 무료 API, 빠른 응답 속도
+- **임베딩**: intfloat/multilingual-e5-base (768 dims, ~560MB)
+  - 로컬 sentence-transformers 사용 (HF Inference API 지원 중단으로 변경)
+  - e5-large (1024 dims) → e5-base (768 dims)로 다운그레이드 (메모리 최적화)
 - **벡터DB**: ChromaDB (경량, 메타데이터 필터링)
 - **검색**: BM25 + 벡터 하이브리드 검색
 
@@ -336,8 +337,8 @@ law/
      - chat.py: 채팅 엔드포인트 (RAG + LLM 추론)
      - search.py: 하이브리드 검색 엔드포인트 (BM25 + 벡터)
    - 핵심 모듈 (core/):
-     - embeddings.py: multilingual-e5-large 로더
-     - llm.py: llama-cpp-python 기반 Qwen2.5-7B 추론
+     - embeddings.py: multilingual-e5-base 로컬 로더 (sentence-transformers)
+     - llm.py: Groq API 기반 LLM 추론
      - retriever.py: 하이브리드 검색 (BM25 + 벡터)
      - rag_service.py: 공통 RAG 파이프라인 서비스
      - prompts.py: 시스템 프롬프트 + RAG 템플릿 + 면책 고지
@@ -356,9 +357,9 @@ law/
    - 샘플 데이터: labor_laws.jsonl (5 documents)
 
 4. **벡터DB (vectordb/)**
-   - ChromaDB 저장소: **5,083개 청크** 인덱싱 완료
-   - 판례 1,438건 + 법령해석례 492건 + 법령 5건
-   - 임베딩: 1024 dimensions (multilingual-e5-large)
+   - ChromaDB 저장소: **~3,000개 청크** 목표 (빌드 시 생성)
+   - 4개 분야: 노동법, 임대차법, 소비자보호법, 교통사고
+   - 임베딩: 768 dimensions (multilingual-e5-base, 로컬)
    - 검색: 하이브리드 (BM25 + 벡터 검색)
 
 5. **배포 (Dockerfile)**
@@ -372,19 +373,18 @@ law/
    - 커밋: 38 files, 2402 insertions
    - 마지막 커밋: "docs: Add detailed HF Spaces deployment guide"
 
-### 🟡 다음 단계: HuggingFace Spaces 배포
-- Space 생성: `korean-law-chatbot` (Docker, CPU 16GB)
-- GitHub 리포지토리 연결 후 자동 빌드 예정
+### ✅ HuggingFace Spaces 배포 완료
+- **Space URL**: https://wonchulhee-korean-law-chatbot.hf.space
+- **상태**: 운영 중 (degraded - 모델 로딩 시 정상화)
+- **Health Check**: https://wonchulhee-korean-law-chatbot.hf.space/api/health
 
-### 📈 배포 예상 타임라인
+### 📈 배포 타임라인
 | 단계 | 시간 | 상태 |
 |------|------|------|
-| Docker 빌드 | 2-3분 | 대기 중 |
-| 서버 시작 | 30초 | 대기 중 |
-| 첫 모델 다운로드* | 2-3분 | 첫 채팅 시 발생 |
+| Docker 빌드 | 2-3분 | ✅ 완료 |
+| 서버 시작 | 30초 | ✅ 완료 |
+| 모델 로딩 | 2-3분 | ⏳ 첫 채팅 시 |
 | 이후 응답 | 3-8초 | 정상 속도 |
-
-*Qwen2.5-7B GGUF (~4GB) + multilingual-e5-large (~2GB)
 
 ### 🔗 배포 리소스
 - **배포 가이드**: HF_SPACES_DEPLOYMENT.md
@@ -397,9 +397,10 @@ law/
 ## 🌐 웹 랜딩 페이지 (web/)
 
 ### 배포 정보
-- **URL**: https://law-ai-chat.vercel.app
-- **플랫폼**: Vercel
-- **GitHub**: buelmanager/biotech-ai-website (main branch)
+- **랜딩 페이지 URL**: https://law-ai-chat.vercel.app
+- **챗봇 URL**: https://wonchulhee-korean-law-chatbot.hf.space
+- **플랫폼**: Vercel (랜딩) + HuggingFace Spaces (챗봇)
+- **GitHub**: buelmanager/law (main branch)
 
 ### 기술 스택
 - **HTML/CSS/JS**: 정적 사이트 (프레임워크 없음)
@@ -421,7 +422,7 @@ law/
 ```
 
 ### 페이지 구조
-1. **Hero**: 4대 특화 분야 배지 + 챗봇 UI
+1. **Hero**: 4대 특화 분야 배지 + 챗봇 UI (첫 메시지 시 전체폭 확장)
 2. **Trust Indicators**: 신뢰 지표 (4개 카드 - 특화분야, 법령수, 판례, 프라이버시)
 3. **How It Works**: RAG 프로세스 시각화 (4단계)
 4. **Categories**: 4대 특화 분야 카드 (노동법, 임대차법, 소비자보호법, 교통사고)
@@ -432,8 +433,9 @@ law/
 ### 파일 구조
 ```
 web/
-├── index.html      # 메인 HTML
-├── styles.css      # 전체 스타일 (CSS 변수, 반응형)
+├── index.html      # 메인 HTML (LawBot 브랜딩, 4대 분야)
+├── contact.html    # 무료 상담 신청 페이지 (Webform 연동 준비)
+├── styles.css      # 전체 스타일 (CSS 변수, 반응형, 블루 테마)
 └── script.js       # GSAP 애니메이션, Lucide 초기화, 채팅 로직
 ```
 
@@ -451,12 +453,31 @@ web/
 .icon-xl: 48px
 ```
 
+### 4대 분야 컬러 코드
+```css
+/* 분야별 색상 */
+.labor    { color: #3b82f6; }  /* 노동법 - 블루 */
+.housing  { color: #10b981; }  /* 임대차법 - 그린 */
+.consumer { color: #f59e0b; }  /* 소비자보호법 - 골드 */
+.traffic  { color: #ef4444; }  /* 교통사고 - 레드 */
+```
+
 ### 주요 컴포넌트
 - **Glass Card**: `backdrop-filter: blur(16px)` + 반투명 배경
-- **Law Badge**: 법령명 표시 태그
+- **Area Badge**: 분야별 컬러 배지 (hero-areas)
 - **Trust Card**: 신뢰 지표 표시 카드
 - **RAG Step**: 프로세스 단계 표시
-- **Consult Card**: 상담 분야 카드
+- **Category Area Card**: 4대 분야 상세 카드 (분야별 아이콘/컬러)
+- **Contact Form**: 상담 신청 폼 (Webform 연동 준비)
+
+### 채팅창 확장 기능
+```javascript
+// 첫 메시지 전송 시 채팅창 전체폭 확장
+const heroSection = document.querySelector('.hero.hero-with-chat');
+if (heroSection && !heroSection.classList.contains('chat-fullwidth')) {
+    heroSection.classList.add('chat-fullwidth');
+}
+```
 
 ### 배포 명령어
 ```bash
@@ -465,8 +486,8 @@ npx vercel --prod
 ```
 
 ### ⚡ 핵심 명세 (확정)
-- **LLM**: Mistral AI (open-mixtral-8x7b) 또는 Groq 폴백
-- **임베딩**: intfloat/multilingual-e5-large (1024 dims)
+- **LLM**: Groq API (open-mixtral-8x7b) 또는 Mistral AI 폴백
+- **임베딩**: intfloat/multilingual-e5-base (768 dims, 로컬 sentence-transformers)
 - **검색**: Hybrid (BM25 + 벡터 검색)
 - **VectorDB**: ChromaDB (영구 저장, ./vectordb/)
 - **백엔드**: FastAPI uvicorn (포트 7860)
@@ -479,8 +500,8 @@ npx vercel --prod
 ## 🔖 버전 관리
 
 ### 현재 버전
-- **APP_VERSION**: `0.4.0`
-- **BUILD_ID**: `full-case-data`
+- **APP_VERSION**: `0.5.0`
+- **BUILD_ID**: `e5-base-4cat`
 - **BUILD_DATE**: `2026-01-29`
 
 ### 버전 확인 방법
@@ -488,7 +509,7 @@ npx vercel --prod
    ```
    ============================================================
    🚀 서버 시작
-   📦 버전: 0.4.0 | 빌드: full-case-data | 날짜: 2026-01-29
+   📦 버전: 0.5.0 | 빌드: e5-base-4cat | 날짜: 2026-01-29
    ============================================================
    ```
 
@@ -499,8 +520,8 @@ npx vercel --prod
    응답:
    ```json
    {
-     "version": "0.4.0",
-     "build_id": "full-case-data",
+     "version": "0.5.0",
+     "build_id": "e5-base-4cat",
      "build_date": "2026-01-29"
    }
    ```
@@ -508,7 +529,58 @@ npx vercel --prod
 ### 버전 업데이트 시
 `backend/main.py` 상단의 다음 변수를 수정:
 ```python
-APP_VERSION = "0.4.0"
+APP_VERSION = "0.5.0"
 BUILD_DATE = "2026-01-29"
-BUILD_ID = "full-case-data"
+BUILD_ID = "e5-base-4cat"
+```
+
+---
+
+## 🔧 기술 변경 이력
+
+### 2026-01-29: 임베딩 모델 변경 (v0.5.0)
+
+#### 문제 상황
+- HuggingFace Inference API (`api-inference.huggingface.co`) 완전 지원 중단
+- `410 Client Error: Gone` 오류 발생
+- 새 API (`router.huggingface.co/hf-inference`)도 직접 REST 호출 미지원
+
+#### 해결책
+- **외부 API → 로컬 모델**로 전환
+- `sentence-transformers` 라이브러리 사용
+- 모델: `intfloat/multilingual-e5-base` (768 dims, ~560MB)
+
+#### 임베딩 모델 비교
+| 모델 | 차원 | 크기 | 메모리 | 선택 |
+|------|------|------|--------|------|
+| e5-small | 384 | ~120MB | 낮음 | ❌ 품질 부족 |
+| **e5-base** | **768** | **~560MB** | **중간** | ✅ **채택** |
+| e5-large | 1024 | ~2.2GB | 높음 | ❌ OOM 위험 |
+
+#### 현재 빌드 설정 (Dockerfile)
+```dockerfile
+# 4개 분야, ~3000 청크 목표
+RUN python data/collect/collect_all_categories.py \
+    --enable-category labor,lease,consumer,traffic \
+    --all-enabled \
+    --max-items 30 \
+    --detail-limit 60 \
+    && python data/process/index_cases.py --collection law_cases
+```
+
+#### 관련 파일
+- `backend/core/embeddings.py`: 로컬 sentence-transformers 사용
+- `data/process/index_cases.py`: 인덱싱 시 로컬 모델 사용
+- `Dockerfile`: 빌드 시 데이터 수집 + 인덱싱
+
+### Git 리모트 설정
+```bash
+# GitHub (origin)
+git remote add origin https://github.com/buelmanager/law.git
+
+# HuggingFace Spaces (hf)
+git remote add hf https://huggingface.co/spaces/wonchulhee/korean-law-chatbot
+
+# 양쪽에 푸시
+git push origin main && git push hf main
 ```
