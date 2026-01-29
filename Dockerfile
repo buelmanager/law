@@ -68,8 +68,8 @@ ARG HF_TOKEN
 ENV HF_TOKEN=${HF_TOKEN}
 
 # 데이터 수집 및 인덱싱 (빌드 시 실행, 외부 API로 e5-large 임베딩)
-# 4개 분야 판례/해석례 수집 후 벡터DB 인덱싱
-RUN python data/collect/collect_all_categories.py --enable-category labor,lease,consumer,traffic --all-enabled --max-items 60 --detail-limit 120 \
+# 테스트: 청크 10개로 축소
+RUN python data/collect/collect_all_categories.py --enable-category labor --max-items 2 --detail-limit 3 \
     && python data/process/index_cases.py --collection law_cases
 
 # 포트 설정 (HuggingFace Spaces 필수)

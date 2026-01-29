@@ -11,8 +11,8 @@ import numpy as np
 
 logger = logging.getLogger(__name__)
 
-# HuggingFace Inference API 설정
-HF_API_URL = "https://api-inference.huggingface.co/pipeline/feature-extraction/"
+# HuggingFace Inference API 설정 (신규 엔드포인트)
+HF_API_URL = "https://router.huggingface.co/hf-inference/models/"
 HF_TOKEN = os.getenv("HF_TOKEN", "")
 USE_EXTERNAL_API = os.getenv("USE_EXTERNAL_EMBEDDING", "true").lower() == "true"
 
