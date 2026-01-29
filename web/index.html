@@ -39,7 +39,7 @@
             </div>
 
             <a href="contact.html" class="nav-cta">
-                <span>무료 상담</span>
+                <span>변호사 상담</span>
                 <i data-lucide="arrow-right" class="icon-sm"></i>
             </a>
 
@@ -107,7 +107,13 @@
                         <span class="status-dot active"></span>
                         <span>AI 상담 가능</span>
                     </div>
-                    <div class="chat-info">4대 분야 전문</div>
+                    <div class="chat-header-right">
+                        <button class="change-category-btn" id="change-category-btn" style="display: none;">
+                            <i data-lucide="repeat" class="icon-xs"></i>
+                            <span>분야 변경</span>
+                        </button>
+                        <div class="chat-info">4대 분야 전문</div>
+                    </div>
                 </div>
 
                 <div class="chat-messages" id="chat-messages">
@@ -116,27 +122,38 @@
                             <i data-lucide="scale" class="icon-xl"></i>
                         </div>
                         <h3>LawBot에 오신 것을 환영합니다</h3>
-                        <p>4대 법률 분야 관련 궁금한 점을 자유롭게 질문해 주세요.</p>
+                        <p>상담받고 싶은 법률 분야를 선택해 주세요.</p>
 
-                        <!-- 법령 배지 -->
-                        <div class="welcome-laws">
-                            <span class="law-badge"><i data-lucide="book-open" class="icon-xs"></i> 근로기준법</span>
-                            <span class="law-badge"><i data-lucide="book-open" class="icon-xs"></i> 주택임대차보호법</span>
-                            <span class="law-badge"><i data-lucide="book-open" class="icon-xs"></i> 소비자기본법</span>
-                            <span class="law-badge"><i data-lucide="book-open" class="icon-xs"></i> 자동차손해배상보장법</span>
+                        <!-- 4대 분야 선택 버튼 -->
+                        <div class="category-select" id="category-select">
+                            <button class="category-btn labor" data-category="labor">
+                                <i data-lucide="briefcase" class="icon-md"></i>
+                                <span class="category-name">노동법</span>
+                                <span class="category-desc">부당해고, 임금체불, 퇴직금</span>
+                            </button>
+                            <button class="category-btn housing" data-category="housing">
+                                <i data-lucide="home" class="icon-md"></i>
+                                <span class="category-name">임대차법</span>
+                                <span class="category-desc">보증금 반환, 계약갱신</span>
+                            </button>
+                            <button class="category-btn consumer" data-category="consumer">
+                                <i data-lucide="shopping-cart" class="icon-md"></i>
+                                <span class="category-name">소비자보호법</span>
+                                <span class="category-desc">환불, 청약철회, 제품 하자</span>
+                            </button>
+                            <button class="category-btn traffic" data-category="traffic">
+                                <i data-lucide="car" class="icon-md"></i>
+                                <span class="category-name">교통사고</span>
+                                <span class="category-desc">과실비율, 손해배상</span>
+                            </button>
                         </div>
 
-                        <div class="welcome-examples">
+                        <!-- 선택 후 표시될 예시 질문 (초기에는 숨김) -->
+                        <div class="welcome-examples" id="welcome-examples" style="display: none;">
                             <span class="example-label">예시 질문:</span>
-                            <button class="example-btn" data-question="퇴직금은 어떻게 계산하나요?">
-                                <i data-lucide="message-circle" class="icon-xs"></i> 퇴직금 계산 방법
-                            </button>
-                            <button class="example-btn" data-question="전세보증금을 돌려받지 못하면 어떻게 해야 하나요?">
-                                <i data-lucide="message-circle" class="icon-xs"></i> 보증금 반환
-                            </button>
-                            <button class="example-btn" data-question="온라인 쇼핑 환불 규정이 어떻게 되나요?">
-                                <i data-lucide="message-circle" class="icon-xs"></i> 온라인 환불
-                            </button>
+                            <div class="example-btns" id="example-btns">
+                                <!-- 분야별 예시 질문이 동적으로 추가됨 -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -162,41 +179,65 @@
         </div>
     </section>
 
-    <!-- Trust Section -->
+    <!-- Trust Section - 데이터 강조 -->
     <section class="trust-section" id="trust">
         <div class="container">
+            <div class="trust-header">
+                <span class="section-tag">데이터 기반 신뢰</span>
+                <h2 class="trust-title">법제처 공식 API 기반<br><span class="highlight">검증된 법률 데이터</span></h2>
+            </div>
             <div class="trust-grid">
-                <div class="trust-card glass-card">
-                    <div class="trust-icon">
-                        <i data-lucide="layers" class="icon-lg"></i>
-                    </div>
-                    <div class="trust-value">4개</div>
-                    <div class="trust-label">특화 분야</div>
-                    <div class="trust-detail">노동법, 임대차법, 소비자보호법, 교통사고</div>
-                </div>
-                <div class="trust-card glass-card">
-                    <div class="trust-icon">
-                        <i data-lucide="book-open" class="icon-lg"></i>
-                    </div>
-                    <div class="trust-value">20+</div>
-                    <div class="trust-label">핵심 법령</div>
-                    <div class="trust-detail">법제처 국가법령정보 API 연동</div>
-                </div>
                 <div class="trust-card glass-card">
                     <div class="trust-icon">
                         <i data-lucide="gavel" class="icon-lg"></i>
                     </div>
-                    <div class="trust-value">1,438+</div>
-                    <div class="trust-label">대법원 판례</div>
-                    <div class="trust-detail">판시사항 및 판결요지 포함</div>
+                    <div class="trust-value" data-count="1438" data-suffix="+">0</div>
+                    <div class="trust-label">판례 수집</div>
+                    <div class="trust-detail">대법원·고등법원·지방법원 판결문</div>
                 </div>
                 <div class="trust-card glass-card">
                     <div class="trust-icon">
-                        <i data-lucide="shield" class="icon-lg"></i>
+                        <i data-lucide="file-text" class="icon-lg"></i>
                     </div>
-                    <div class="trust-value">Zero</div>
-                    <div class="trust-label">개인정보 수집</div>
-                    <div class="trust-detail">대화 내용 미저장, 완전 익명</div>
+                    <div class="trust-value" data-count="492" data-suffix="+">0</div>
+                    <div class="trust-label">법령해석례</div>
+                    <div class="trust-detail">질의요지·회답·이유 전문 포함</div>
+                </div>
+                <div class="trust-card glass-card">
+                    <div class="trust-icon">
+                        <i data-lucide="database" class="icon-lg"></i>
+                    </div>
+                    <div class="trust-value" data-count="5083" data-suffix="">0</div>
+                    <div class="trust-label">벡터 청크</div>
+                    <div class="trust-detail">RAG 검색용 인덱싱 완료</div>
+                </div>
+                <div class="trust-card glass-card">
+                    <div class="trust-icon">
+                        <i data-lucide="shield-check" class="icon-lg"></i>
+                    </div>
+                    <div class="trust-value static-value">공식 출처</div>
+                    <div class="trust-label">데이터 신뢰성</div>
+                    <div class="trust-detail">법제처·대법원 API 원본 사용</div>
+                </div>
+            </div>
+
+            <!-- 추가 신뢰 지표 -->
+            <div class="trust-badges">
+                <div class="trust-badge">
+                    <i data-lucide="check-circle" class="icon-sm"></i>
+                    <span>대법원 판례 321건 (60.6%)</span>
+                </div>
+                <div class="trust-badge">
+                    <i data-lucide="check-circle" class="icon-sm"></i>
+                    <span>판시사항 353건 포함</span>
+                </div>
+                <div class="trust-badge">
+                    <i data-lucide="check-circle" class="icon-sm"></i>
+                    <span>판결요지 233건 포함</span>
+                </div>
+                <div class="trust-badge">
+                    <i data-lucide="check-circle" class="icon-sm"></i>
+                    <span>판결문 전문 수록</span>
                 </div>
             </div>
         </div>
@@ -234,7 +275,7 @@
                     <div class="feature-icon">
                         <i data-lucide="clock" class="icon-lg"></i>
                     </div>
-                    <h3 class="feature-title">24시간 무료 상담</h3>
+                    <h3 class="feature-title">24시간 AI 상담</h3>
                     <p class="feature-desc">
                         시간과 장소에 구애받지 않고 언제든지 법률 정보를 확인하세요.
                         회원가입이나 비용 없이 바로 이용 가능합니다.
@@ -661,7 +702,7 @@
                         <a href="#hero" class="footer-link">AI 상담</a>
                         <a href="#categories" class="footer-link">상담 분야</a>
                         <a href="#how-it-works" class="footer-link">이용 방법</a>
-                        <a href="contact.html" class="footer-link">무료 상담 신청</a>
+                        <a href="contact.html" class="footer-link">변호사 상담 신청</a>
                     </div>
                     <div class="footer-col">
                         <h4 class="footer-col-title">4대 특화 분야</h4>

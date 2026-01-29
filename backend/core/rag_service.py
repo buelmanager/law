@@ -47,13 +47,19 @@ class RAGService:
             self.rag_template = "컨텍스트:\n{context}\n\n질문: {question}\n\n답변:"
             self.disclaimer = "본 서비스는 AI가 제공하는 일반적인 법률 정보이며, 정식 법률 자문이 아닙니다."
 
-    def search(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
+    def search(
+        self,
+        query: str,
+        top_k: int = 5,
+        category_filter: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
         """
         하이브리드 검색 수행
 
         Args:
             query: 검색 쿼리
             top_k: 반환할 결과 수
+            category_filter: 분야 카테고리 ID (예: "labor", "lease", "consumer", "traffic")
 
         Returns:
             검색 결과 리스트 [{"content": ..., "metadata": {...}}, ...]
@@ -66,12 +72,28 @@ class RAGService:
             # 쿼리 임베딩
             query_embedding = self.embeddings.encode(query)
 
-            # 하이브리드 검색
+            # 하이브리드 검색 (더 많이 검색 후 필터링)
+            search_top_k = top_k * 3 if category_filter else top_k
             results = self.retriever.hybrid_search(
                 query_embedding=query_embedding,
                 query_text=query,
-                top_k=top_k
+                top_k=search_top_k
             )
+
+            # 분야 필터링 적용 (category 메타데이터 필드로 필터)
+            if category_filter and results:
+                filtered_results = []
+                for r in results:
+                    metadata = r.get('metadata', {})
+                    doc_category = metadata.get('category', '')
+
+                    # 카테고리 ID가 일치하면 추가
+                    if doc_category == category_filter:
+                        filtered_results.append(r)
+
+                results = filtered_results[:top_k]
+                logger.info(f"Category filter '{category_filter}' applied: {len(filtered_results)} results matched, returning top {top_k}")
+
             return results
         except Exception as e:
             logger.error(f"Search error: {e}")
@@ -91,10 +113,27 @@ class RAGService:
             return ""
 
         context_parts = []
-        for r in search_results:
-            law_name = r.get('metadata', {}).get('law', '알 수 없음')
+        for i, r in enumerate(search_results, 1):
+            metadata = r.get('metadata', {})
             content = r.get('content', '')
-            context_parts.append(f"[{law_name}] {content}")
+
+            # 판례/해석례 메타데이터에서 정보 추출
+            source = metadata.get('source', '')  # "판례 123456" 또는 "법령해석례 123"
+            title = metadata.get('title', '')
+            case_number = metadata.get('case_number', '')
+            doc_type = metadata.get('type', '')  # precedent 또는 interpretation
+
+            # 헤더 구성
+            if source:
+                header = f"### [{i}] {source}"
+                if title and len(title) < 100:
+                    header += f" - {title}"
+            elif case_number:
+                header = f"### [{i}] {case_number}"
+            else:
+                header = f"### [{i}] 법률 정보"
+
+            context_parts.append(f"{header}\n{content}")
 
         return "\n\n".join(context_parts)
 
@@ -106,13 +145,36 @@ class RAGService:
             search_results: 검색 결과 리스트
 
         Returns:
-            출처 문자열 리스트
+            출처 문자열 리스트 (예: "판례 2020다12345", "법령해석례 2021-0001")
         """
         sources = []
+        seen = set()
+
         for r in search_results:
-            law_name = r.get('metadata', {}).get('law', '')
-            if law_name and law_name not in sources:
-                sources.append(law_name)
+            metadata = r.get('metadata', {})
+
+            # 판례/해석례 source 필드 사용 (예: "판례 123456")
+            source = metadata.get('source', '')
+            case_number = metadata.get('case_number', '')
+
+            if source:
+                source_str = source
+            elif case_number:
+                doc_type = metadata.get('type', '')
+                if doc_type == 'precedent':
+                    source_str = f"판례 {case_number}"
+                elif doc_type == 'interpretation':
+                    source_str = f"법령해석례 {case_number}"
+                else:
+                    source_str = case_number
+            else:
+                continue
+
+            # 중복 방지
+            if source_str not in seen:
+                seen.add(source_str)
+                sources.append(source_str)
+
         return sources
 
     def generate_answer(
@@ -171,6 +233,7 @@ class RAGService:
         question: str,
         top_k: int = 5,
         max_tokens: int = 1024,
+        category_filter: Optional[str] = None,
     ) -> RAGResult:
         """
         전체 RAG 파이프라인 실행
@@ -179,12 +242,13 @@ class RAGService:
             question: 사용자 질문
             top_k: 검색 결과 수
             max_tokens: LLM 최대 토큰
+            category_filter: 분야 카테고리 ID (labor, lease, consumer, traffic)
 
         Returns:
             RAGResult 객체
         """
-        # 1. 검색
-        search_results = self.search(question, top_k=top_k)
+        # 1. 검색 (분야 필터 적용)
+        search_results = self.search(question, top_k=top_k, category_filter=category_filter)
 
         # 2. 컨텍스트 구성
         context = self.build_context(search_results)

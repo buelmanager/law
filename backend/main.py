@@ -11,11 +11,12 @@ from fastapi.middleware.cors import CORSMiddleware
 # API 라우터
 from backend.api.chat import router as chat_router
 from backend.api.search import router as search_router
+from backend.api.download import router as download_router
 
 # 버전 정보 (배포 시 확인용)
-APP_VERSION = "0.4.0"
+APP_VERSION = "0.5.0"
 BUILD_DATE = "2026-01-29"
-BUILD_ID = "full-case-data"
+BUILD_ID = "category-filter-fix"
 
 # 로깅 설정
 logging.basicConfig(
@@ -57,9 +58,9 @@ async def lifespan(app: FastAPI):
             logger.warning(f"Failed to init EmbeddingsManager: {e}")
             app_state.embeddings = None
 
-        # Retriever
+        # Retriever (law_cases 컬렉션 사용 - Dockerfile에서 인덱싱된 데이터)
         try:
-            app_state.retriever = Retriever(chroma_db_path=chroma_path)
+            app_state.retriever = Retriever(chroma_db_path=chroma_path, collection_name="law_cases")
 
             # Check if collection is empty and auto-index if needed
             if app_state.retriever.collection is None or (
@@ -126,8 +127,10 @@ app = FastAPI(
 ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "").split(",") if os.getenv("ALLOWED_ORIGINS") else [
     "https://wonchulhee-korean-law-chatbot.hf.space",
     "https://huggingface.co",
+    "https://lawbot-public.vercel.app",  # Vercel 랜딩 페이지
     "http://localhost:3000",  # 개발용
     "http://localhost:7860",  # 개발용
+    "http://localhost:8000",  # 로컬 테스트용
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -140,6 +143,7 @@ app.add_middleware(
 # API 라우터 등록
 app.include_router(chat_router, prefix="/api", tags=["chat"])
 app.include_router(search_router, prefix="/api", tags=["search"])
+app.include_router(download_router, prefix="/api", tags=["download"])
 
 # 헬스체크
 @app.get("/api/health")
