@@ -67,9 +67,9 @@ ENV PYTHONPATH=/app
 ARG HF_TOKEN
 ENV HF_TOKEN=${HF_TOKEN}
 
-# 데이터 수집 및 인덱싱 (빌드 시 실행, 외부 API로 e5-large 임베딩)
-# 테스트: 청크 10개로 축소
-RUN python data/collect/collect_all_categories.py --enable-category labor --max-items 2 --detail-limit 3 \
+# 데이터 수집 및 인덱싱 (빌드 시 실행, 로컬 e5-base 임베딩)
+# 4개 분야, ~3000 청크 목표
+RUN python data/collect/collect_all_categories.py --enable-category labor,lease,consumer,traffic --all-enabled --max-items 30 --detail-limit 60 \
     && python data/process/index_cases.py --collection law_cases
 
 # 포트 설정 (HuggingFace Spaces 필수)

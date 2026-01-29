@@ -45,7 +45,7 @@ class CaseIndexer:
         self,
         chroma_path: str = None,
         collection_name: str = "law_cases",
-        embeddings_model: str = "intfloat/multilingual-e5-small"
+        embeddings_model: str = "intfloat/multilingual-e5-base"
     ):
         self.chroma_path = Path(chroma_path) if chroma_path else PROJECT_ROOT / "vectordb"
         self.chroma_path.mkdir(parents=True, exist_ok=True)

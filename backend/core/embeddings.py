@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class EmbeddingsManager:
-    def __init__(self, model_name: str = "intfloat/multilingual-e5-small"):
+    def __init__(self, model_name: str = "intfloat/multilingual-e5-base"):
         """
         임베딩 모델 초기화 (로컬 모델 사용)
 
