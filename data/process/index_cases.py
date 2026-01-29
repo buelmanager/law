@@ -30,11 +30,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# HuggingFace Inference API 설정 (신규 엔드포인트)
-HF_API_URL = "https://router.huggingface.co/hf-inference/models/"
-HF_TOKEN = os.getenv("HF_TOKEN", "")
-
-
 @dataclass
 class CaseChunk:
     """인덱싱할 청크 단위"""
@@ -50,54 +45,29 @@ class CaseIndexer:
         self,
         chroma_path: str = None,
         collection_name: str = "law_cases",
-        embeddings_model: str = "intfloat/multilingual-e5-large"
+        embeddings_model: str = "intfloat/multilingual-e5-small"
     ):
         self.chroma_path = Path(chroma_path) if chroma_path else PROJECT_ROOT / "vectordb"
         self.chroma_path.mkdir(parents=True, exist_ok=True)
 
         self.collection_name = collection_name
         self.embeddings_model = embeddings_model
-        self.api_url = f"{HF_API_URL}{embeddings_model}"
-        self.headers = {"Authorization": f"Bearer {HF_TOKEN}"} if HF_TOKEN else {}
+        self.model = None
         self.client = None
         self.collection = None
 
     def _init_embeddings(self):
-        """외부 임베딩 API 초기화"""
-        logger.info(f"🔄 외부 임베딩 API 사용: {self.embeddings_model}")
-        if not HF_TOKEN:
-            logger.warning("⚠️ HF_TOKEN이 설정되지 않았습니다. API 호출이 제한될 수 있습니다.")
-        logger.info("✅ 임베딩 API 준비 완료")
-
-    def _encode_text(self, text: str) -> List[float]:
-        """단일 텍스트 임베딩 생성 (외부 API)"""
-        try:
-            response = requests.post(
-                self.api_url,
-                headers=self.headers,
-                json={"inputs": text, "options": {"wait_for_model": True}},
-                timeout=60
-            )
-            response.raise_for_status()
-            embedding = response.json()
-
-            # API 응답이 중첩 리스트일 수 있음
-            if isinstance(embedding, list) and len(embedding) > 0:
-                if isinstance(embedding[0], list):
-                    embedding = np.mean(embedding[0], axis=0).tolist()
-
-            return embedding
-        except Exception as e:
-            logger.error(f"Embedding API error: {e}")
-            return [0.0] * 1024
+        """로컬 임베딩 모델 초기화"""
+        if self.model is None:
+            from sentence_transformers import SentenceTransformer
+            logger.info(f"🔄 임베딩 모델 로드: {self.embeddings_model}")
+            self.model = SentenceTransformer(self.embeddings_model)
+            logger.info("✅ 임베딩 모델 로드 완료")
 
     def _encode_batch(self, texts: List[str]) -> List[List[float]]:
-        """배치 임베딩 생성 (외부 API)"""
-        embeddings = []
-        for text in texts:
-            embedding = self._encode_text(text)
-            embeddings.append(embedding)
-        return embeddings
+        """배치 임베딩 생성 (로컬 모델)"""
+        embeddings = self.model.encode(texts, convert_to_numpy=True)
+        return embeddings.tolist()
 
     def _init_chroma(self):
         """ChromaDB 초기화"""
