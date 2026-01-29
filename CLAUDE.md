@@ -737,3 +737,28 @@ git remote add hf https://huggingface.co/spaces/wonchulhee/korean-law-chatbot
 # 양쪽에 푸시
 git push origin main && git push hf main
 ```
+
+---
+
+## 🔑 API 토큰
+
+### GitHub Token (Private 레포 접근용)
+```
+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
+```
+- 용도: GitHub API 접근, private 레포 읽기/쓰기
+- 레포: `buelmanager/law` (private)
+
+### Vercel Token
+```
+CeTcRgbdKUpzvhhRfxrPg9z6
+```
+- 용도: Vercel 프로젝트 배포 및 설정
+- 프로젝트: `lawbot-public`
+- URL: https://lawbot-public.vercel.app
+
+### 배포 설정
+| 플랫폼 | 레포 | 폴더 | URL |
+|--------|------|------|-----|
+| Vercel | `buelmanager/law` | `web/` | https://lawbot-public.vercel.app |
+| HuggingFace | `buelmanager/law` | 루트 | https://wonchulhee-korean-law-chatbot.hf.space |
