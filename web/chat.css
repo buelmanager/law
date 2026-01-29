@@ -168,6 +168,22 @@
     transform: translateY(-1px);
 }
 
+/* AI 메시지 단락 간격 개선 */
+.chat-section .message-ai .message-content p {
+    margin-bottom: 1.5em;
+    line-height: 1.8;
+}
+
+.chat-section .message-ai .message-content p:last-child {
+    margin-bottom: 0;
+}
+
+.chat-section .message-ai .message-content br {
+    display: block;
+    content: "";
+    margin-bottom: 0.5em;
+}
+
 /* AI Notice */
 .chat-ai-notice {
     display: flex;

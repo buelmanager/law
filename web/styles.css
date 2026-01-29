@@ -902,6 +902,22 @@ a {
     border-bottom-left-radius: 4px;
 }
 
+/* AI 메시지 단락 간격 개선 */
+.message-ai .message-content p {
+    margin-bottom: 1.5em;
+    line-height: 1.8;
+}
+
+.message-ai .message-content p:last-child {
+    margin-bottom: 0;
+}
+
+.message-ai .message-content br {
+    display: block;
+    content: "";
+    margin-bottom: 0.5em;
+}
+
 /* Chat Input */
 .chat-input-container {
     padding: var(--space-lg);
