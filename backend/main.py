@@ -2,6 +2,7 @@ import os
 import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
+from datetime import datetime
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -10,6 +11,11 @@ from fastapi.middleware.cors import CORSMiddleware
 # API 라우터
 from backend.api.chat import router as chat_router
 from backend.api.search import router as search_router
+
+# 버전 정보 (배포 시 확인용)
+APP_VERSION = "0.2.0"
+BUILD_DATE = "2025-01-29"
+BUILD_ID = "prompt-improvement-v2"
 
 # 로깅 설정
 logging.basicConfig(
@@ -30,7 +36,10 @@ app_state = AppState()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """FastAPI 애플리케이션 라이프사이클 관리"""
-    logger.info("🚀 서버 시작")
+    logger.info("=" * 60)
+    logger.info(f"🚀 서버 시작")
+    logger.info(f"📦 버전: {APP_VERSION} | 빌드: {BUILD_ID} | 날짜: {BUILD_DATE}")
+    logger.info("=" * 60)
     
     # 모델 초기화 시도 (환경변수 또는 기본값 사용)
     try:
@@ -109,7 +118,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="AI 법률 상담 챗봇",
     description="RAG 기반 노동법 전문 상담",
-    version="0.1.0",
+    version=APP_VERSION,
     lifespan=lifespan
 )
 
@@ -148,7 +157,9 @@ async def health_check():
     return {
         "status": "healthy" if is_fully_ready else "degraded",
         "service": "law-chatbot-api",
-        "version": "0.1.0",
+        "version": APP_VERSION,
+        "build_id": BUILD_ID,
+        "build_date": BUILD_DATE,
         "modules": modules_ready,
     }
 
