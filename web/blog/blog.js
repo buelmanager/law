@@ -176,34 +176,31 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="modal-tags">
                         ${blog.tags.map(tag => `<span class="modal-tag">#${tag}</span>`).join('')}
                     </div>
-                    <!-- 모달 내 애드핏 광고 (반응형) -->
-                    <div class="modal-adfit" id="modal-adfit-blog">
-                        <!-- PC용 -->
-                        <div class="adfit-pc">
-                            <ins class="kakao_ad_area" style="display:none;"
-                                data-ad-unit="DAN-M3ggCdAeCcSQ7ktD"
-                                data-ad-width="728"
-                                data-ad-height="90"></ins>
-                        </div>
-                        <!-- 모바일용 -->
-                        <div class="adfit-mobile">
-                            <ins class="kakao_ad_area" style="display:none;"
-                                data-ad-unit="DAN-i04GrqMLeQJPPR0E"
-                                data-ad-width="320"
-                                data-ad-height="50"></ins>
-                        </div>
-                    </div>
+                    <!-- 모달 내 애드핏 광고 -->
+                    <div class="modal-adfit" id="modal-adfit-blog"></div>
                 </div>
             </div>
         `;
 
-        // 애드핏 광고 로드 (동적 요소용)
+        // 애드핏 광고 로드 (화면 크기에 따라 하나만)
         setTimeout(() => {
-            // 애드핏 스크립트 재실행
-            const script = document.createElement('script');
-            script.src = '//t1.daumcdn.net/kas/static/ba.min.js';
-            script.async = true;
-            document.body.appendChild(script);
+            const adContainer = modal.querySelector('#modal-adfit-blog');
+            if (adContainer) {
+                const isMobile = window.innerWidth <= 768;
+                const adUnit = isMobile ? 'DAN-i04GrqMLeQJPPR0E' : 'DAN-M3ggCdAeCcSQ7ktD';
+                const adWidth = isMobile ? '320' : '728';
+                const adHeight = isMobile ? '50' : '90';
+
+                adContainer.innerHTML = '<ins class="kakao_ad_area" style="display:none;" ' +
+                    'data-ad-unit="' + adUnit + '" ' +
+                    'data-ad-width="' + adWidth + '" ' +
+                    'data-ad-height="' + adHeight + '"></ins>';
+
+                const script = document.createElement('script');
+                script.src = '//t1.daumcdn.net/kas/static/ba.min.js';
+                script.async = true;
+                document.body.appendChild(script);
+            }
         }, 100);
 
         modal.classList.add('active');

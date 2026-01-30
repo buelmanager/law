@@ -718,22 +718,29 @@
     <!-- 카카오 애드핏 광고 -->
     <section class="adfit-section">
         <div class="container">
-            <!-- PC용 광고 (728x90) -->
-            <div class="adfit-container adfit-pc" id="adfit-home-pc">
-                <ins class="kakao_ad_area" style="display:none;"
-                    data-ad-unit="DAN-M3ggCdAeCcSQ7ktD"
-                    data-ad-width="728"
-                    data-ad-height="90"></ins>
-            </div>
-            <!-- 모바일용 광고 (320x50) -->
-            <div class="adfit-container adfit-mobile" id="adfit-home-mobile">
-                <ins class="kakao_ad_area" style="display:none;"
-                    data-ad-unit="DAN-i04GrqMLeQJPPR0E"
-                    data-ad-width="320"
-                    data-ad-height="50"></ins>
-            </div>
+            <div class="adfit-container" id="adfit-home"></div>
         </div>
     </section>
+    <script>
+        // 화면 크기에 따라 적절한 광고 로드
+        (function() {
+            const container = document.getElementById('adfit-home');
+            if (!container) return;
+
+            const isMobile = window.innerWidth <= 768;
+            const adUnit = isMobile ? 'DAN-i04GrqMLeQJPPR0E' : 'DAN-M3ggCdAeCcSQ7ktD';
+            const adWidth = isMobile ? '320' : '728';
+            const adHeight = isMobile ? '50' : '90';
+
+            container.innerHTML = '<ins class="kakao_ad_area" style="display:none;" ' +
+                'data-ad-unit="' + adUnit + '" ' +
+                'data-ad-width="' + adWidth + '" ' +
+                'data-ad-height="' + adHeight + '"></ins>';
+
+            container.style.minHeight = isMobile ? '80px' : '120px';
+            container.style.maxWidth = isMobile ? '350px' : '760px';
+        })();
+    </script>
 
     <!-- Footer -->
     <footer class="footer">
@@ -784,7 +791,7 @@
                         본 서비스는 법률 정보 제공 목적이며, 법률 자문이 아닙니다. 구체적 사안은 변호사와 상담하세요.
                     </p>
                 </div>
-                <p class="footer-version">v1.0.007</p>
+                <p class="footer-version">v1.0.008</p>
             </div>
         </div>
     </footer>
