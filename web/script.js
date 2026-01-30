@@ -1,41 +1,14 @@
 /* ===========================
    LawBot - Main Script
    4대 법률 분야 특화 AI 법률 정보 서비스
-   GSAP + Lenis + Canvas Particles + Lucide Icons
+   GSAP + ScrollTrigger + Canvas Particles + Lucide Icons
    =========================== */
 
 // Initialize Lucide Icons
 lucide.createIcons();
 
-// Initialize Lenis Smooth Scroll
-const lenis = new Lenis({
-    duration: 1.2,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    direction: 'vertical',
-    gestureDirection: 'vertical',
-    smooth: true,
-    smoothTouch: false,
-    touchMultiplier: 2,
-    prevent: (node) => {
-        // 채팅 메시지 영역에서는 Lenis 스크롤 비활성화
-        return node.closest('.chat-messages') !== null ||
-               node.closest('.chat-container') !== null ||
-               node.classList.contains('chat-messages');
-    }
-});
-
 // Register GSAP Plugins
 gsap.registerPlugin(ScrollTrigger);
-
-// Sync Lenis with GSAP ticker
-gsap.ticker.add((time) => {
-    lenis.raf(time * 1000);
-});
-
-gsap.ticker.lagSmoothing(0);
-
-// Update ScrollTrigger on Lenis scroll
-lenis.on('scroll', ScrollTrigger.update);
 
 // 홈 히어로 채팅 영역에서는 스크롤 완전 비활성화 (전체 페이지 스크롤에 영향 없음)
 document.addEventListener('DOMContentLoaded', () => {
@@ -401,16 +374,17 @@ categoryAreas.forEach((card, index) => {
 });
 
 /* ===========================
-   Smooth Scroll Links
+   Smooth Scroll Links (Native)
    =========================== */
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
-            lenis.scrollTo(target, {
-                offset: -100,
-                duration: 1.2,
+            const offsetTop = target.getBoundingClientRect().top + window.pageYOffset - 100;
+            window.scrollTo({
+                top: offsetTop,
+                behavior: 'smooth'
             });
         }
     });

@@ -62,3 +62,5 @@ logs/
 # Temporary
 *.tmp
 .cache/
+.vercel
+.env*.local
