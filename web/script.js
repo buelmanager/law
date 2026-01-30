@@ -12,21 +12,18 @@ gsap.registerPlugin(ScrollTrigger);
 
 // 홈 히어로 채팅 영역에서는 스크롤 완전 비활성화 (전체 페이지 스크롤에 영향 없음)
 document.addEventListener('DOMContentLoaded', () => {
-    const chatMessagesEl = document.getElementById('chat-messages');
     const heroChat = document.querySelector('.hero-chat');
 
-    if (chatMessagesEl && heroChat) {
-        // 홈 히어로의 채팅 영역에서는 스크롤 이벤트 완전 차단
-        chatMessagesEl.addEventListener('wheel', (e) => {
-            e.preventDefault();
+    if (heroChat) {
+        // hero-chat 전체 영역에서 휠 이벤트 차단 (페이지 스크롤에 영향 없도록)
+        heroChat.addEventListener('wheel', (e) => {
             e.stopPropagation();
-        }, { passive: false });
+        }, { passive: true });
 
         // 터치 스크롤도 차단
-        chatMessagesEl.addEventListener('touchmove', (e) => {
-            e.preventDefault();
+        heroChat.addEventListener('touchmove', (e) => {
             e.stopPropagation();
-        }, { passive: false });
+        }, { passive: true });
     }
 });
 
