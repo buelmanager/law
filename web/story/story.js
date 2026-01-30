@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // 애드핏 광고 로드 (동적 요소용)
         setTimeout(() => {
             const adContainer = modal.querySelector('#modal-adfit-story');
-            if (adContainer && window.kakaoAdFit) {
+            if (adContainer) {
                 adContainer.innerHTML = '';
                 const ins = document.createElement('ins');
                 ins.className = 'kakao_ad_area';
@@ -180,7 +180,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 ins.setAttribute('data-ad-width', '300');
                 ins.setAttribute('data-ad-height', '250');
                 adContainer.appendChild(ins);
-                kakaoAdFit.load();
+
+                // 애드핏 스크립트 재실행
+                const script = document.createElement('script');
+                script.src = '//t1.daumcdn.net/kas/static/ba.min.js';
+                script.async = true;
+                adContainer.appendChild(script);
             }
         }, 100);
 

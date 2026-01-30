@@ -1,5 +1,5 @@
 // Service Worker for LawBot PWA
-const CACHE_NAME = 'lawbot-v1.0.004';
+const CACHE_NAME = 'lawbot-v1.0.005';
 const urlsToCache = [
   '/',
   '/index.html',

@@ -1,0 +1,30 @@
+# LawBot - robots.txt
+# https://lawbot-public.vercel.app
+
+# All search engines
+User-agent: *
+Allow: /
+Crawl-delay: 1
+
+# Naver Search Bot
+User-agent: Yeti
+Allow: /
+
+# Google Bot
+User-agent: Googlebot
+Allow: /
+
+# Bing Bot
+User-agent: Bingbot
+Allow: /
+
+# Daum Search Bot
+User-agent: Daum
+Allow: /
+
+# Sitemap
+Sitemap: https://lawbot-public.vercel.app/sitemap.xml
+
+# IndexNow API Key
+# Key: 18675a3c-d343-493d-a6ee-061094700bb3
+# Key Location: https://lawbot-public.vercel.app/18675a3c-d343-493d-a6ee-061094700bb3.txt
