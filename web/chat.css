@@ -504,6 +504,11 @@
         font-size: 0.8rem;
     }
 
+    /* 모바일에서 "나", "AI" 아바타 숨김 */
+    .message-avatar {
+        display: none;
+    }
+
     /* 광고 숨김 - 모바일에서 공간 확보 */
     .chat-wrapper .adfit-container {
         display: none;

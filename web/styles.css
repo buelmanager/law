@@ -1907,6 +1907,11 @@ a {
         max-width: 85%;
     }
 
+    /* 모바일에서 "나", "AI" 아바타 숨김 */
+    .message-avatar {
+        display: none;
+    }
+
     .footer-content {
         grid-template-columns: 1fr;
         text-align: center;

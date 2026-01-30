@@ -960,10 +960,16 @@ function addMessage(content, type) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message message-${type}`;
 
+    // Avatar 추가
+    const avatarDiv = document.createElement('div');
+    avatarDiv.className = 'message-avatar';
+    avatarDiv.textContent = type === 'user' ? '나' : 'AI';
+
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content';
     contentDiv.innerHTML = content;
 
+    messageDiv.appendChild(avatarDiv);
     messageDiv.appendChild(contentDiv);
 
     chatMessages.appendChild(messageDiv);
