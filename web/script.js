@@ -37,21 +37,21 @@ gsap.ticker.lagSmoothing(0);
 // Update ScrollTrigger on Lenis scroll
 lenis.on('scroll', ScrollTrigger.update);
 
-// 채팅 영역에서 휠 이벤트가 페이지 스크롤로 전파되지 않도록 처리
+// 홈 히어로 채팅 영역에서는 스크롤 완전 비활성화 (전체 페이지 스크롤에 영향 없음)
 document.addEventListener('DOMContentLoaded', () => {
     const chatMessagesEl = document.getElementById('chat-messages');
-    if (chatMessagesEl) {
-        chatMessagesEl.addEventListener('wheel', (e) => {
-            const { scrollTop, scrollHeight, clientHeight } = chatMessagesEl;
-            const isScrolledToTop = scrollTop === 0;
-            const isScrolledToBottom = scrollTop + clientHeight >= scrollHeight - 1;
+    const heroChat = document.querySelector('.hero-chat');
 
-            // 스크롤이 위나 아래 끝에 도달했을 때만 이벤트 전파 방지
-            if ((e.deltaY < 0 && isScrolledToTop) || (e.deltaY > 0 && isScrolledToBottom)) {
-                // 끝에 도달해도 페이지 스크롤 방지
-                e.preventDefault();
-            }
-            // 채팅 영역 내에서는 항상 이벤트 전파 중단
+    if (chatMessagesEl && heroChat) {
+        // 홈 히어로의 채팅 영역에서는 스크롤 이벤트 완전 차단
+        chatMessagesEl.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        }, { passive: false });
+
+        // 터치 스크롤도 차단
+        chatMessagesEl.addEventListener('touchmove', (e) => {
+            e.preventDefault();
             e.stopPropagation();
         }, { passive: false });
     }

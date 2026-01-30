@@ -25,60 +25,84 @@
     gap: var(--space-lg);
 }
 
-/* Category Header */
-.chat-category-header {
+/* Chat Header with Category (통합된 헤더) */
+.chat-header.chat-header-with-category {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-md) var(--space-lg);
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    backdrop-filter: blur(var(--glass-blur));
+    padding: var(--space-sm) var(--space-lg);
+    border-bottom: 1px solid var(--glass-border);
+    background: rgba(15, 23, 42, 0.5);
+}
+
+.chat-header-left {
+    flex: 1;
+}
+
+.chat-header-center {
+    flex: 0 0 auto;
+}
+
+.chat-header-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .category-indicator {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: var(--space-sm);
-    font-size: 1.1rem;
+    gap: 8px;
+    padding: 6px 14px;
+    font-size: 0.9rem;
     font-weight: 600;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 100px;
 }
 
 .category-indicator.labor {
     color: var(--color-labor);
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.2);
 }
 
 .category-indicator.housing {
     color: var(--color-housing);
+    background: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.2);
 }
 
 .category-indicator.consumer {
     color: var(--color-consumer);
+    background: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.2);
 }
 
 .category-indicator.traffic {
     color: var(--color-traffic);
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.2);
 }
 
-.change-category-btn {
+.chat-section .change-category-btn {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 8px 16px;
-    font-size: 0.875rem;
+    padding: 6px 12px;
+    font-size: 0.8rem;
     color: var(--color-text-secondary);
-    background: rgba(255, 255, 255, 0.05);
+    background: transparent;
     border: 1px solid var(--glass-border);
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: all var(--transition-base);
+    transition: all var(--transition-fast);
     font-family: var(--font-primary);
 }
 
-.change-category-btn:hover {
+.chat-section .change-category-btn:hover {
     color: var(--color-text-primary);
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     border-color: var(--color-primary);
 }
 
@@ -487,11 +511,26 @@
         text-align: center;
     }
 
-    .chat-category-header {
+    /* 모바일에서 통합 헤더 스타일 */
+    .chat-header.chat-header-with-category {
         flex-direction: column;
-        gap: var(--space-sm);
-        text-align: center;
+        gap: var(--space-xs);
         padding: var(--space-sm) var(--space-md);
+    }
+
+    .chat-header-left,
+    .chat-header-right {
+        flex: none;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .chat-header-center {
+        order: -1;
+    }
+
+    .chat-section .change-category-btn {
+        margin-top: var(--space-xs);
     }
 
     .category-modal-grid {

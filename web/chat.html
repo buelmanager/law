@@ -88,26 +88,28 @@
     <!-- Chat Section -->
     <section class="chat-section">
         <div class="chat-wrapper">
-            <!-- 선택된 분야 표시 -->
-            <div class="chat-category-header" id="chat-category-header">
-                <div class="category-indicator" id="category-indicator">
-                    <i data-lucide="briefcase" class="icon-md" id="category-icon"></i>
-                    <span id="category-name">노동법</span>
-                </div>
-                <button class="change-category-btn" id="change-category-btn">
-                    <i data-lucide="repeat" class="icon-xs"></i>
-                    <span>분야 변경</span>
-                </button>
-            </div>
-
             <!-- Chat Container -->
             <div class="chat-container glass-card">
-                <div class="chat-header">
-                    <div class="chat-status">
-                        <span class="status-dot active"></span>
-                        <span>AI 상담 가능</span>
+                <!-- 분야 선택 헤더 (채팅 카드 내부) -->
+                <div class="chat-header chat-header-with-category">
+                    <div class="chat-header-left">
+                        <div class="chat-status">
+                            <span class="status-dot active"></span>
+                            <span>AI 상담 가능</span>
+                        </div>
                     </div>
-                    <div class="chat-info" id="chat-info">법률 정보 서비스</div>
+                    <div class="chat-header-center">
+                        <div class="category-indicator" id="category-indicator">
+                            <i data-lucide="briefcase" class="icon-sm" id="category-icon"></i>
+                            <span id="category-name">노동법</span>
+                        </div>
+                    </div>
+                    <div class="chat-header-right">
+                        <button class="change-category-btn" id="change-category-btn">
+                            <i data-lucide="repeat" class="icon-xs"></i>
+                            <span>분야 변경</span>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="chat-messages" id="chat-messages">

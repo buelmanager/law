@@ -89,7 +89,6 @@ const categoryIndicator = document.getElementById('category-indicator');
 const categoryIcon = document.getElementById('category-icon');
 const categoryName = document.getElementById('category-name');
 const changeCategoryBtn = document.getElementById('change-category-btn');
-const chatCategoryHeader = document.getElementById('chat-category-header');
 
 // URL에서 카테고리 가져오기
 function getCategoryFromURL() {
