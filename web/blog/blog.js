@@ -176,12 +176,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="modal-tags">
                         ${blog.tags.map(tag => `<span class="modal-tag">#${tag}</span>`).join('')}
                     </div>
-                    <!-- 모달 내 애드핏 광고 -->
+                    <!-- 모달 내 애드핏 광고 (반응형) -->
                     <div class="modal-adfit" id="modal-adfit-blog">
-                        <ins class="kakao_ad_area" style="display:none;width:100%;"
-                            data-ad-unit="DAN-lJv0UFXMhOFUlRhD"
-                            data-ad-width="300"
-                            data-ad-height="250"></ins>
+                        <!-- PC용 -->
+                        <div class="adfit-pc">
+                            <ins class="kakao_ad_area" style="display:none;"
+                                data-ad-unit="DAN-M3ggCdAeCcSQ7ktD"
+                                data-ad-width="728"
+                                data-ad-height="90"></ins>
+                        </div>
+                        <!-- 모바일용 -->
+                        <div class="adfit-mobile">
+                            <ins class="kakao_ad_area" style="display:none;"
+                                data-ad-unit="DAN-i04GrqMLeQJPPR0E"
+                                data-ad-width="320"
+                                data-ad-height="50"></ins>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -189,24 +199,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // 애드핏 광고 로드 (동적 요소용)
         setTimeout(() => {
-            const adContainer = modal.querySelector('#modal-adfit-blog');
-            if (adContainer) {
-                adContainer.innerHTML = '';
-                const ins = document.createElement('ins');
-                ins.className = 'kakao_ad_area';
-                ins.style.display = 'none';
-                ins.style.width = '100%';
-                ins.setAttribute('data-ad-unit', 'DAN-lJv0UFXMhOFUlRhD');
-                ins.setAttribute('data-ad-width', '300');
-                ins.setAttribute('data-ad-height', '250');
-                adContainer.appendChild(ins);
-
-                // 애드핏 스크립트 재실행
-                const script = document.createElement('script');
-                script.src = '//t1.daumcdn.net/kas/static/ba.min.js';
-                script.async = true;
-                adContainer.appendChild(script);
-            }
+            // 애드핏 스크립트 재실행
+            const script = document.createElement('script');
+            script.src = '//t1.daumcdn.net/kas/static/ba.min.js';
+            script.async = true;
+            document.body.appendChild(script);
         }, 100);
 
         modal.classList.add('active');
