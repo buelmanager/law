@@ -27,7 +27,7 @@
 1. Space 생성 후 **Settings** 탭 이동
 2. **"Linked Repos"** 섹션 찾기
 3. **GitHub** 계정 연결 (처음이면 OAuth 승인)
-4. 리포지토리 선택: `buelmanager/law`
+4. 리포지토리 선택: `.env` 파일의 `GITHUB_REPO_URL` 참조
 5. **"Link"** 클릭
 
 ### Step 3️⃣: 자동 배포 시작

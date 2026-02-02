@@ -174,7 +174,7 @@ AI 챗봇이 통합된 랜딩페이지/홈페이지 제작 서비스
 ## 🖼️ 포트폴리오 예시
 
 ### LawBot - AI 법률 정보 서비스
-- **URL**: https://lawbot-public.vercel.app
+- **URL**: `.env` 파일의 `LANDING_URL` 참조
 - **특징**:
   - 4대 법률 분야 특화 AI 챗봇
   - 글래스모피즘 디자인
@@ -261,8 +261,8 @@ AI 챗봇이 통합된 랜딩페이지/홈페이지 제작 서비스
 
 ## 🔗 참고 링크
 
-- **라이브 데모**: https://lawbot-public.vercel.app
-- **AI 챗봇 데모**: https://wonchulhee-korean-law-chatbot.hf.space
+- **라이브 데모**: `.env` 파일의 `LANDING_URL` 참조
+- **AI 챗봇 데모**: `.env` 파일의 `CHATBOT_URL` 참조
 
 ---
 

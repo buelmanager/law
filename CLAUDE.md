@@ -218,7 +218,7 @@ Docker Container (HF Spaces, 포트 7860)
   - 38 files, 2402 insertions
 - 🟡 HuggingFace Spaces 배포 (진행 중)
   - Space 생성: `korean-law-chatbot` (Docker, CPU 16GB)
-  - GitHub 연결: `buelmanager/law` 리포지토리
+  - GitHub 연결: `.env` 파일 참조
 
 ### Phase 2: 판례 검색 추가
 - [ ] 대법원 판례 데이터 수집 및 인덱싱
@@ -369,7 +369,7 @@ law/
    - HEALTHCHECK: /api/health 엔드포인트
 
 6. **버전 관리 (Git)**
-   - GitHub 리포지토리: buelmanager/law
+   - GitHub 리포지토리: `.env` 파일 참조 (GITHUB_REPO_URL)
    - 커밋: 38 files, 2402 insertions
    - 마지막 커밋: "docs: Add detailed HF Spaces deployment guide"
 
@@ -390,7 +390,7 @@ law/
 - **배포 가이드**: HF_SPACES_DEPLOYMENT.md
 - **체크리스트**: DEPLOYMENT_CHECKLIST.md
 - **상세 문서**: DEPLOYMENT.md
-- **GitHub**: https://github.com/buelmanager/law (main branch)
+- **GitHub**: `.env` 파일 참조 (GITHUB_REPO_URL)
 
 ---
 

@@ -4,11 +4,15 @@
 각 분야별 20개 질문으로 참고자료가 올바른 카테고리에서 검색되는지 확인
 """
 
+import os
 import requests
 import json
 from typing import Dict, List, Tuple
+from dotenv import load_dotenv
 
-API_BASE_URL = "https://wonchulhee-korean-law-chatbot.hf.space"
+load_dotenv()
+
+API_BASE_URL = os.getenv("CHATBOT_URL", "http://localhost:7860")
 
 # 분야별 테스트 질문 (각 20개)
 TEST_QUESTIONS = {

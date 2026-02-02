@@ -293,7 +293,7 @@ frontend/
 ```
 +------------------+     +------------------+     +------------------+
 |    GitHub        |     |  HuggingFace     |     |    Vercel        |
-|  buelmanager/law |---->|  Spaces          |     |  lawbot-public   |
+|  (GITHUB_REPO)   |---->|  Spaces          |     |  (LANDING_URL)   |
 |  (main branch)   |     |  (Docker)        |     |  (web/ folder)   |
 +------------------+     +------------------+     +------------------+
         |                        |                        |
@@ -615,8 +615,8 @@ DEBUG=False
 # ===================
 # CORS Settings
 # ===================
-# Allowed origins (comma-separated)
-ALLOWED_ORIGINS=https://lawbot-public.vercel.app,http://localhost:3000
+# Allowed origins (comma-separated) - Set your production URLs
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:7860
 ```
 
 ---
@@ -635,8 +635,8 @@ ALLOWED_ORIGINS=https://lawbot-public.vercel.app,http://localhost:3000
 ### Local Development
 
 ```bash
-# 1. Clone repository
-git clone https://github.com/buelmanager/law.git
+# 1. Clone repository (use your GITHUB_REPO_URL from .env)
+git clone $GITHUB_REPO_URL
 cd law
 
 # 2. Backend setup

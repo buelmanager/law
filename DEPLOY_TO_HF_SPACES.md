@@ -5,7 +5,7 @@
 ### 1단계: HuggingFace Space 설정
 
 1. **HuggingFace Space 페이지 접속**
-   - 🔗 https://huggingface.co/spaces/wonchulhee/korean-law-chatbot
+   - 🔗 환경 변수 `HF_SPACE_URL` 참조 (또는 `.env` 파일 확인)
 
 2. **Settings 탭 클릭**
 
@@ -17,7 +17,7 @@
 
 1. **Repository URL 입력**
    ```
-   https://github.com/buelmanager/law
+   # .env 파일의 GITHUB_REPO_URL 참조
    ```
 
 2. **Branch 선택**
@@ -93,7 +93,8 @@ huggingface-cli login
 ### 3단계: Space Clone
 
 ```bash
-git clone https://huggingface.co/spaces/wonchulhee/korean-law-chatbot
+# .env 파일의 HF_REPO_URL 참조
+git clone $HF_REPO_URL
 cd korean-law-chatbot
 ```
 
@@ -155,7 +156,8 @@ LLM_MODEL_PATH=./models/qwen2.5-7b-instruct-q4_k_m.gguf
 배포 완료 후 다음 URL로 상태 확인:
 
 ```bash
-curl https://wonchulhee-korean-law-chatbot.hf.space/api/health
+# .env 파일의 CHATBOT_URL 참조
+curl $CHATBOT_URL/api/health
 ```
 
 **정상 응답:**
@@ -273,15 +275,13 @@ HF Spaces 무료 티어: 16GB RAM
 
 - **HuggingFace Spaces 문서**: https://huggingface.co/docs/hub/spaces
 - **Docker Spaces 가이드**: https://huggingface.co/docs/hub/spaces-sdks-docker
-- **프로젝트 GitHub**: https://github.com/buelmanager/law
-- **Space URL**: https://wonchulhee-korean-law-chatbot.hf.space
+- **프로젝트 GitHub**: `.env` 파일의 `GITHUB_REPO_URL` 참조
+- **Space URL**: `.env` 파일의 `CHATBOT_URL` 참조
 
 ---
 
 ## 🎉 배포 완료!
 
-배포가 성공하면 다음 URL로 접속할 수 있습니다:
-
-**🔗 https://wonchulhee-korean-law-chatbot.hf.space**
+배포가 성공하면 `.env` 파일의 `CHATBOT_URL`로 접속할 수 있습니다.
 
 법률 질문을 입력하여 AI 상담을 받아보세요!
