@@ -7,163 +7,566 @@ sdk: docker
 pinned: false
 ---
 
-# Korean Law Chatbot
+# LawBot - AI Legal Consultation Chatbot
 
-RAG 기반 한국 법률 상담 AI 챗봇 서비스
+Korean AI legal consultation chatbot using RAG (Retrieval-Augmented Generation) with Korean law statutes and precedents.
 
-## Architecture
+- RAG-based legal information retrieval with hybrid search (BM25 + Vector)
+- 4 specialized legal domains: Labor Law, Lease Law, Consumer Protection, Traffic Accidents
+- Multi-LLM support with automatic failover (Mistral AI / Groq)
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    HuggingFace Spaces (Docker)                  │
-│                         Port 7860                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   ┌─────────────┐     ┌─────────────────────────────────────┐  │
-│   │  Next.js    │     │         FastAPI Backend             │  │
-│   │  Static     │     │                                     │  │
-│   │  (React)    │     │  ┌───────────┐  ┌───────────────┐  │  │
-│   │             │────▶│  │ /api/chat │  │ /api/search   │  │  │
-│   │  /out/*     │     │  └─────┬─────┘  └───────┬───────┘  │  │
-│   └─────────────┘     │        │                │          │  │
-│                       │        ▼                ▼          │  │
-│                       │  ┌─────────────────────────────┐   │  │
-│                       │  │       RAG Service           │   │  │
-│                       │  │  (rag_service.py)           │   │  │
-│                       │  └──────────┬──────────────────┘   │  │
-│                       │             │                      │  │
-│        ┌──────────────┼─────────────┼──────────────────┐   │  │
-│        ▼              ▼             ▼                  ▼   │  │
-│  ┌──────────┐  ┌───────────┐  ┌──────────┐  ┌──────────┐  │  │
-│  │Embeddings│  │ Retriever │  │   LLM    │  │ Prompts  │  │  │
-│  │ (e5-base)│  │(Hybrid)   │  │(Mistral) │  │          │  │  │
-│  └────┬─────┘  └─────┬─────┘  └────┬─────┘  └──────────┘  │  │
-│       │              │             │                      │  │
-│       ▼              ▼             ▼                      │  │
-│  ┌──────────┐  ┌───────────┐  ┌──────────┐               │  │
-│  │sentence- │  │ ChromaDB  │  │Mistral AI│               │  │
-│  │transform │  │ + BM25    │  │   API    │               │  │
-│  └──────────┘  └───────────┘  └──────────┘               │  │
-│                       │                                   │  │
-│                       ▼                                   │  │
-│                 ┌───────────┐                             │  │
-│                 │ ./vectordb│                             │  │
-│                 │ (Persist) │                             │  │
-│                 └───────────┘                             │  │
-│                                                           │  │
-└───────────────────────────────────────────────────────────────┘
-```
+---
+
+## Screenshots
+
+<p align="center">
+  <img src="images/1.png" width="280" alt="Landing Page" />
+  <img src="images/0.png" width="280" alt="Chat Interface" />
+  <img src="images/2.png" width="280" alt="AI Response" />
+</p>
+
+<p align="center">
+  <img src="images/3.png" width="280" alt="Source References" />
+  <img src="images/5.png" width="280" alt="4 Legal Domains" />
+  <img src="images/6.png" width="280" alt="RAG Process" />
+</p>
+
+<p align="center">
+  <img src="images/7.png" width="280" alt="Legal Stories" />
+  <img src="images/8.png" width="280" alt="Blog" />
+  <img src="images/9.png" width="280" alt="Blog Detail" />
+</p>
+
+<p align="center">
+  <img src="images/10.png" width="280" alt="Data Statistics" />
+  <img src="images/11.png" width="280" alt="Features" />
+</p>
+
+| Screen | Description |
+|--------|-------------|
+| Landing Page | Hero section with 4 legal domain badges and chat preview |
+| Chat Interface | Labor law consultation with suggested questions |
+| AI Response | IRAC structured answer with legal citations |
+| Source References | Clickable source links to original documents |
+| 4 Legal Domains | Category cards for labor, lease, consumer, traffic |
+| RAG Process | 4-step RAG pipeline visualization |
+| Legal Stories | Real case studies filtered by category |
+| Blog | Legal knowledge articles by domain |
+| Blog Detail | Article modal with regulations and advice |
+| Data Statistics | 1,438+ precedents, 492+ interpretations, 5,083 chunks |
+| Features | 24/7 AI consultation, citation-based answers, privacy |
+
+---
 
 ## Tech Stack
 
-| Component | Technology | Specification |
-|-----------|-----------|---------------|
-| **Backend** | FastAPI + Uvicorn | Python 3.11, Port 7860 |
-| **Frontend** | Next.js 14 | React 18, Static Export |
-| **Embeddings** | sentence-transformers | `intfloat/multilingual-e5-base` (768 dims) |
-| **Vector DB** | ChromaDB | Persistent, Cosine similarity |
-| **Search** | Hybrid | BM25 + Vector (alpha=0.5) |
-| **LLM** | Mistral AI | `open-mixtral-8x7b` (Groq fallback) |
-| **Deploy** | HuggingFace Spaces | Docker, 16GB RAM, Free tier |
+### Backend
+
+| Category | Technology | Version | Description |
+|----------|------------|---------|-------------|
+| Framework | FastAPI | 0.109+ | Async REST API server |
+| Language | Python | 3.11 | Runtime environment |
+| Validation | Pydantic | 2.6+ | Request/response validation |
+| Server | Uvicorn | 0.27+ | ASGI server |
+| Vector DB | ChromaDB | 0.4.24+ | Persistent vector storage |
+| Search | rank-bm25 | 0.2.2 | BM25 keyword search |
+
+**Backend Architecture:**
+
+```
+backend/
+├── main.py                     # FastAPI entry point, lifespan management
+│                               # - CORS middleware configuration
+│                               # - Static file serving (Next.js build)
+│                               # - Health check endpoint
+├── api/
+│   ├── chat.py                 # POST /api/chat
+│   │                           # - Category auto-detection from keywords
+│   │                           # - RAG pipeline execution
+│   │                           # - Disclaimer injection
+│   └── search.py               # POST /api/search
+│                               # - Hybrid search (BM25 + Vector)
+│                               # - Result ranking and filtering
+└── core/
+    ├── embeddings.py           # Local sentence-transformers wrapper
+    ├── llm.py                  # Multi-provider LLM client
+    │                           # - Mistral AI (primary)
+    │                           # - Groq API (fallback)
+    │                           # - Retry logic with exponential backoff
+    ├── retriever.py            # Hybrid search engine
+    │                           # - ChromaDB vector search
+    │                           # - BM25 keyword search
+    │                           # - Score fusion (alpha weighting)
+    ├── rag_service.py          # Unified RAG pipeline
+    │                           # - Context building
+    │                           # - Source extraction
+    │                           # - Answer generation
+    └── prompts.py              # System prompts and templates
+                                # - IRAC response structure
+                                # - Legal disclaimer
+```
+
+**Core Technical Implementation:**
+
+1. **Hybrid Search (retriever.py)**
+   - Vector similarity search via ChromaDB (cosine distance)
+   - BM25 keyword search with tokenization
+   - Score fusion: `final_score = alpha * vector_score + (1 - alpha) * bm25_score`
+   - Default alpha: 0.5 (equal weighting)
+
+2. **Multi-Provider LLM (llm.py)**
+   - Primary: Mistral AI (open-mixtral-8x7b, 1B tokens/month free)
+   - Fallback: Groq API (llama-3.1-70b-versatile)
+   - Automatic retry with exponential backoff on rate limits
+   - Streaming support for real-time responses
+
+3. **RAG Pipeline (rag_service.py)**
+   - Query embedding via sentence-transformers
+   - Hybrid search with category filtering
+   - Context construction with source metadata
+   - LLM generation with legal domain prompts
+
+### AI/ML
+
+| Category | Technology | Version | Description |
+|----------|------------|---------|-------------|
+| Embeddings | multilingual-e5-base | - | 768-dim multilingual embeddings |
+| Framework | sentence-transformers | 2.6+ | Local embedding inference |
+| LLM (Primary) | Mistral AI | open-mixtral-8x7b | Korean-optimized, free tier |
+| LLM (Fallback) | Groq | llama-3.1-70b | Fast inference, rate limited |
+| ML Runtime | PyTorch | 2.0+ | CPU-only inference |
+
+**Embedding Model Specifications:**
+
+| Model | Dimensions | Size | Memory | Use Case |
+|-------|------------|------|--------|----------|
+| e5-small | 384 | ~120MB | Low | Not recommended |
+| e5-base | 768 | ~560MB | Medium | Production (selected) |
+| e5-large | 1024 | ~2.2GB | High | OOM risk on free tier |
+
+### Frontend
+
+| Category | Technology | Version | Description |
+|----------|------------|---------|-------------|
+| Framework | Next.js | 14.1+ | React framework with App Router |
+| Language | TypeScript | 5.3+ | Type-safe JavaScript |
+| Styling | Tailwind CSS | 3.4+ | Utility-first CSS |
+| HTTP Client | Axios | 1.6+ | Promise-based HTTP client |
+| Build | Static Export | - | output: 'export' for FastAPI serving |
+
+**Frontend Architecture:**
+
+```
+frontend/
+├── next.config.js              # Static export configuration
+│                               # - output: 'export'
+│                               # - images.unoptimized: true
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx          # Root layout with metadata
+│   │   └── page.tsx            # Main chat interface
+│   ├── components/
+│   │   ├── ChatWindow.tsx      # Chat container component
+│   │   ├── MessageBubble.tsx   # Message display component
+│   │   └── Disclaimer.tsx      # Legal disclaimer component
+│   └── styles/
+│       └── globals.css         # Global styles and Tailwind imports
+└── out/                        # Static build output (served by FastAPI)
+```
+
+### Landing Page (web/)
+
+| Category | Technology | Version | Description |
+|----------|------------|---------|-------------|
+| Animation | GSAP | 3.12 | Scroll-triggered animations |
+| Scroll | ScrollTrigger | - | GSAP plugin for scroll events |
+| Icons | Lucide | - | SVG icon library |
+| Forms | Web3Forms | - | Serverless form handling |
+| Deployment | Vercel | - | Static site hosting |
+
+### Infrastructure
+
+| Category | Technology | Description |
+|----------|------------|-------------|
+| Container | Docker | Multi-stage build |
+| Hosting | HuggingFace Spaces | Free tier (16GB RAM, 2 vCPU) |
+| Landing | Vercel | Static site CDN |
+| Vector Storage | ChromaDB (Persistent) | ./vectordb directory |
+
+---
+
+## Architecture
+
+### System Architecture
+
+```
++-------------------------------------------------------------------------+
+|                              Client Layer                               |
+|  +------------------+  +------------------+  +------------------------+  |
+|  |   Landing Page   |  |   Chat Frontend  |  |    Mobile Browser      |  |
+|  |   (Vercel)       |  |   (Next.js SSG)  |  |                        |  |
+|  +------------------+  +------------------+  +------------------------+  |
+|         |                      |                        |               |
+|         | lawbot-public.       | wonchulhee-korean-     |               |
+|         | vercel.app           | law-chatbot.hf.space   |               |
++---------|----------------------|------------------------|---------------+
+          |                      |                        |
+          v                      v                        v
++-------------------------------------------------------------------------+
+|                           HuggingFace Spaces                            |
+|  +-------------------------------------------------------------------+  |
+|  |                    Docker Container (Port 7860)                   |  |
+|  |  +---------------------+  +------------------------------------+  |  |
+|  |  |   FastAPI Server    |  |        Static Files               |  |  |
+|  |  |   /api/chat         |  |        Next.js Build (./out)      |  |  |
+|  |  |   /api/search       |  +------------------------------------+  |  |
+|  |  |   /api/health       |                                          |  |
+|  |  +---------------------+                                          |  |
+|  |           |                                                       |  |
+|  |           v                                                       |  |
+|  |  +---------------------+  +------------------------------------+  |  |
+|  |  |   RAG Service       |  |        LLM Manager                |  |  |
+|  |  |   - Embeddings      |  |        - Mistral AI (Primary)     |  |  |
+|  |  |   - Retriever       |  |        - Groq API (Fallback)      |  |  |
+|  |  +---------------------+  +------------------------------------+  |  |
+|  |           |                          |                            |  |
+|  |           v                          v                            |  |
+|  |  +---------------------+  +------------------------------------+  |  |
+|  |  |   ChromaDB          |  |        External APIs              |  |  |
+|  |  |   (./vectordb)      |  |        api.mistral.ai             |  |  |
+|  |  |   ~5000 chunks      |  |        api.groq.com               |  |  |
+|  |  +---------------------+  +------------------------------------+  |  |
+|  +-------------------------------------------------------------------+  |
++-------------------------------------------------------------------------+
+```
+
+### RAG Data Flow
+
+```
+[User Question]
+    |
+    | "퇴직금 계산 방법이 궁금합니다"
+    v
++------------------+
+| Category Detect  |  <-- Keyword matching (CATEGORY_KEYWORDS)
+| -> "labor"       |
++------------------+
+    |
+    v
++------------------+
+| Query Embedding  |  <-- sentence-transformers (e5-base)
+| -> 768-dim vector|      Local inference (~100ms)
++------------------+
+    |
+    v
++------------------+
+| Hybrid Search    |  <-- ChromaDB + BM25
+| top_k=5          |      alpha=0.5 (score fusion)
+| category=labor   |
++------------------+
+    |
+    v
++------------------+
+| Context Build    |  <-- Format search results
+| [1] 판례 123456  |      Add source metadata
+| [2] 해석례 789   |
++------------------+
+    |
+    v
++------------------+
+| LLM Generation   |  <-- Mistral AI / Groq
+| System Prompt    |      IRAC structure
+| + RAG Context    |      max_tokens=1024
++------------------+
+    |
+    v
++------------------+
+| Response         |
+| - Answer (IRAC)  |
+| - Sources list   |
+| - Disclaimer     |
++------------------+
+```
+
+### Deployment Architecture
+
+```
++------------------+     +------------------+     +------------------+
+|    GitHub        |     |  HuggingFace     |     |    Vercel        |
+|  buelmanager/law |---->|  Spaces          |     |  lawbot-public   |
+|  (main branch)   |     |  (Docker)        |     |  (web/ folder)   |
++------------------+     +------------------+     +------------------+
+        |                        |                        |
+        | git push               | Auto-build             | Auto-deploy
+        v                        v                        v
++------------------+     +------------------+     +------------------+
+| Dockerfile       |     | Container        |     | Static Site      |
+| - Node.js build  |     | - Port 7860      |     | - index.html     |
+| - Python runtime |     | - 16GB RAM       |     | - contact.html   |
+| - Data indexing  |     | - Health check   |     | - story/         |
++------------------+     +------------------+     +------------------+
+```
+
+---
 
 ## Project Structure
 
 ```
-law/
+lawbot/
+├── CLAUDE.md                           # Project context and specifications
+├── Dockerfile                          # Multi-stage Docker build
+│                                       # Stage 1: Node.js -> Next.js build
+│                                       # Stage 2: Python build environment
+│                                       # Stage 3: Runtime image
+├── .env.example                        # Environment variables template
+│
 ├── backend/
-│   ├── main.py                 # FastAPI entry point
+│   ├── main.py                         # FastAPI application entry
+│   │                                   # - Lifespan management
+│   │                                   # - CORS configuration
+│   │                                   # - Static file mounting
+│   │                                   # - Version: 0.5.1
 │   ├── api/
-│   │   ├── chat.py             # POST /api/chat
-│   │   ├── search.py           # POST /api/search
-│   │   └── download.py         # File download endpoint
-│   └── core/
-│       ├── embeddings.py       # sentence-transformers wrapper
-│       ├── retriever.py        # ChromaDB + BM25 hybrid search
-│       ├── llm.py              # Mistral/Groq multi-provider
-│       ├── rag_service.py      # RAG pipeline orchestration
-│       ├── prompts.py          # System prompts & templates
-│       └── auto_indexer.py     # Fallback indexing on startup
+│   │   ├── chat.py                     # /api/chat endpoint
+│   │   │                               # - ChatRequest/ChatResponse models
+│   │   │                               # - Category auto-detection
+│   │   │                               # - RAG pipeline integration
+│   │   └── search.py                   # /api/search endpoint
+│   │                                   # - SearchRequest/SearchResponse models
+│   │                                   # - Hybrid search execution
+│   ├── core/
+│   │   ├── embeddings.py               # EmbeddingsManager class
+│   │   │                               # - sentence-transformers wrapper
+│   │   │                               # - encode() / encode_batch()
+│   │   ├── llm.py                      # LLMManager class
+│   │   │                               # - Mistral AI / Groq API
+│   │   │                               # - generate() / stream_generate()
+│   │   │                               # - Retry logic with backoff
+│   │   ├── retriever.py                # Retriever class
+│   │   │                               # - ChromaDB client
+│   │   │                               # - BM25 index
+│   │   │                               # - hybrid_search()
+│   │   ├── rag_service.py              # RAGService class
+│   │   │                               # - Unified pipeline
+│   │   │                               # - search() / build_context()
+│   │   │                               # - generate_answer() / process()
+│   │   └── prompts.py                  # Prompt templates
+│   │                                   # - SYSTEM_PROMPT_LABOR_LAW
+│   │                                   # - RAG_PROMPT_TEMPLATE
+│   │                                   # - DISCLAIMER
+│   └── requirements.txt                # Python dependencies
 │
 ├── frontend/
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── page.tsx        # Main chat page
-│   │   │   └── layout.tsx      # Root layout
-│   │   └── components/
-│   │       ├── ChatWindow.tsx  # Chat UI container
-│   │       ├── MessageBubble.tsx
-│   │       └── Disclaimer.tsx
-│   ├── package.json            # Next.js 14, React 18, Tailwind
-│   └── next.config.js          # output: 'export'
+│   ├── package.json                    # Node.js dependencies
+│   ├── next.config.js                  # Next.js configuration
+│   │                                   # - output: 'export'
+│   │                                   # - images.unoptimized: true
+│   ├── tailwind.config.js              # Tailwind CSS configuration
+│   ├── postcss.config.js               # PostCSS configuration
+│   └── src/
+│       ├── app/
+│       │   ├── layout.tsx              # Root layout
+│       │   └── page.tsx                # Chat page
+│       ├── components/
+│       │   ├── ChatWindow.tsx          # Chat UI container
+│       │   ├── MessageBubble.tsx       # Message bubble component
+│       │   └── Disclaimer.tsx          # Legal disclaimer
+│       └── styles/
+│           └── globals.css             # Global styles
 │
 ├── data/
 │   ├── collect/
-│   │   ├── law_drf_client.py   # law.go.kr DRF API client
-│   │   ├── collect_all_categories.py  # Multi-category collector
-│   │   └── collect_labor_laws.py      # Labor law specific
-│   └── process/
-│       └── index_cases.py      # Chunking + Embedding + Indexing
+│   │   ├── law_drf_client.py           # law.go.kr API client
+│   │   │                               # - search_precedents()
+│   │   │                               # - search_interpretations()
+│   │   │                               # - get_precedent_detail()
+│   │   ├── collect_all_categories.py   # Multi-category data collector
+│   │   │                               # - 4 legal domains
+│   │   │                               # - Keyword-based search
+│   │   │                               # - Detail fetching
+│   │   └── law_go_kr.py                # Legacy API wrapper
+│   ├── process/
+│   │   └── index_cases.py              # Vector DB indexing pipeline
+│   │                                   # - CaseChunk dataclass
+│   │                                   # - chunk_precedent()
+│   │                                   # - chunk_interpretation()
+│   │                                   # - Batch embedding generation
+│   └── raw/
+│       └── categories/                 # JSONL data files
+│           ├── labor_precedents_*.jsonl
+│           ├── labor_interpretations_*.jsonl
+│           └── ...
 │
-├── web/                        # Landing page (Vercel)
-│   ├── index.html
-│   ├── contact.html
-│   ├── styles.css
-│   └── script.js
+├── vectordb/                           # ChromaDB persistent storage
+│                                       # - Collection: law_cases
+│                                       # - ~5000 chunks
 │
-├── vectordb/                   # ChromaDB persistent storage
-├── Dockerfile                  # Multi-stage build
-└── README.md
+├── web/                                # Landing page (Vercel)
+│   ├── index.html                      # Main landing page
+│   ├── contact.html                    # Contact form (Web3Forms)
+│   ├── chat.html                       # Embedded chat page
+│   ├── styles.css                      # Main stylesheet
+│   ├── chat.css                        # Chat-specific styles
+│   ├── script.js                       # GSAP animations, Lucide icons
+│   ├── chat.js                         # Chat functionality
+│   ├── vercel.json                     # Vercel configuration
+│   ├── blog/
+│   │   ├── index.html                  # Blog listing
+│   │   ├── blog.css                    # Blog styles
+│   │   └── blog.js                     # Blog functionality
+│   └── story/                          # Legal case stories (64 cases)
+│       ├── index.html                  # Story listing
+│       ├── story.css                   # Story styles
+│       ├── story.js                    # Story filtering
+│       ├── stories-data.js             # Story metadata
+│       ├── labor/                      # 20 labor law cases
+│       ├── housing/                    # 14 lease law cases
+│       ├── consumer/                   # 15 consumer protection cases
+│       └── traffic/                    # 15 traffic accident cases
+│
+└── models/                             # LLM models (if local)
 ```
 
-## API Endpoints
+---
+
+## Design Patterns
+
+### Backend Patterns
+
+| Pattern | Location | Implementation | Purpose |
+|---------|----------|----------------|---------|
+| Repository | retriever.py | `Retriever` class | Abstract data access |
+| Service | rag_service.py | `RAGService` class | Business logic encapsulation |
+| Factory | llm.py | Provider auto-selection | LLM client instantiation |
+| Strategy | llm.py | Mistral/Groq providers | Interchangeable LLM backends |
+| Decorator | main.py | `@asynccontextmanager` | Lifespan management |
+
+**Service Pattern Example (rag_service.py):**
+
+```python
+class RAGService:
+    def __init__(self, embeddings_manager, retriever, llm_manager):
+        self.embeddings = embeddings_manager
+        self.retriever = retriever
+        self.llm = llm_manager
+
+    def process(self, question: str, top_k: int = 5, category_filter: str = None) -> RAGResult:
+        # 1. Search
+        search_results = self.search(question, top_k, category_filter)
+        # 2. Build context
+        context = self.build_context(search_results)
+        # 3. Extract sources
+        sources = self.extract_sources(search_results)
+        # 4. Generate answer
+        answer = self.generate_answer(question, context)
+
+        return RAGResult(answer=answer, sources=sources, context=context, disclaimer=self.disclaimer)
+```
+
+**Factory Pattern Example (llm.py):**
+
+```python
+class LLMManager:
+    def __init__(self, mistral_api_key=None, groq_api_key=None, provider=None):
+        # Auto-select provider: Mistral priority
+        if provider:
+            self.provider = provider
+        elif mistral_api_key:
+            self.provider = "mistral"
+        elif groq_api_key:
+            self.provider = "groq"
+        else:
+            raise ValueError("No API key provided")
+
+        # Set API URL based on provider
+        self.api_url = MISTRAL_API_URL if self.provider == "mistral" else GROQ_API_URL
+```
+
+### Frontend Patterns
+
+| Pattern | Location | Implementation | Purpose |
+|---------|----------|----------------|---------|
+| Component | components/*.tsx | React functional components | UI composition |
+| Container | ChatWindow.tsx | State management | Logic separation |
+| Presenter | MessageBubble.tsx | Props-driven display | Reusable UI |
+
+---
+
+## API Specification
+
+### Core Endpoints
+
+| Endpoint | Method | Auth | Rate Limit | Description |
+|----------|--------|------|------------|-------------|
+| /api/chat | POST | None | - | RAG-based legal consultation |
+| /api/search | POST | None | - | Hybrid search for documents |
+| /api/health | GET | None | - | Health check with module status |
 
 ### POST /api/chat
 
-법률 상담 채팅
+**Request:**
 
-```bash
-curl -X POST https://wonchulhee-korean-law-chatbot.hf.space/api/chat \
-  -H "Content-Type: application/json" \
-  -d '{"message": "퇴직금 계산 방법을 알려주세요"}'
-```
-
-**Request**
 ```json
 {
-  "message": "string (max 2000 chars)",
-  "conversation_id": "string (optional)"
+  "message": "[노동법 관련 질문] 퇴직금 계산 방법이 궁금합니다",
+  "conversation_id": "optional-uuid"
 }
 ```
 
-**Response**
+**Response:**
+
 ```json
 {
-  "conversation_id": "uuid",
-  "answer": "답변 내용",
+  "conversation_id": "uuid-string",
+  "answer": "[쟁점] 퇴직금 계산 기준에 관한 질문입니다...",
   "sources": ["판례 2020다12345", "법령해석례 2021-0001"],
-  "disclaimer": "면책 고지문"
+  "disclaimer": "본 서비스는 AI가 제공하는 일반적인 법률 정보이며..."
 }
 ```
 
 ### POST /api/search
 
-법률 정보 검색
+**Request:**
 
-```bash
-curl -X POST https://wonchulhee-korean-law-chatbot.hf.space/api/search \
-  -H "Content-Type: application/json" \
-  -d '{"query": "부당해고", "limit": 5}'
+```json
+{
+  "query": "퇴직금 계산",
+  "limit": 5
+}
+```
+
+**Response:**
+
+```json
+{
+  "results": [
+    {
+      "id": "prec_123_summary",
+      "content": "[판시사항] 퇴직금 산정 기준...",
+      "metadata": {
+        "type": "precedent",
+        "category": "labor",
+        "case_number": "2020다12345",
+        "source": "판례 2020다12345"
+      },
+      "score": 0.85
+    }
+  ],
+  "total_count": 5
+}
 ```
 
 ### GET /api/health
 
-서버 상태 확인
+**Response:**
 
 ```json
 {
   "status": "healthy",
+  "service": "law-chatbot-api",
   "version": "0.5.1",
   "build_id": "embeddings-fix",
+  "build_date": "2026-01-29",
   "modules": {
     "embeddings": true,
     "retriever": true,
@@ -172,195 +575,242 @@ curl -X POST https://wonchulhee-korean-law-chatbot.hf.space/api/search \
 }
 ```
 
-## Core Modules
+---
 
-### Embeddings (`backend/core/embeddings.py`)
-
-Local sentence-transformers 기반 임베딩 생성
-
-```python
-from backend.core.embeddings import EmbeddingsManager
-
-embeddings = EmbeddingsManager(model_name="intfloat/multilingual-e5-base")
-vector = embeddings.encode("퇴직금 계산")  # shape: (768,)
-vectors = embeddings.encode_batch(["질문1", "질문2"])  # shape: (2, 768)
-```
-
-### Retriever (`backend/core/retriever.py`)
-
-ChromaDB + BM25 하이브리드 검색
-
-```python
-from backend.core.retriever import Retriever
-
-retriever = Retriever(chroma_db_path="./vectordb", collection_name="law_cases")
-
-# Vector search only
-results = retriever.retrieve(query_embedding, top_k=5)
-
-# Hybrid search (recommended)
-results = retriever.hybrid_search(
-    query_embedding=embedding,
-    query_text="퇴직금",
-    top_k=5,
-    alpha=0.5  # vector:BM25 weight ratio
-)
-```
-
-**Hybrid Search Algorithm**
-```
-score = alpha * vector_similarity + (1 - alpha) * bm25_score
-```
-
-### LLM (`backend/core/llm.py`)
-
-Multi-provider LLM (Mistral 우선, Groq 폴백)
-
-```python
-from backend.core.llm import LLMManager
-
-llm = LLMManager(
-    mistral_api_key="...",  # Primary
-    groq_api_key="..."      # Fallback
-)
-
-# Sync generation
-answer = llm.generate(prompt, max_tokens=1024, temperature=0.7)
-
-# Streaming
-for chunk in llm.stream_generate(prompt):
-    print(chunk, end="")
-```
-
-### RAG Service (`backend/core/rag_service.py`)
-
-통합 RAG 파이프라인
-
-```python
-from backend.core.rag_service import RAGService
-
-rag = RAGService(
-    embeddings_manager=embeddings,
-    retriever=retriever,
-    llm_manager=llm
-)
-
-result = rag.process(
-    question="퇴직금 계산 방법",
-    top_k=5,
-    max_tokens=1024,
-    category_filter="labor"  # labor, lease, consumer, traffic
-)
-
-print(result.answer)
-print(result.sources)  # ["판례 2020다12345", ...]
-print(result.disclaimer)
-```
-
-## Categories
-
-4대 법률 분야 특화 검색
-
-| Category ID | 분야 | Keywords |
-|------------|------|----------|
-| `labor` | 노동법 | 퇴직금, 해고, 임금, 연차, 근로계약 |
-| `lease` | 임대차법 | 전세, 보증금, 계약갱신, 대항력 |
-| `consumer` | 소비자보호법 | 환불, 청약철회, 제품하자, 약관 |
-| `traffic` | 교통사고 | 과실비율, 손해배상, 보험금 |
-
-## Data Pipeline
-
-### 1. Collection (법제처 API)
-
-```bash
-python data/collect/collect_all_categories.py \
-  --enable-category labor,lease,consumer,traffic \
-  --max-items 30 \
-  --detail-limit 60
-```
-
-**Data Sources**
-- 법제처 국가법령정보 (law.go.kr/DRF)
-- 판례, 법령해석례, 헌재결정례
-
-### 2. Indexing
-
-```bash
-python data/process/index_cases.py --collection law_cases
-```
-
-- Chunking: 조문/판시사항/이유 단위
-- Embedding: e5-base (768 dims)
-- Storage: ChromaDB (cosine similarity)
-
-## Development
-
-### Local Setup
-
-```bash
-# Backend
-cd backend
-pip install -r requirements.txt
-python -m uvicorn backend.main:app --reload --port 7860
-
-# Frontend (별도 터미널)
-cd frontend
-npm install
-npm run dev
-```
+## Configuration
 
 ### Environment Variables
 
 ```bash
-# Required (하나 이상)
-MISTRAL_API_KEY=your_mistral_key
-GROQ_API_KEY=your_groq_key
-
-# Optional
+# ===================
+# AI Model Settings
+# ===================
+# Embedding model (HuggingFace model ID)
 EMBEDDINGS_MODEL_NAME=intfloat/multilingual-e5-base
+
+# ChromaDB storage path
 CHROMADB_PATH=./vectordb
+
+# ===================
+# LLM API Keys
+# ===================
+# Mistral AI (Primary - 1B tokens/month free)
+MISTRAL_API_KEY=your-mistral-key
+
+# Groq API (Fallback - fast but rate limited)
+GROQ_API_KEY=your-groq-key
+
+# ===================
+# Server Settings
+# ===================
+# Port (7860 required for HF Spaces)
 PORT=7860
+
+# Host binding
+HOST=0.0.0.0
+
+# Debug mode
+DEBUG=False
+
+# ===================
+# CORS Settings
+# ===================
+# Allowed origins (comma-separated)
+ALLOWED_ORIGINS=https://lawbot-public.vercel.app,http://localhost:3000
 ```
 
-### Build & Test
+---
+
+## Development Setup
+
+### Requirements
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| Python | 3.11+ | Backend runtime |
+| Node.js | 20+ | Frontend build |
+| Docker | 20+ | Container build |
+| Git | 2.x | Version control |
+
+### Local Development
 
 ```bash
-# Frontend build
-cd frontend && npm run build
+# 1. Clone repository
+git clone https://github.com/buelmanager/law.git
+cd law
 
-# Full Docker build
-docker build -t law-chatbot .
-docker run -p 7860:7860 -e MISTRAL_API_KEY=... law-chatbot
+# 2. Backend setup
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+pip install -r backend/requirements.txt
+
+# 3. Frontend setup
+cd frontend
+npm ci
+npm run build
+cd ..
+
+# 4. Environment variables
+cp .env.example .env
+# Edit .env with your API keys
+
+# 5. Data collection (optional - uses law.go.kr API)
+python data/collect/collect_all_categories.py --all-enabled --max-items 30
+
+# 6. Index data to vector DB
+python data/process/index_cases.py --collection law_cases
+
+# 7. Run server
+python -m uvicorn backend.main:app --host 0.0.0.0 --port 7860 --reload
 ```
+
+### Testing
+
+```bash
+# Backend - API test
+curl -X POST http://localhost:7860/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "퇴직금 계산 방법이 궁금합니다"}'
+
+# Health check
+curl http://localhost:7860/api/health
+
+# Search test
+curl -X POST http://localhost:7860/api/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": "부당해고", "limit": 5}'
+```
+
+---
 
 ## Deployment
 
-### HuggingFace Spaces
+### HuggingFace Spaces (Docker)
 
-```bash
-# GitHub → HF Spaces 연동
-git remote add hf https://huggingface.co/spaces/wonchulhee/korean-law-chatbot
-git push hf main
+**Dockerfile (Multi-stage build):**
+
+```dockerfile
+# Stage 1: Frontend build
+FROM node:20-slim AS frontend-builder
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
+RUN npm ci
+COPY frontend/ .
+RUN npm run build
+
+# Stage 2: Python dependencies
+FROM python:3.11-slim AS python-builder
+WORKDIR /app
+RUN apt-get update && apt-get install -y build-essential
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir --target=/app/packages -r requirements.txt
+
+# Stage 3: Runtime
+FROM python:3.11-slim
+WORKDIR /app
+RUN apt-get update && apt-get install -y curl
+COPY --from=python-builder /app/packages /usr/local/lib/python3.11/site-packages/
+COPY backend/ ./backend/
+COPY data/ ./data/
+COPY --from=frontend-builder /app/frontend/out ./frontend/out
+
+# Data collection and indexing at build time
+RUN python data/collect/collect_all_categories.py \
+    --enable-category labor,lease,consumer,traffic \
+    --all-enabled --max-items 30 --detail-limit 60 \
+    && python data/process/index_cases.py --collection law_cases
+
+EXPOSE 7860
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s \
+    CMD curl -f http://localhost:7860/api/health || exit 1
+CMD ["python", "-m", "uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "7860"]
 ```
 
-**HF Secrets 설정**
-- `MISTRAL_API_KEY` 또는 `GROQ_API_KEY`
-- `HF_TOKEN` (optional, for model downloads)
+**Deployment Steps:**
+
+```bash
+# 1. Push to GitHub
+git push origin main
+
+# 2. Push to HuggingFace Spaces
+git remote add hf https://huggingface.co/spaces/wonchulhee/korean-law-chatbot
+git push hf main
+
+# 3. Set secrets in HF Spaces Settings
+# - MISTRAL_API_KEY
+# - GROQ_API_KEY
+# - HF_TOKEN (for model downloads)
+```
 
 ### Vercel (Landing Page)
+
+**vercel.json:**
+
+```json
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {"key": "Cache-Control", "value": "public, max-age=31536000, immutable"}
+      ]
+    }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
+}
+```
+
+**Deployment:**
 
 ```bash
 cd web
 npx vercel --prod
 ```
 
-## URLs
+---
 
-| Service | URL |
-|---------|-----|
-| Chatbot | https://wonchulhee-korean-law-chatbot.hf.space |
-| Landing | https://lawbot-public.vercel.app |
-| Health | https://wonchulhee-korean-law-chatbot.hf.space/api/health |
+## Data Statistics
+
+### Vector Database
+
+| Metric | Value |
+|--------|-------|
+| Total Chunks | ~5,000 |
+| Embedding Dimensions | 768 |
+| Collection Name | law_cases |
+| Storage | ChromaDB (Persistent) |
+
+### Data Distribution
+
+| Category | Precedents | Interpretations | Total Chunks | Source |
+|----------|------------|-----------------|--------------|--------|
+| Labor (labor) | ~600 | ~200 | ~2,000 | law.go.kr |
+| Lease (lease) | ~400 | ~150 | ~1,200 | law.go.kr |
+| Consumer (consumer) | ~350 | ~100 | ~1,000 | law.go.kr |
+| Traffic (traffic) | ~300 | ~100 | ~800 | law.go.kr |
+
+### Chunk Types
+
+| Type | Description | Avg Length |
+|------|-------------|------------|
+| summary | Case summary | ~500 chars |
+| holding | Case holding | ~800 chars |
+| full_text | Full text | ~2,000 chars |
+| question | Interpretation question | ~300 chars |
+| answer | Interpretation answer | ~400 chars |
+| reason | Interpretation reason | ~1,500 chars |
+
+### Categories (4 Legal Domains)
+
+| Category ID | Name | Keywords |
+|------------|------|----------|
+| labor | Labor Law | severance, dismissal, wages, leave |
+| lease | Lease Law | deposit, renewal, priority |
+| consumer | Consumer Protection | refund, cancellation, defect |
+| traffic | Traffic Accidents | fault ratio, compensation, insurance |
+
+---
 
 ## Performance
 
@@ -373,21 +823,38 @@ npx vercel --prod
 | Model size (e5-base) | ~560MB |
 | Container size | ~2-3GB |
 
-## Disclaimer
-
-본 서비스는 AI가 제공하는 일반적인 법률 정보이며, 정식 법률 자문이 아닙니다.
-구체적인 사안은 반드시 변호사와 상담하세요.
+---
 
 ## Version
 
-- **Version**: 0.5.1
-- **Build ID**: embeddings-fix
-- **Build Date**: 2026-01-29
+| Component | Version | Release Date |
+|-----------|---------|--------------|
+| Backend API | 0.5.1 | 2026-01-29 |
+| Build ID | embeddings-fix | - |
+| Embeddings | e5-base (768d) | - |
+| LLM | open-mixtral-8x7b | - |
+
+---
 
 ## License
 
 MIT License
 
-Data sourced from:
-- 법제처 국가법령정보 (CC BY)
-- 대법원 공개 판례
+This project uses data from the following public sources:
+
+| Source | License | URL |
+|--------|---------|-----|
+| law.go.kr | CC BY (Public Data) | https://open.law.go.kr |
+| Supreme Court Precedents | Public Domain | via law.go.kr API |
+
+**Data Accuracy:**
+- All precedents collected via official law.go.kr API
+- Case numbers, dates, and court names are 100% accurate
+- Summaries and holdings are original text from court records
+
+---
+
+## Disclaimer
+
+This service provides AI-generated general legal information, not formal legal advice.
+For specific cases, always consult with a licensed attorney.

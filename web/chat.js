@@ -6,8 +6,8 @@
 // Initialize Lucide Icons
 lucide.createIcons();
 
-// API Endpoint
-const API_BASE_URL = 'https://wonchulhee-korean-law-chatbot.hf.space';
+// API Endpoint (config.js에서 설정)
+// CONFIG.API_BASE_URL 사용 - 빈 문자열이면 상대 경로 사용
 
 // 분야별 정보
 const CATEGORY_INTRO = {
@@ -233,16 +233,16 @@ function formatApiResponse(data) {
 
     // 출처 정보
     if (data.sources && data.sources.length > 0) {
-        html += '<div class="source-section" style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">';
-        html += '<p style="font-size: 0.85em; color: var(--color-primary-light); margin-bottom: 8px;"><strong>📚 참고 자료:</strong></p>';
+        html += '<div class="source-section" style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.1);">';
+        html += '<p style="font-size: 0.85em; color: #1f2937; margin-bottom: 8px;"><strong>📚 참고 자료:</strong></p>';
 
-        html += '<ul style="font-size: 0.8em; color: rgba(255,255,255,0.6); padding-left: 16px; margin-bottom: 12px;">';
+        html += '<ul style="font-size: 0.8em; color: #4b5563; padding-left: 16px; margin-bottom: 12px;">';
         data.sources.forEach(source => {
             const sourceInfo = getSourceUrl(source);
             if (sourceInfo && sourceInfo.url) {
                 html += `<li style="margin-bottom: 4px;">
                     <a href="${sourceInfo.url}" target="_blank" rel="noopener noreferrer"
-                       style="color: rgba(255,255,255,0.7); text-decoration: underline; text-decoration-style: dotted;">
+                       style="color: #1d4ed8; text-decoration: underline; text-decoration-style: dotted;">
                         ${source}
                     </a>
                 </li>`;
@@ -294,7 +294,7 @@ function formatApiResponse(data) {
 
     // 면책 고지
     if (data.disclaimer) {
-        html += `<p style="font-size: 0.8em; color: rgba(255,255,255,0.4); margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
+        html += `<p style="font-size: 0.8em; color: #6b7280; margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.1);">
             ⚠️ ${data.disclaimer}
         </p>`;
     }
@@ -382,7 +382,7 @@ async function sendMessage() {
     const contextMessage = `[${categoryInfo.name} 관련 질문] ${message}`;
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/chat`, {
+        const response = await fetch(getApiUrl('/api/chat'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

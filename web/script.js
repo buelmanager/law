@@ -390,7 +390,8 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
 /* ===========================
    Chat Functionality
    =========================== */
-const API_BASE_URL = 'https://wonchulhee-korean-law-chatbot.hf.space';
+// API Endpoint (config.js에서 설정)
+// CONFIG.API_BASE_URL 사용 - 빈 문자열이면 상대 경로 사용
 let conversationId = null;
 let selectedCategory = null;
 
@@ -641,7 +642,7 @@ async function sendMessage() {
 
     try {
         // 실제 API 호출
-        const response = await fetch(`${API_BASE_URL}/api/chat`, {
+        const response = await fetch(getApiUrl('/api/chat'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -833,17 +834,17 @@ function formatApiResponse(data) {
 
     // 출처 정보가 있으면 표시
     if (data.sources && data.sources.length > 0) {
-        html += '<div class="source-section" style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">';
-        html += '<p style="font-size: 0.85em; color: var(--color-primary-light); margin-bottom: 8px;"><strong>📚 참고 자료:</strong></p>';
+        html += '<div class="source-section" style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.1);">';
+        html += '<p style="font-size: 0.85em; color: #1f2937; margin-bottom: 8px;"><strong>📚 참고 자료:</strong></p>';
 
         // 출처별 리스트 (클릭 가능한 링크로)
-        html += '<ul style="font-size: 0.8em; color: rgba(255,255,255,0.6); padding-left: 16px; margin-bottom: 12px;">';
+        html += '<ul style="font-size: 0.8em; color: #4b5563; padding-left: 16px; margin-bottom: 12px;">';
         data.sources.forEach(source => {
             const sourceInfo = getSourceUrl(source);
             if (sourceInfo && sourceInfo.url) {
                 html += `<li style="margin-bottom: 4px;">
                     <a href="${sourceInfo.url}" target="_blank" rel="noopener noreferrer"
-                       style="color: rgba(255,255,255,0.7); text-decoration: underline; text-decoration-style: dotted;">
+                       style="color: #1d4ed8; text-decoration: underline; text-decoration-style: dotted;">
                         ${source}
                     </a>
                 </li>`;
@@ -896,7 +897,7 @@ function formatApiResponse(data) {
 
     // 면책 고지
     if (data.disclaimer) {
-        html += `<p style="font-size: 0.8em; color: rgba(255,255,255,0.4); margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
+        html += `<p style="font-size: 0.8em; color: #6b7280; margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.1);">
             ⚠️ ${data.disclaimer}
         </p>`;
     }
@@ -907,7 +908,7 @@ function formatApiResponse(data) {
 // 인덱싱된 법령 데이터 다운로드
 async function downloadLawData() {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/download/laws.json`);
+        const response = await fetch(getApiUrl('/api/download/laws.json'));
         if (!response.ok) throw new Error('다운로드 실패');
 
         const data = await response.json();

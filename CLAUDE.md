@@ -374,9 +374,9 @@ law/
    - 마지막 커밋: "docs: Add detailed HF Spaces deployment guide"
 
 ### ✅ HuggingFace Spaces 배포 완료
-- **Space URL**: https://wonchulhee-korean-law-chatbot.hf.space
+- **Space URL**: 환경 변수 참조 (HF_SPACE_URL)
 - **상태**: 운영 중 (degraded - 모델 로딩 시 정상화)
-- **Health Check**: https://wonchulhee-korean-law-chatbot.hf.space/api/health
+- **Health Check**: /api/health
 
 ### 📈 배포 타임라인
 | 단계 | 시간 | 상태 |
@@ -397,11 +397,11 @@ law/
 ## 🌐 웹 랜딩 페이지 (web/)
 
 ### 배포 정보
-- **랜딩 페이지 URL**: https://lawbot-public.vercel.app
-- **상담 신청 URL**: https://lawbot-public.vercel.app/contact.html
-- **챗봇 URL**: https://wonchulhee-korean-law-chatbot.hf.space
+- **랜딩 페이지 URL**: 환경 변수 참조 (LANDING_URL)
+- **상담 신청 URL**: /contact.html
+- **챗봇 URL**: 환경 변수 참조 (CHATBOT_URL)
 - **플랫폼**: Vercel (랜딩) + HuggingFace Spaces (챗봇)
-- **GitHub**: buelmanager/law (main branch)
+- **GitHub**: 환경 변수 참조 (GITHUB_REPO)
 
 ### 기술 스택
 - **HTML/CSS/JS**: 정적 사이트 (프레임워크 없음)
@@ -668,7 +668,7 @@ npx vercel --prod
 
 2. **API 엔드포인트** - `/api/health` 호출
    ```bash
-   curl https://wonchulhee-korean-law-chatbot.hf.space/api/health
+   curl $CHATBOT_URL/api/health
    ```
    응답:
    ```json
@@ -729,10 +729,10 @@ RUN python data/collect/collect_all_categories.py \
 ### Git 리모트 설정
 ```bash
 # GitHub (origin)
-git remote add origin https://github.com/buelmanager/law.git
+git remote add origin $GITHUB_REPO_URL
 
 # HuggingFace Spaces (hf)
-git remote add hf https://huggingface.co/spaces/wonchulhee/korean-law-chatbot
+git remote add hf $HF_REPO_URL
 
 # 양쪽에 푸시
 git push origin main && git push hf main
@@ -742,23 +742,16 @@ git push origin main && git push hf main
 
 ## 🔑 API 토큰
 
-### GitHub Token (Private 레포 접근용)
-```
-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
-```
-- 용도: GitHub API 접근, private 레포 읽기/쓰기
-- 레포: `buelmanager/law` (private)
+> **주의**: 모든 API 토큰과 인증 정보는 환경 변수로 관리됩니다.
+> `.env` 파일이나 환경 변수 설정에서 다음 키를 설정하세요.
 
-### Vercel Token
-```
-CeTcRgbdKUpzvhhRfxrPg9z6
-```
-- 용도: Vercel 프로젝트 배포 및 설정
-- 프로젝트: `lawbot-public`
-- URL: https://lawbot-public.vercel.app
+### 필요한 환경 변수
+- `GITHUB_TOKEN`: GitHub API 접근용 토큰
+- `VERCEL_TOKEN`: Vercel 배포용 토큰
+- `HF_TOKEN`: HuggingFace API 토큰 (필요시)
 
 ### 배포 설정
 | 플랫폼 | 레포 | 폴더 | URL |
 |--------|------|------|-----|
-| Vercel | `buelmanager/law` | `web/` | https://lawbot-public.vercel.app |
-| HuggingFace | `buelmanager/law` | 루트 | https://wonchulhee-korean-law-chatbot.hf.space |
+| Vercel | 환경 변수 참조 | `web/` | 환경 변수 참조 (LANDING_URL) |
+| HuggingFace | 환경 변수 참조 | 루트 | 환경 변수 참조 (CHATBOT_URL) |

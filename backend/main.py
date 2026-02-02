@@ -124,14 +124,13 @@ app = FastAPI(
 )
 
 # CORS 미들웨어 (보안 강화)
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "").split(",") if os.getenv("ALLOWED_ORIGINS") else [
-    "https://wonchulhee-korean-law-chatbot.hf.space",
-    "https://huggingface.co",
-    "https://lawbot-public.vercel.app",  # Vercel 랜딩 페이지
-    "http://localhost:3000",  # 개발용
-    "http://localhost:7860",  # 개발용
-    "http://localhost:8000",  # 로컬 테스트용
+# 환경변수 ALLOWED_ORIGINS로 설정 (쉼표 구분), 미설정시 로컬 개발용만 허용
+DEFAULT_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:7860",
+    "http://localhost:8000",
 ]
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "").split(",") if os.getenv("ALLOWED_ORIGINS") else DEFAULT_ORIGINS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
